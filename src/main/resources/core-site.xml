@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+	<property>
+		<!--配置默认的文件系统的参数-->
+		<name>fs.defaultFS</name>
+		<!--文件系统所在地-->
+		<value>hdfs://Hadoop001</value>
+	</property>
+	<!--配置hadoop的临时目录-->
+	<property>
+		<name>hadoop.tmp.dir</name>
+		<!--存放的目录地址，一般可以防止$HADOOP_HOME/data/,或者当前启动进程的用户的家目录下-->
+		<value>/home/centos/hadoop</value>
+	</property>
+
+<!--启用回收站 存放时间为1分钟-->
+<property>
+<name>fs.trash.interval</name>
+<value>1</value>
+</property>
+
+<property>
+<name>hadoop.http.staticuser.user</name>
+<value>centos</value>
+</property>
+
+</configuration>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/js/jquery-3.1.0.min.js" type="application/javascript"></script>
+</head>
+<body>
+<form action="" method="post">
+    任务名称:<input name="taskTitle" type="text" id="taskTitle" /><br />
+    任务计划完成时间：<input name="taskEndTime" type="text" id="taskEndTime" /><br />
+    任务办理人：
+                <select name="beAssignId" id="beAssignId">
+                    <option value="02102278">祝小龙</option>
+                    <option value="02102279">张洲</option>
+                    <option value="02102280">李波</option>
+                    <option value="02102281">邓亚</option>
+                    <option value="02102282">刘豪</option>
+                    <option value="02102283">李俊</option>
+                    <option value="02102284">陈勇</option>
+                    <option value="02102285">商祖诚</option>
+                    <option value="02102286">邹超</option>
+                    <option value="02102287">袁兴磊</option>
+                    <option value="02102288">廖濂</option>
+                    <option value="02102289">李晋</option>
+                    <option value="02102290">建晨飞</option>
+                </select><br />
+    任务类型： <input name="taskTag" type="radio" value="请假" />请假
+    <input name="taskTag" type="radio"  value="调休" />调休
+    <input name="taskTag" type="radio"  value="外出" />外出
+    <input name="taskTag" type="radio"  value="离职" />离职<br />
+    任务描述：<textarea name="taskDesc" id="taskDesc" cols="30" rows="30"></textarea><Br>
+    <input  type="button" value="提交" id="btn01"/>
+</form>
+
+<script type="application/javascript">
+    $(function () {
+        $("#btn01").click(function () {
+            var users = {
+                taskTitle : $("#taskTitle").val(),
+                timeLimit : $("#taskEndTime").val(),
+                beAssignId : $("#beAssignId").val(),
+                taskTag : $("input[name='taskTag']").val(),
+                taskDesc : $("#taskDesc").val()
+
+            };
+            $.ajax({
+                type : 'POST',  //提交类型
+                data:JSON.stringify(users),   //把数据转换为json
+                contentType : 'application/json',
+                dataType: 'json',   //返回的数据类型
+                url : '/issueTak', //请求的url地址
+                success : function(data) {   //请求成功调用的方法
+                   if(data.success){
+                       alert("协同新增成功");
+                        location.href="/html/issueTask.html"
+                   }else {
+                       alert("协同新增失败。。。。");
+                   }
+                },
+                error : function(e) {           //请求失败调用的方法
+                    alert("系统发送错误。。。");
+                }
+            });
+
+        });
+    });
+
+</script>
+</body>
+</html>
