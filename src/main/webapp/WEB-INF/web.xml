@@ -6,6 +6,19 @@
     <welcome-file>index.html</welcome-file>
 </welcome-file-list>
     <display-name>Archetype Created Web Application</display-name>
+
+    <!--跨域-->
+    <filter>
+        <filter-name>corsFilter</filter-name>
+        <filter-class>com.tecode.filter.SimpleCORSFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>corsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <!--字符集-->
     <filter>
         <filter-name>characterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -23,6 +36,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <!--REST  -->
     <filter>
         <filter-name>hiddenHttpMethodFilter</filter-name>
         <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
@@ -31,7 +45,7 @@
         <filter-name>hiddenHttpMethodFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
+    <!--Spring-->
     <servlet>
         <servlet-name>dispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -49,6 +63,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:springContext.xml</param-value>
     </context-param>
+
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>

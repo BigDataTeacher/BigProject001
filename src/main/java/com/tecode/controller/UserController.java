@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -19,7 +18,9 @@ import java.util.Map;
  */
 @Controller
 public class UserController {
-
+    /**
+     *需要调用业务层（Services)的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。
+     */
     @Autowired
     private UserService userService;
 
@@ -37,26 +38,17 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "/userLogin", method = RequestMethod.POST)
     public Map<String,Object> login(@RequestBody User user, HttpSession session){
-        //调用登录的业务处理方法
-        User loginUser = userService.getUseLogin(user);
+        /**
+         *1.验证参数的合法性
+         * 2.调用业务逻辑层处理业务，并获得返回值
+         * 3.讲返回结果封装成map集合
+         * 4.返回map
+         *
+         *
+         *
+         */
 
-
-        Map<String,Object> map = new HashMap<>();
-        //添加标记状态，默认为登录失败
-        map.put("success",false);
-
-        if(loginUser != null){
-            //添加状态
-            map.put("success",true);
-            //添加查询成功的用户信息返回
-            map.put("data",loginUser);
-
-
-            //把登录成功的用户存放起来 已被后面使用。
-            session.setAttribute("user",loginUser);
-        }
-        //返回封装后的返回结果。
-        return map;
+        return null;
     }
 
 }

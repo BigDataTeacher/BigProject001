@@ -8,12 +8,20 @@ import org.springframework.stereotype.Service;
 
 /**
  * 被Controller层调用的方法所在类上添加@Service
+ *
+ * 这是处理用户请求的业务逻辑实现层。
  */
 @Service
 public class UserServiceImpl implements UserService {
 
+    /**
+     * 需要调用Dao层的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。
+     */
     @Autowired
     private UserDao userDao;
+
+
+
 
     /**
      * 正在的登录业务处理方法
@@ -22,23 +30,14 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User getUseLogin(User user) {
-        User u = null;
-        try {
-            //把用户名传入Dao层，进行查询该用户对象
-             u = userDao.getUserByUserName(user.getUsername());
-             //判断根据username参数查询到的User对象的password是否和传入的password相同。 如果不相同说明登录失败
-             if(!u.getPassword().equals(user.getPassword())) return  null;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return u;
+      return  null;
     }
     /**
      * 根据用户id查询
      */
     @Override
     public User getUserByUserName(String username) throws Exception {
-        return userDao.getUserByUserName(username);
+        return null;
     }
 
 
