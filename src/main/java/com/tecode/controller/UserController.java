@@ -41,8 +41,10 @@ public class UserController {
         /**
          *1.验证参数的合法性
          * 2.调用业务逻辑层处理业务，并获得返回值
-         * 3.讲返回结果封装成map集合
-         * 4.返回map
+         * 3.判断是否登录成功
+         *          如果登录成功 调用SessionUtil.setLoginUser(session,user);
+         * 4.讲返回结果封装成map集合
+         * 5.返回map
          *
          *
          *
