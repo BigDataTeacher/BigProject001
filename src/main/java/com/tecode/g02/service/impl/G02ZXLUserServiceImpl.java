@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -32,6 +33,15 @@ public class G02ZXLUserServiceImpl implements G02ZXLUserService {
     @Override
     public List<User> findUser(String name) throws IOException {
         //调用Dao层的接口获得返回值
-        return userDao.findUserByName(name);
+        try {
+            return userDao.findUserByName(name);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
