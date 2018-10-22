@@ -63,8 +63,10 @@ public class G04CommentDaoImpl implements G04CommentDao {
 
         //构建put对象
         Put put = new Put(Bytes.toBytes( taskid ));
+
         //使用addColumn()方法 来设置需要在哪个列族的列新增值
         put.addColumn(Bytes.toBytes(ConfigUtil.getString("hbase_task_tbale_cf")),Bytes.toBytes(date),Bytes.toBytes(value));
+
         //使用Connection连接对象调用getTable(TableName tableName) 来获得Table的对象
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
 
