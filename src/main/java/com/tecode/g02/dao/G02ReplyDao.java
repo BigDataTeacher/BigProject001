@@ -14,7 +14,7 @@ public interface G02ReplyDao {
     /**
      * 通过任务id查找到TaskBean对象
      */
-    Task selectTaskByID(String userId) throws IOException;
+    Task selectTaskByID(String taskId) throws IOException;
     /**
      * 在log中添加一个新列，列名为当前时间，值一条回复的记录
      */

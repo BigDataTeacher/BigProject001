@@ -26,12 +26,14 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
 
 
     @Override
-    public Task selectTaskByID(String userId) throws IOException {
+    public Task selectTaskByID(String taskId) throws IOException {
         Task task = new Task();
+        task.setTaskId(taskId);
+
         Connection conn =HBaseUtils.getConnection();
         Table table =  conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         //创建一个Get对象
-        Get get = new Get(Bytes.toBytes(userId));
+        Get get = new Get(Bytes.toBytes(taskId));
         String info = getFamilyName("hbase_task_tbale_cf");
         //在get对象中添加列族和列的信息，指定查找对应的列族的列，这次查找的是info列族的handlerStack列
         get.addColumn(Bytes.toBytes(info),Bytes.toBytes("handlerStack"));
@@ -44,15 +46,38 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
             byte[] bytes = CellUtil.cloneValue(cell);
             task.setHandlerStack(Bytes.toString(bytes));
         }
-        //在get对象中添加当前办理人列：beAssignId
+        //在get对象中添加当前办理人id：beAssignId
         get.addColumn(Bytes.toBytes(info),Bytes.toBytes("beAssignId"));
         Result result2 = table.get(get);
         Cell[] cells2 = result2.rawCells();
         for (Cell cell:cells2
-             ) {
+        ) {
             task.setBeAssignId(Bytes.toString(CellUtil.cloneValue(cell)));
         }
-        //
+
+        //在get对象中添加任务分类taskTag
+        get.addColumn(Bytes.toBytes(info),Bytes.toBytes("taskTag"));
+        Result result3 = table.get(get);
+        Cell[] cells3 = result3.rawCells();
+        for (Cell cell:cells3
+        ) {
+            task.setTaskTag(Bytes.toString(CellUtil.cloneValue(cell)));
+        }
+        //在get对象中添加当前办理人姓名
+        get.addColumn(Bytes.toBytes(info),Bytes.toBytes("nowHandler"));
+        Result result4 = table.get(get);
+        Cell[] cells4 = result4.rawCells();
+        for (Cell cell:cells4) {
+            task.setNowHandler(Bytes.toString(CellUtil.cloneValue(cell)));
+        }
+
+        //在get对象中任务成员
+        get.addColumn(Bytes.toBytes(info),Bytes.toBytes("memberIds"));
+        Result result5 = table.get(get);
+        Cell[] cells5 = result5.rawCells();
+        for (Cell cell:cells5) {
+            task.setMemberIds(Bytes.toString(CellUtil.cloneValue(cell)));
+        }
         return task;
     }
 
