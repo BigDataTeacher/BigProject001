@@ -11,6 +11,37 @@ public class TaskComment implements Comparable<TaskComment> {
     //评论内容
     private String taskComment;
 
+    //评论者类型
+    private String commentatorType;
+
+    //评论内容类型
+    private String   commentType;
+    //评论人名
+    private String realName;
+
+    public String getCommentatorType() {
+        return commentatorType;
+    }
+
+    public void setCommentatorType(String commentatorType) {
+        this.commentatorType = commentatorType;
+    }
+
+    public String getCommentType() {
+        return commentType;
+    }
+
+    public void setCommentType(String commentType) {
+        this.commentType = commentType;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
 
     public Date getTaskCommentTime() {
         return taskCommentTime;
