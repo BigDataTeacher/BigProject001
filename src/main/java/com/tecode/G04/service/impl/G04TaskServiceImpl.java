@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * 这是处理用户请求的业务逻辑实现层。
  */
 @Service
-public class G04UserServiceImpl implements UserService {
+public class G04TaskServiceImpl implements UserService {
 
     /**
      * 需要调用Dao层的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。

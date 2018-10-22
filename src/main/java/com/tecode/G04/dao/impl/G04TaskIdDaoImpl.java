@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
  *   需要类上添加@Repository注解
  */
 @Repository
-public class G04UserDaoImpl implements UserDao {
+public class G04TaskIdDaoImpl implements UserDao {
 
 
     @Override
