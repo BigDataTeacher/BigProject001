@@ -14,6 +14,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,12 +74,10 @@ public class G02ZXLUserDaoImpl implements G02ZXLUserDao {
             for (Cell cell:cells) {
 
                 byte[] bytes = CellUtil.cloneQualifier(cell);
-                String cl=Bytes.toString(bytes);
 
 
 
-
-                    //将获取到的每一行的值封装为一个user对象并添加进userList中
+                //将获取到的每一行的值封装为一个user对象并添加进userList中
                     User user = new User();
 
                     //获取到用户名
