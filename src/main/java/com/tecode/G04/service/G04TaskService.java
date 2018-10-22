@@ -13,15 +13,9 @@ import com.tecode.bean.User;
  */
 public interface G04TaskService {
 
-    /**
-     * 用户登录的业务处理方法
-     * @param taskId
-     * @return
-     */
-    Task getUseLogin(Task  taskId);
 
     /**
-     *根据用户名id查询用户对象
+     *根据任务查询用户对象
      */
-    Task getUserByUserName(String taskId) throws Exception;
+    Boolean modifyTaskState(String taskId) throws Exception;
 }
