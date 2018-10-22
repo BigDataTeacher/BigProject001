@@ -1,7 +1,7 @@
 package com.tecode.g01.service.impl;
 
 import com.tecode.bean.User;
-import com.tecode.g01.dao.UserDao;
+import com.tecode.dao.UserDao;
 import com.tecode.g01.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
