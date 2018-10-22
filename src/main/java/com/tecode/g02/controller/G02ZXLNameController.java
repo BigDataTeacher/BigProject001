@@ -2,7 +2,9 @@ package com.tecode.g02.controller;
 
 import com.tecode.bean.User;
 import com.tecode.g02.service.G02ZXLUserService;
+import com.tecode.util.hbase.table.HBaseUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.hadoop.hbase.client.Connection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,11 @@ public class G02ZXLNameController {
      */
     @Autowired
     private G02ZXLUserService userService;
+
+//    public static void main(String[] args) {
+//        Connection conn=HBaseUtils.getConnection();
+//        System.out.println(conn);
+//    }
 
     /**
      * 用户登录方法
@@ -53,6 +60,7 @@ public class G02ZXLNameController {
          */
         //用一个变量来接收传入的姓名
         String name=user.getName();
+        System.out.println("user:" + name);
         //创建一个map集合用来存放返回的结果
         Map<String,Object> map=new HashedMap();
 
@@ -61,12 +69,12 @@ public class G02ZXLNameController {
         if(name!=null||!name.equals("")){
             try {
                 //获取从Service层返回的结果
-                List<User> userList=userService.findUser(user.getName());
+                List<User> userList=userService.findUser(name);
 
                 //如果结果为空，则返回false，不为空返回true和list集合
                 if(userList.size()==0||userList==null){
                     map.put("success",false);
-                    map.put("data","查找不到此用户");
+                    map.put("msg","查找不到此用户");
                 }else{
                     map.put("success",true);
                     map.put("data",userList);
@@ -79,7 +87,7 @@ public class G02ZXLNameController {
         }
         //如果输入的参数不符合规则，返回false并加上错误提示
         map.put("success",false);
-        map.put("data","输入的名字不能为空");
+        map.put("msg","输入的名字不能为空");
 
         return map;
     }

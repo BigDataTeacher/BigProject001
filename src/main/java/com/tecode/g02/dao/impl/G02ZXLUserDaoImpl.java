@@ -37,6 +37,7 @@ public class G02ZXLUserDaoImpl implements G02ZXLUserDao {
 
         //获取链接
         Connection conn=HBaseUtils.getConnection();
+        System.out.println(conn);
 
         //获取user表对象
         Table userTable = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
@@ -55,6 +56,8 @@ public class G02ZXLUserDaoImpl implements G02ZXLUserDao {
 
         //使用设置好的扫描器扫描user表，并获得扫描结果
         ResultScanner scanner = userTable.getScanner(scan);
+        System.out.println(scanner);
+
 
         //遍历扫描结果
         for (Result rs :scanner) {
@@ -81,6 +84,8 @@ public class G02ZXLUserDaoImpl implements G02ZXLUserDao {
 
                 //通过获取到的用户名调用获取部门的方法
                 user.setDepartment(getDepartment(userName,userTable));
+
+                System.out.println(user);
 
                 //将获取到的uesr对象添加进user集合中
                 userList.add(user);
