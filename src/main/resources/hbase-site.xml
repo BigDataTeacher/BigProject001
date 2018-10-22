@@ -47,4 +47,5 @@
 			<name>hbase.zookeeper.property.dataDir</name>
 			<value>/home/centos/zookeeper</value>
 		</property>
+
 </configuration>
