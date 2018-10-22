@@ -20,7 +20,7 @@ public class G04FinishTaskController {
      *需要调用业务层（Services)的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。
      */
     @Autowired
-    private G04TaskService g04TaskService;
+
 
     /**
      * 用户登录方法
@@ -34,7 +34,7 @@ public class G04FinishTaskController {
      * 3.@ResponseBody:：表示把返回的值封装成json进行返回
      */
     @ResponseBody
-    @RequestMapping(value = "/close-task", method = RequestMethod.POST)
+    @RequestMapping(value = "/comment-task", method = RequestMethod.POST)
     public Map<String,Object> finishTask(Task taskId, HttpSession session){
         /**
          *1.验证参数的合法性
