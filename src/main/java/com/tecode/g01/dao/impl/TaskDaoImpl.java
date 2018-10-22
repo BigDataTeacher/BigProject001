@@ -4,6 +4,7 @@ import com.tecode.bean.Task;
 import com.tecode.g01.dao.TaskDao;
 import com.tecode.util.hbase.table.HBaseUtils;
 import org.apache.commons.collections.bag.SynchronizedSortedBag;
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -37,9 +38,10 @@ public class TaskDaoImpl implements TaskDao{
 
 
 
-
         return null;
     }
+    public static void main(System[] args){
 
+    }
 
 }
