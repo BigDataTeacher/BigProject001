@@ -1,5 +1,8 @@
 package com.tecode.bean;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Administrator on 2018/10/18.
  */
@@ -9,6 +12,16 @@ public class User {
     private String password;//登录密码
     private String name;//用户的姓名
     private String department;//部门
+    //存放用户的所以任务集合    key 为任务id   value 为这个任务的未读消息数量
+    private Map<String,Integer> userTask =new HashMap();
+
+    public Map<String, Integer> getUserTask() {
+        return userTask;
+    }
+
+    public void setUserTask(Map<String, Integer> userTask) {
+        this.userTask = userTask;
+    }
 
     public String getUsername() {
         return username;
