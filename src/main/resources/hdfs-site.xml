@@ -25,7 +25,7 @@
 	<!--设置辅助名称节点所在地址-->
 	<property>
 		<name>dfs.namenode.secondary.http-address</name>
-	        <value>hadoop04:50090</value>
+	        <value>166.166.166.168:50090</value>
 	    </property>
 	<!--配置多个存放namenode数据节点的目录-->
 	<property>
