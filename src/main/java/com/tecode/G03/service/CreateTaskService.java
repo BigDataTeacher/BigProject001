@@ -5,7 +5,6 @@ package com.tecode.G03.service;
  */
 
 import com.tecode.bean.Task;
-import com.tecode.bean.User;
 
 /**
  *

@@ -22,7 +22,7 @@ public class G3UserDaoImpl implements G3UserDao {
     }
 
     @Override
-    public void addUserTasks() throws Exception {
+    public void addUserTasks(String userid,String taskid,int num) throws Exception {
 
     }
 }

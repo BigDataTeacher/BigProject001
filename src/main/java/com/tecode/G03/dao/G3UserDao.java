@@ -1,6 +1,5 @@
 package com.tecode.G03.dao;
 
-import com.tecode.bean.User;
 
 import java.util.List;
 
@@ -16,5 +15,5 @@ public interface G3UserDao {
      * @throws Exception
      */
     List<String> getNameByUserName(List<String> usernames) throws Exception;
-    void addUserTasks() throws Exception;
+    void addUserTasks(String userid,String taskid,int num) throws Exception;
 }
