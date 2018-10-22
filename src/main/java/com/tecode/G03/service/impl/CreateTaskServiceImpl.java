@@ -39,7 +39,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         Set<TaskLog> logSet = new TreeSet<>();
 
         //设置任务ID
-        String taskid = null;
+        String taskid = ;
         //从task对象中取出sponsorID和beAssignID，并存入List集合中
         String sponsorID = task.getSponsorId();
         String beAssignID = task.getBeAssignId();
@@ -48,12 +48,14 @@ public class CreateTaskServiceImpl implements CreateTaskService {
     /*
       调用userDao的getNameByUserName方法来获得其对应的用户ID所对应的的用户名字的集合
       */
-        List<String> names = userDao.getNameByUserName(usernames);
+        Map<String,String> names = userDao.getNameByUserName(usernames);
+        //封装taskID
+        task.setTaskId(taskid);
         // 将取得的用户名字封装入task对象中
         //封装任务发起人名字
-        task.setSponsor(names.get(0));
+        task.setSponsor(names.get(sponsorID));
         //封装任务办理人名字
-        task.setBeAssignId(names.get(1));
+        task.setBeAssignId(names.get(beAssignID));
         //封装任务状态
         task.setTaskState(TaskState.HANDLE);
         //封装办理人ID栈
@@ -71,7 +73,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         //评论时间
         createComment.setTaskCommentTime(new Date(System.currentTimeMillis()));
         //评论内容
-        createComment.setTaskComment(names.get(0) + "发起了任务");
+        createComment.setTaskComment(names.get(sponsorID) + "发起了任务");
         //评论者类型
         createComment.setCommentatorType(CommentatorType.SYSTEM.getType());
         //评论内容类型
@@ -85,7 +87,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         //评论时间
         assignedComment.setTaskCommentTime(new Date(System.currentTimeMillis()));
         //评论内容
-        assignedComment.setTaskComment(names.get(0) + "交办任务给" + names.get(1));
+        assignedComment.setTaskComment(names.get(sponsorID) + "交办任务给" + names.get(beAssignID));
         //评论者类型
         assignedComment.setCommentatorType(CommentatorType.SYSTEM.getType());
         //评论内容类型
@@ -104,7 +106,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         //日志类型   如用户还是系统
         log.setCommentatorType(CommentatorType.SYSTEM);
         //日志内容
-        log.setContent("交办：" + names.get(0) + "," + names.get(1));
+        log.setContent("交办：" + names.get(sponsorID) + "," + names.get(beAssignID));
         logSet.add(log);
         task.setTaskLog(logSet);
 

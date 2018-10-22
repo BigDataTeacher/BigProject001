@@ -2,6 +2,7 @@ package com.tecode.G03.dao;
 
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018/10/18.
@@ -14,6 +15,6 @@ public interface G3UserDao {
      * @return
      * @throws Exception
      */
-    List<String> getNameByUserName(List<String> usernames) throws Exception;
+    Map<String,String> getNameByUserName(List<String> usernames) throws Exception;
     void addUserTasks(String userid,String taskid,int num) throws Exception;
 }
