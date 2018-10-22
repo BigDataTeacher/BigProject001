@@ -12,7 +12,7 @@ public interface TaskDao {
      * 通过任务Id获取需要返回的任务详情
      */
 
-    Task getTaskBytaskId (String taskid) throws IOException;
+    Task getTaskBytaskId (String taskid,String username) throws IOException;
 
 
 }
