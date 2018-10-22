@@ -14,6 +14,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class G02ZXLUserDaoImpl implements G02ZXLUserDao {
 
 
     @Override
-    public List<User> findUserByName(String name) throws IOException {
+    public List<User> findUserByName(String name) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
         //创建一个user对象的List集合来存储查询的结果
         List<User> userList=new ArrayList<User>();
@@ -52,7 +53,9 @@ public class G02ZXLUserDaoImpl implements G02ZXLUserDao {
                                                                     CompareFilter.CompareOp.EQUAL,
                                                                     Bytes.toBytes(name));
         //在扫描器中设置过滤器
-//        scan.addColumn(Bytes.toBytes(getFamilyName()),Bytes.toBytes("name"));
+        scan.addColumn(Bytes.toBytes(getFamilyName()),Bytes.toBytes("name")).
+                addColumn(Bytes.toBytes(getFamilyName()),Bytes.toBytes("department"))
+                .addColumn(Bytes.toBytes(getFamilyName()),Bytes.toBytes("username"));
         scan.setFilter(scvf);
 
 
@@ -66,44 +69,35 @@ public class G02ZXLUserDaoImpl implements G02ZXLUserDao {
 
         //遍历扫描结果
         for (Result rs :scanner) {
+            //将获取到的每一行的值封装为一个user对象并添加进userList中
+            User user = new User();
+
+            //获得user对象的类对象
+            Class<? extends User> userClazz = user.getClass();
 
             //获取每一行的扫描结果
             Cell[] cells = rs.rawCells();
 
             //遍历每一行的结果
             for (Cell cell:cells) {
-
+                //获取列名
                 byte[] bytes = CellUtil.cloneQualifier(cell);
+                String cl=Bytes.toString(bytes);
 
+                //获取对应列的对应值
+                String value = Bytes.toString(CellUtil.cloneValue(cell));
 
+                //设置user对象的set方法的表达式
+                String mysetName="set"+cl.substring(0,1).toUpperCase()+cl.substring(1);
 
-                //将获取到的每一行的值封装为一个user对象并添加进userList中
-                    User user = new User();
+                //获取user类的方法
+                Method method = userClazz.getMethod(mysetName, String.class);
 
-                    //获取到用户名
-                    String userName = Bytes.toString(CellUtil.cloneRow(cell));
-
-                    //设置用户名
-                    user.setUsername(userName);
-
-                    //获取并设置姓名
-                    user.setName(Bytes.toString(CellUtil.cloneValue(cell)));
-
-                    //因为不需要密码，这里直接传一个空值
-                    user.setPassword("");
-
-                    //通过获取到的用户名调用获取部门的方法
-                    user.setDepartment(getDepartment(userName, userTable));
-
-                    System.out.println(user);
-
-                    //将获取到的uesr对象添加进user集合中
-                    userList.add(user);
-
-
+                //执行
+                method.invoke(user,value);
             }
-
-
+            //将user对象存入list集合中
+            userList.add(user);
         }
 
         //返回封装了user对象的List集合

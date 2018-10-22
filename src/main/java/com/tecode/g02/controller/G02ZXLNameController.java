@@ -60,13 +60,13 @@ public class G02ZXLNameController {
          */
         //用一个变量来接收传入的姓名
         String name=user.getName();
-        System.out.println("user:" + name);
+
         //创建一个map集合用来存放返回的结果
         Map<String,Object> map=new HashedMap();
 
 
         //对传入的姓名进行判断，如果为空则直接返回，不为空则调用Service层中查找用户的方法
-        if(name!=null||!name.equals("")){
+        if(name!=null&&!name.equals("")){
             try {
                 //获取从Service层返回的结果
                 List<User> userList=userService.findUser(name);
