@@ -17,5 +17,5 @@ public interface G04TaskService {
     /**
      *根据任务查询用户对象
      */
-    Boolean modifyTaskState(String taskId) throws Exception;
+    Boolean modifyTaskState(String taskId,String cusId) throws Exception;
 }

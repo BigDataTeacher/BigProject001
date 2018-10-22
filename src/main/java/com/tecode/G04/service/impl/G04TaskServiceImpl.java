@@ -24,12 +24,14 @@ public class G04TaskServiceImpl implements G04TaskService {
 
 
     @Override
-    public Boolean modifyTaskState(String taskId) throws Exception {
+    public Boolean modifyTaskState(String taskId,String cusId) throws Exception {
         List<String> idStack = g04TaskIdDao.getIdStack(taskId);
 
         String[] strings = idStack.toString().split(",");
 
-
+        if(strings.length==1){
+            g04TaskIdDao.modifyFinishState(taskId,cusId);
+        }
         return null;
     }
 }
