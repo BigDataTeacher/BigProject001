@@ -33,11 +33,10 @@ public class G02ZXLUserDaoImpl implements G02ZXLUserDao {
     public List<User> findUserByName(String name) throws IOException {
 
         //创建一个user对象的List集合来存储查询的结果
-        List<User> userList=new ArrayList<>();
+        List<User> userList=new ArrayList<User>();
 
         //获取链接
         Connection conn=HBaseUtils.getConnection();
-        System.out.println(conn);
 
         //获取user表对象
         Table userTable = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
@@ -52,7 +51,12 @@ public class G02ZXLUserDaoImpl implements G02ZXLUserDao {
                                                                     CompareFilter.CompareOp.EQUAL,
                                                                     Bytes.toBytes(name));
         //在扫描器中设置过滤器
+//        scan.addColumn(Bytes.toBytes(getFamilyName()),Bytes.toBytes("name"));
         scan.setFilter(scvf);
+
+
+
+
 
         //使用设置好的扫描器扫描user表，并获得扫描结果
         ResultScanner scanner = userTable.getScanner(scan);
@@ -67,28 +71,36 @@ public class G02ZXLUserDaoImpl implements G02ZXLUserDao {
 
             //遍历每一行的结果
             for (Cell cell:cells) {
-                //将获取到的每一行的值封装为一个user对象并添加进userList中
-                User user=new User();
 
-                //获取到用户名
-                String userName=Bytes.toString(CellUtil.cloneRow(cell));
+                byte[] bytes = CellUtil.cloneQualifier(cell);
+                String cl=Bytes.toString(bytes);
 
-                //设置用户名
-                user.setUsername(userName);
 
-                //获取并设置姓名
-                user.setName(Bytes.toString(CellUtil.cloneValue(cell)));
 
-                //因为不需要密码，这里直接传一个空值
-                user.setPassword("");
 
-                //通过获取到的用户名调用获取部门的方法
-                user.setDepartment(getDepartment(userName,userTable));
+                    //将获取到的每一行的值封装为一个user对象并添加进userList中
+                    User user = new User();
 
-                System.out.println(user);
+                    //获取到用户名
+                    String userName = Bytes.toString(CellUtil.cloneRow(cell));
 
-                //将获取到的uesr对象添加进user集合中
-                userList.add(user);
+                    //设置用户名
+                    user.setUsername(userName);
+
+                    //获取并设置姓名
+                    user.setName(Bytes.toString(CellUtil.cloneValue(cell)));
+
+                    //因为不需要密码，这里直接传一个空值
+                    user.setPassword("");
+
+                    //通过获取到的用户名调用获取部门的方法
+                    user.setDepartment(getDepartment(userName, userTable));
+
+                    System.out.println(user);
+
+                    //将获取到的uesr对象添加进user集合中
+                    userList.add(user);
+
 
             }
 
