@@ -24,7 +24,7 @@
 		<!--配置HBase的元数据，存放在hdfs的的路径-->
 		<property>
 			<name>hbase.rootdir</name>
-			<value>hdfs://hadoop001:8020/hbase</value>
+			<value>hdfs://166.166.166.167:8020/hbase</value>
 		</property>
 		
 		<!--配置是否是集群-->
@@ -40,7 +40,7 @@
 		<!--配置hbase，使用的zookeeper集群-->
 		<property>
 			<name>hbase.zookeeper.quorum</name>
-			<value>hadoop001:2181,hadoop002:2181,hadoop003:2181</value>
+			<value>166.166.166.167:2181,166.166.166.168:2181,166.166.166.169:2181</value>
 		</property>
 		<!--获得zookeeper的原始数据的存放目录-->
 		<property>
