@@ -52,10 +52,6 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
         put.addColumn(Bytes.toBytes("info"),Bytes.toBytes("taskState"),Bytes.toBytes(TaskState.FINISH.getType()));
 
 
-
-        //得到info列族下的taskState  任务状态
-        //get.addColumn(Bytes.toBytes(ConfigUtil.getString("info")),Bytes.toBytes("taskState"));
-
     }
 
     /**

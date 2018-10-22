@@ -29,9 +29,12 @@ public class G04TaskServiceImpl implements G04TaskService {
 
         String[] strings = idStack.toString().split(",");
 
-        if(strings.length==1){
+        boolean  flag =false;
+
+        if(strings.length==1&&cusId.equals(g04TaskIdDao.getSponsorId(taskId))){
             g04TaskIdDao.modifyFinishState(taskId,cusId);
+            flag=true;
         }
-        return null;
+        return flag;
     }
 }
