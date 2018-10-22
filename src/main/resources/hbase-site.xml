@@ -19,6 +19,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
 -->
 <configuration>
 		<!--配置HBase的元数据，存放在hdfs的的路径-->
