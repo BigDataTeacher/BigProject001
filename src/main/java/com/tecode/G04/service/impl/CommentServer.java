@@ -1,8 +1,5 @@
 package com.tecode.G04.service.impl;
 
-import com.tecode.G04.dao.impl.G04CommentDao;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.io.IOException;
 
 /**
