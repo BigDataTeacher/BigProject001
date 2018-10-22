@@ -35,7 +35,17 @@ public class Task {
     //任务的评论
     private Set<TaskComment> taskComments = new TreeSet<>();
 
+    //是否运行完成   true  允许完成   false 不允许完成
 
+    private boolean isAllowFinish;
+
+    public boolean isAllowFinish() {
+        return isAllowFinish;
+    }
+
+    public void setAllowFinish(boolean allowFinish) {
+        isAllowFinish = allowFinish;
+    }
 
     public Set<TaskLog> getTaskLog() {
         return taskLog;
