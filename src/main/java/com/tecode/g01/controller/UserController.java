@@ -1,8 +1,6 @@
 package com.tecode.g01.controller;
 
-import com.tecode.G04.dao.impl.G04CommentDao;
 import com.tecode.bean.User;
-import com.tecode.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
