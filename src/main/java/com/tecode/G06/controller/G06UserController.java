@@ -2,6 +2,7 @@ package com.tecode.G06.controller;
 
 import com.tecode.bean.User;
 import com.tecode.service.UserService;
+import com.tecode.util.hbase.table.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,7 @@ public class G06UserController {
     /**
      * 用户登录方法
      *
-     * 1.其中 @RequestMapping(value = "/userLogin", method = RequestMethod.POST) 表示html页面请求到该方法的URL地址的映射
+     * 1.其中 @RequestMapping(value = "/userLoginEntry", method = RequestMethod.POST) 表示html页面请求到该方法的URL地址的映射
      *      value = "/userLogin" ： html的请求地址
      *      method = RequestMethod.POST：表示请求的方式
      * 2.@RequestBody:表示接收josn类型的参数
@@ -48,6 +49,11 @@ public class G06UserController {
          *
          *
          */
+        boolean n=user.getName().isEmpty();
+        boolean p=user.getPassword().isEmpty();
+        if(n==false & p==false){
+            SessionUtil.setLoginUser(session,user);
+        }
 
 
         return null;
