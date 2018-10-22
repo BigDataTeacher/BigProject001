@@ -4,7 +4,6 @@ import com.tecode.bean.User;
 import com.tecode.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,7 +36,7 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(value = "/userLogin", method = RequestMethod.POST)
-    public Map<String,Object> login(@RequestBody User user, HttpSession session){
+    public Map<String,Object> login(User user, HttpSession session){
         /**
          *1.验证参数的合法性
          * 2.调用业务逻辑层处理业务，并获得返回值
@@ -49,6 +48,7 @@ public class UserController {
          *
          *
          */
+
 
         return null;
     }

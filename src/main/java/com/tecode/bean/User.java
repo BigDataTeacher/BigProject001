@@ -42,4 +42,13 @@ public class User {
         this.department = department;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                '}';
+    }
 }

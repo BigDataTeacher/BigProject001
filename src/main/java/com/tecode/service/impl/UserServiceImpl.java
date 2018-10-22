@@ -21,8 +21,6 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
 
-
-
     /**
      * 正在的登录业务处理方法
      * @param user

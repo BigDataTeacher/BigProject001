@@ -22,7 +22,7 @@ public class Task {
 
     private String beAssignId;              //当前办理人id
     private String nowHandler;              //当前办理人姓名
-    private String handlerStack;              //办理人ID栈
+    private String handlerStack;            //办理人ID栈
 
     private String createTime;              //任务发起时间
     private String timeLimit;              //任务完成时限  建议完成时间
