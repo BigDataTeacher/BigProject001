@@ -28,10 +28,6 @@ public class G02ZXLNameController {
     @Autowired
     private G02ZXLUserService userService;
 
-//    public static void main(String[] args) {
-//        Connection conn=HBaseUtils.getConnection();
-//        System.out.println(conn);
-//    }
 
     /**
      * 用户登录方法
