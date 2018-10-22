@@ -16,7 +16,7 @@ import java.util.Map;
  * 1.在接收html请求的java文件的类上添加@Controller
  */
 @Controller
-public class G04UserController {
+public class G04TaskController {
     /**
      *需要调用业务层（Services)的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。
      */
@@ -46,10 +46,6 @@ public class G04UserController {
          *          如果登录成功 调用SessionUtil.setLoginUser(session,user);
          * 4.讲返回结果封装成map集合
          * 5.返回map
-         *
-         *
-         *
-         *
          *
          *
          */
