@@ -30,9 +30,9 @@ public class G02ZzReplyServiceImpl implements G02ZzReplyService {
         Task task = null;
         try {
             task = replyDao.selectTaskByID(taskId);
-            replyDao.addReplyLog("");
+            replyDao.addReplyLog("",false);
             replyDao.addSystemComment("");
-            replyDao.removeIDFromStack();
+            replyDao.removeIDFromStack("");
             replyDao.changeHandler("");
 
         } catch (IOException e) {

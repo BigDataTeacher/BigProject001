@@ -18,17 +18,17 @@ public interface G02ReplyDao {
     /**
      * 在log中添加一个新列，列名为当前时间，值一条回复的记录
      */
-    void addReplyLog(String replyLog);
+    void addReplyLog(String taskId,boolean bl) throws IOException;
     /**
      * 在comment列族中添加一列，列名为当前时间，值为系统的评论
      */
-    void addSystemComment(String systemComm);
+    void addSystemComment(String taskId) throws IOException;
     /**
      * 将id栈中的栈顶元素移除
      */
-    void removeIDFromStack();
+    void removeIDFromStack(String taskId) throws IOException;
     /**
      * 更改当前办理人的id
      */
-    void changeHandler(String userId);
+    void changeHandler(String taskId) throws IOException;
 }

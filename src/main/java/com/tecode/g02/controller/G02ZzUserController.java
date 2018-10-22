@@ -2,6 +2,8 @@ package com.tecode.g02.controller;
 
 import com.tecode.bean.Task;
 import com.tecode.bean.User;
+import com.tecode.g02.service.G02ZzReplyService;
+import com.tecode.g02.service.impl.G02ZzReplyServiceImpl;
 import com.tecode.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,6 +61,8 @@ public class G02ZzUserController {
 
         Map<String,Object> map = new HashMap<>();
         if(taskId!=null || handlerId.equals(cusId)){
+            G02ZzReplyService replyService = new G02ZzReplyServiceImpl();
+
             map.put("success",true);
             map.put("msg","回复成功！");
         }else{
