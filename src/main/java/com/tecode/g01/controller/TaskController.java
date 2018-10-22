@@ -1,7 +1,7 @@
 package com.tecode.g01.controller;
 
 import com.tecode.bean.User;
-import com.tecode.g01.service.UserService;
+import com.tecode.g01.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,12 +16,13 @@ import java.util.Map;
  * 1.在接收html请求的java文件的类上添加@Controller
  */
 @Controller
-public class UserController {
+public class TaskController {
+
     /**
      *需要调用业务层（Services)的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。
      */
     @Autowired
-    private UserService userService;
+    private TaskService userService;
 
     /**
      * 用户登录方法

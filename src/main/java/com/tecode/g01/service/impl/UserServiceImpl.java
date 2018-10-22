@@ -2,7 +2,7 @@ package com.tecode.g01.service.impl;
 
 import com.tecode.bean.User;
 import com.tecode.g01.dao.UserDao;
-import com.tecode.g01.service.UserService;
+import com.tecode.g01.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * 这是处理用户请求的业务逻辑实现层。
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements TaskService {
 
     /**
      * 需要调用Dao层的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。

@@ -10,7 +10,7 @@ import com.tecode.bean.User;
  *
  * 处理用户信息相关的业务层
  */
-public interface UserService {
+public interface TaskService {
 
     /**
      * 用户登录的业务处理方法
