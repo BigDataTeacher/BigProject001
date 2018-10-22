@@ -10,9 +10,14 @@ import org.springframework.stereotype.Repository;
  *   需要类上添加@Repository注解
  */
 @Repository
-public class G04UserDaoImpl implements UserDao {
+public class G04CommentDaoImpl implements UserDao {
 
-
+    /**
+     * 根据传入的评论者ID获得评论者的姓名
+     * @param username
+     * @return
+     * @throws Exception
+     */
     @Override
     public User getUserByUserName(String username) throws Exception {
 
