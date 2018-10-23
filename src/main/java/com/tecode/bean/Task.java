@@ -193,7 +193,7 @@ public class Task {
         return memberIds;
     }
 
-    public void setMemberIds(String s) {
+    public void setMemberIds(String memberIds) {
         this.memberIds = memberIds;
     }
 }
