@@ -19,5 +19,5 @@ public interface CreateTaskService {
      * @return true: 创建成功  false:创建失败
      */
 
-    Boolean createTask(Task task) throws BaseException;
+    void createTask(Task task) throws BaseException;
 }

@@ -106,35 +106,14 @@ public class G3TaskDaoImpl implements G3TaskDao {
         Set<Map.Entry<String, String>> entrySet = commentMap.entrySet();
         //获取列族名
         String[] hbase_task_tbale_cfs = ConfigUtil.getString("hbase_task_tbale_cf").split(",");
-
-
         String cf = hbase_task_tbale_cfs[2];
-
-
         List<Put> puts = new ArrayList<Put>();
         for (Map.Entry<String, String> entry : entrySet) {
-
-
             Put put = new Put(Bytes.toBytes(taskID));
-
             put.addColumn(Bytes.toBytes(cf), Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
             puts.add(put);
-
         }
-        /*
-        *     //评论数据
-    private Date taskCommentTime;
-    //评论内容
-    private String taskComment;
-    //评论者类型
-    private String commentatorType;
-    //评论内容类型
-    private String   commentType;
-    //评论人名
-    private String realName;
-        * */
-
-
+        table.put(puts);
     }
 
     @Override
@@ -150,13 +129,16 @@ public class G3TaskDaoImpl implements G3TaskDao {
             String value = log.getCommentatorType().getType() + ":" + log.getContent();
             logMap.put(key, value);
         }
-        /*
-        *     //日志生成时间
-    private Date logTime;
-    //日志内容
-    private String content;
-    //日志类型   如用户还是系统
-    private CommentatorType commentatorType;
-        * */
+        Set<Map.Entry<String, String>> entrySet = logMap.entrySet();
+        //获取列族名
+        String[] hbase_task_tbale_cfs = ConfigUtil.getString("hbase_task_tbale_cf").split(",");
+        String cf = hbase_task_tbale_cfs[1];
+        List<Put> puts = new ArrayList<Put>();
+        for (Map.Entry<String, String> entry : entrySet) {
+            Put put = new Put(Bytes.toBytes(taskID));
+            put.addColumn(Bytes.toBytes(cf), Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
+            puts.add(put);
+        }
+        table.put(puts);
     }
 }
