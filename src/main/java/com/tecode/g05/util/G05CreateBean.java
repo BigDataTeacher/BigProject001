@@ -3,6 +3,7 @@ package com.tecode.g05.util;
 import com.tecode.bean.Task;
 import com.tecode.bean.User;
 import com.tecode.enumBean.TaskState;
+import com.tecode.g05.bean.G05TaskBean;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.client.Result;
@@ -10,6 +11,9 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +24,8 @@ import java.util.Map;
  * 成员：李晋、建晨飞<br>
  */
 public class G05CreateBean {
+    // 格式化日期
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     /**
      * 生成User
      *
@@ -99,5 +105,36 @@ public class G05CreateBean {
             }
         }
         return task;
+    }
+
+    public static G05TaskBean createG05TaskBean(Task task) {
+        G05TaskBean gtb = new G05TaskBean();
+        gtb.setTaskId(task.getTaskId());
+        gtb.setSponsor(task.getSponsor());
+        gtb.setTaskTitle(task.getTaskTitle());
+        gtb.setTaskState(task.getTaskState().getType());
+        //****************剩余时限*****************
+        gtb.setBalanceTime("0");
+        try {
+            // 任务规定完成时间
+            String timeLimit = task.getTimeLimit();
+            Date limitDate = sdf.parse(timeLimit);
+            // 当前时间
+            Date nowDate = new Date();
+            long time = limitDate.getTime() - nowDate.getTime();
+            if(time > 0) {
+                gtb.setBalanceTime(G05TimeUtil.getTime(time));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        gtb.setTaskTag(task.getTaskTag());
+        gtb.setIsHandle("false");
+        if(task.getSponsor().equals(task.getNowHandler())) {
+            gtb.setIsHandle("true");
+        }
+        gtb.setNowHandle(task.getNowHandler());
+        gtb.setTaskFinishTime(task.getFinishTime());
+        return gtb;
     }
 }

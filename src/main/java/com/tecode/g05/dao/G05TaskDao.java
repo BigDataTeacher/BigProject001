@@ -2,7 +2,10 @@ package com.tecode.g05.dao;
 
 import com.tecode.bean.Task;
 import com.tecode.bean.User;
+import com.tecode.exception.BaseException;
+import com.tecode.g05.bean.G05TaskBean;
 import com.tecode.g05.bean.RequestTaskListBean;
+import com.tecode.g05.bean.UpdateTaskBean;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,5 +23,12 @@ public interface G05TaskDao {
      * @param user  用户信息
      * @return
      */
-    List<Task> getTasksByRequest(RequestTaskListBean rtb, User user) throws IOException;
+    List<G05TaskBean>  getTasksByRequest(RequestTaskListBean rtb, User user) throws IOException;
+
+    /**
+     * 修改Task
+     * @param utb
+     * @return
+     */
+    boolean updateTask(UpdateTaskBean utb) throws BaseException;
 }
