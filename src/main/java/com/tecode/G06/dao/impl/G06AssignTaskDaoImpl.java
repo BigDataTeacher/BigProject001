@@ -145,7 +145,7 @@ public class G06AssignTaskDaoImpl implements G06AssignTaskDao {
      * @return	是否插入成功
      */
     public boolean insertData(String tableName, String rowKey, String columnFamily, String columnName,
-                                     String value) {
+                              String value) {
 
         try {
             Connection connection = HBaseUtils.getConnection();

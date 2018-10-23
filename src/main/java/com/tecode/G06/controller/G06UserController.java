@@ -10,12 +10,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 
+
+
+
+
 /**
  * 1.在接收html请求的java文件的类上添加@Controller
+ *
+ *
  */
 @Controller
 public class G06UserController {
