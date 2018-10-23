@@ -1,11 +1,11 @@
 package com.tecode.g01.dao.impl;
 
 import com.tecode.g01.dao.UserCopyDao;
+import com.tecode.util.hbase.table.ConfigUtil;
 import com.tecode.util.hbase.table.HBaseUtils;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Table;
@@ -25,8 +25,7 @@ public class UserCopyDaoImpl implements UserCopyDao {
         //建立存放任务的集合
         Set<String> task = new HashSet<>();
         //获取链接
-        Connection conn = HBaseUtils.getConnection();
-        Table userTable = conn.getTable(TableName.valueOf("user"));
+        Table userTable = HBaseUtils.getConnection().getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
         //获得use表的username字段s
         Get get = new Get(Bytes.toBytes("username"));
         get.addColumn(Bytes.toBytes("tasks"),Bytes.toBytes(taskId));

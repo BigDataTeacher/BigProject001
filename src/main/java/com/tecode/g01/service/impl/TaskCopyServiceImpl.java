@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 
 
 /**
- * Created by Administrator on 2018/10/22.
+ *
  */
 @Service
 public class TaskCopyServiceImpl implements TaskCopyService{
 
     @Autowired
     private TaskCopyDao taskDao;
+    @Autowired
     private UserCopyDao userDao;
 
 
