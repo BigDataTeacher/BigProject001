@@ -37,6 +37,7 @@ public class G06UserDaoImpl implements G06UserDao {
             value=Bytes.toString(CellUtil.cloneValue(cell));
 
 
+
         if(name.equals("username")) {
             user.setUsername(value);
         }if(name.equals("password")){

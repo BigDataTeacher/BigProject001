@@ -40,3 +40,4 @@ public interface G06AssignTaskService {
      */
     Task inTask(Task task)throws Exception;
 }
+

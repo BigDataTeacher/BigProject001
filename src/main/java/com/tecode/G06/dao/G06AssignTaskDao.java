@@ -16,6 +16,7 @@ public interface G06AssignTaskDao {
      */
     User getUserbyUserId(String username) throws Exception;
 
+
     /**
      * 通过rowkey TaskId将任务查询出来
      */

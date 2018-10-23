@@ -39,6 +39,7 @@ public class G06AssignTaskServiceImpl implements G06AssignTaskService{
             return true;
         }
         return false;
+
     }
     /**
      * 将当前办理人ID存入班里人ID栈handlerStack

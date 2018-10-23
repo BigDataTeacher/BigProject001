@@ -7,6 +7,7 @@ import com.tecode.bean.User;
  */
 public interface G06UserDao {
 
+
     /**
      * 通过员工编号查询员工对象
      * @param username

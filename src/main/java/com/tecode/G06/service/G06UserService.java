@@ -17,10 +17,11 @@ public interface G06UserService {
      * @param user
      * @return
      */
-    User getUseLogin(User user) throws Exception;
+    User  getUseLogin(User user) throws Exception;
 
     /**
      *根据用户名id查询用户对象
      */
     User getUserByUserName(String username) throws Exception;
 }
+
