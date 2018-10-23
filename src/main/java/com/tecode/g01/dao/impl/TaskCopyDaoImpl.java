@@ -13,7 +13,9 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,7 +27,7 @@ public class TaskCopyDaoImpl implements TaskCopyDao{
 
 
     /**
-     *
+     *在任务表的memberIds修改并加入memberid字段
      * @param taskId    任务ID
      * @param memberId  需要加入的成员ID
      * @return          true/false
@@ -34,6 +36,7 @@ public class TaskCopyDaoImpl implements TaskCopyDao{
 
     @Override
     public boolean insertTaskMember(String taskId,String memberId) throws Exception {
+
 
 
         Set<String> set = new HashSet<>();
@@ -53,20 +56,25 @@ public class TaskCopyDaoImpl implements TaskCopyDao{
         String newMember =null;
 
 
+        List<Put> list = new ArrayList<>();
+
         for (Cell cell:cells) {
             s = Bytes.toString(CellUtil.cloneValue(cell));
 //            newMember = s + "," + memberId;
-            set.add(s);
+//            set.add(s);
+            Put put = new Put(Bytes.toBytes("taskId"));
+            put.addColumn(Bytes.toBytes(getCf(0)), Bytes.toBytes("memberIds"), Bytes.toBytes(s));
+            list.add(put);
         }
         set.add(memberId);
 
 
         //put对象提交
-        Put put = new Put(Bytes.toBytes("taskId"));
 
-        put.addColumn(Bytes.toBytes(getCf(0)), Bytes.toBytes("memberIds"), Bytes.toBytes( newMember));
 
-        taskTable.put(put);
+
+
+        taskTable.put(list);
         return true;
 
 
@@ -98,6 +106,7 @@ public class TaskCopyDaoImpl implements TaskCopyDao{
 
 
     }
+
 
 
 
