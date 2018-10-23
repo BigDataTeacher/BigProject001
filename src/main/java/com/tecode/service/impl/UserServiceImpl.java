@@ -1,7 +1,6 @@
 package com.tecode.service.impl;
 
 import com.tecode.bean.User;
-import com.tecode.dao.UserDao;
 import com.tecode.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ public class UserServiceImpl implements UserService {
      * 需要调用Dao层的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。
      */
     @Autowired
-    private UserDao userDa;
+
 
 
     /**
