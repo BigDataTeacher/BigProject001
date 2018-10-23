@@ -30,7 +30,7 @@ public class G04TaskServiceImpl implements G04TaskService {
     @Override
     @Test
     public Boolean modifyTaskState(String  taskId,String cusId) throws BaseException {
-
+        String sponsorId = null;
 
         //得到发起人
         String sponsor = null;
@@ -50,17 +50,19 @@ public class G04TaskServiceImpl implements G04TaskService {
         String[] strings = idStack.split(",");
 
         try {
-            String sponsorId = g04TaskIdDao.getSponsorId(taskId);
+             sponsorId = g04TaskIdDao.getSponsorId(taskId);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         //判断ID栈是否最后一个和当前用户ID和发起人ID 是否一致
         try {
-            if(strings.length==1&&cusId.equals(g04TaskIdDao.getSponsorId(taskId))){
+            if(strings.length==1&&cusId.equals(sponsorId)){
                 g04TaskIdDao.modifyFinishState(taskId,cusId);
 
-            }else return  null ;
+            }else {
+                throw new BaseException("当前用户ID和发起人ID不一致");
+            };
             //调用完成任务时间方法
             g04TaskIdDao.taskFinishTime(taskId);
 
