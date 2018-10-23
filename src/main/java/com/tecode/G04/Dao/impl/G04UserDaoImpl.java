@@ -36,4 +36,16 @@ class G04UserDaoImpl implements G04UserDao {
         Result Name = table.get(get);
         return Name.toString();
     }
+
+    @Override
+    public void modifymsgnumber(String username) throws IOException {
+        //获取hbase链接
+        Connection conn = HBaseUtils.getConnection();
+        //获得表
+        Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
+        //得到get对象
+        Get get = new Get(Bytes.toBytes(username));
+        //设置获得哪一个列祖下的哪一列
+        get.addColumn(Bytes.toBytes(ConfigUtil.getString("hbase_user_tbale_cf")),Bytes.toBytes("name"));
+    }
 }
