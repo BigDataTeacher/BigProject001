@@ -162,7 +162,7 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         String handlerStack = task.getHandlerStack();
         String[] split = handlerStack.split(",");
         String nowHandler = split[split.length-1];
-        Table user = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_table_name")));
+        Table user = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
         Get getName = new Get(Bytes.toBytes(nowHandler));
         getName.addColumn(Bytes.toBytes(info),Bytes.toBytes("name"));
         Result result = user.get(getName);
