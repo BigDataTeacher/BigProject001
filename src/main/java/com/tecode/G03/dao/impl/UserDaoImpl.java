@@ -24,7 +24,7 @@ public class UserDaoImpl implements UserDao {
     Connection conn = null;
 
     @Override  //重写获得name方法
-    public String getUserByUserName(String username) throws Exception {
+    public String getNameByUserName(String username) throws Exception {
         //获取系统
         conf = HBaseConfiguration.create();
 
@@ -63,7 +63,7 @@ public class UserDaoImpl implements UserDao {
 
         Put put = new Put(Bytes.toBytes(username));
 
-        Put putTask = put.addColumn(Bytes.toBytes("tasks"), Bytes.toBytes("taskId"),Bytes.toBytes(""));
+        Put putTask = put.addColumn(Bytes.toBytes("tasks"), Bytes.toBytes("taskId"),Bytes.toBytes("1"));
 
         tableUser.put(putTask);
 
@@ -82,7 +82,12 @@ public class UserDaoImpl implements UserDao {
 
     }
 
-    public
+    public String getNumOfTaskMsg(String username){
+
+
+
+        return null;
+    }
 
     @Override
     public String modifyNumOfTaskMsg(String username) {

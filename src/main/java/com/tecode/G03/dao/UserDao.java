@@ -15,9 +15,9 @@ public interface UserDao {
      * @return
      * @throws Exception
      */
-    String getUserByUserName(String username) throws Exception;
+    String getNameByUserName(String username) throws IOException;
 
     void addTask(String username) throws IOException;
 
-    String modifyNumOfTaskMsg(String username);
+    String modifyNumOfTaskMsg(String username) throws IOException;
 }
