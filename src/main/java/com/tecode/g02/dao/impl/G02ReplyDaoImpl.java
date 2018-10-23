@@ -114,8 +114,8 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
     //得到一个put对象
     private Put getPut(String rowKey,String family,boolean bl){
         Put put = new Put(Bytes.toBytes(rowKey));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String currentTime = sdf.format(System.currentTimeMillis());
+        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long currentTime = System.currentTimeMillis();
         if(bl){
             put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime),Bytes.toBytes(CommentatorType.SYSTEM+":回复操作成功,"));
         }else {
@@ -143,7 +143,7 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         Task task = selectTaskByID(taskId);
         String handlerStack = task.getHandlerStack();
         String[] split = handlerStack.split(",");
-        String newStack=null;
+        String newStack="";
         for (int i = 0 ;i < split.length-1;i++) {
             newStack+=split[i];
         }
@@ -170,4 +170,6 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         table.close();
 
     }
+
+
 }

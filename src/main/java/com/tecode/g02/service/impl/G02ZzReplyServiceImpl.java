@@ -5,6 +5,7 @@ import com.tecode.exception.BaseException;
 import com.tecode.g02.dao.G02ReplyDao;
 import com.tecode.g02.dao.impl.G02ReplyDaoImpl;
 import com.tecode.g02.service.G02ZzReplyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 
@@ -17,8 +18,10 @@ import java.io.IOException;
  */
 @Service
 public class G02ZzReplyServiceImpl implements G02ZzReplyService {
-    G02ReplyDao replyDao = new G02ReplyDaoImpl();
-    Task task = null;
+    @Autowired G02ReplyDao replyDao;
+    //G02ReplyDao replyDao = new G02ReplyDaoImpl();
+
+    Task task = new Task();
 
     @Override
     public boolean isReplySuccess(String taskId,String cusId) throws IOException {
@@ -54,6 +57,7 @@ public class G02ZzReplyServiceImpl implements G02ZzReplyService {
     //获得栈顶元素
     private String getHandlerId(Task task,String cusId) throws BaseException{
         String handlerStack = task.getHandlerStack();
+        //打印出id栈中的信息，用于测试
         System.out.println(handlerStack+"============");
         if(handlerStack==null){
             throw new BaseException("id栈中没有数据");
