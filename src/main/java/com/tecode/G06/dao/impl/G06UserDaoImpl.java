@@ -38,14 +38,14 @@ public class G06UserDaoImpl implements G06UserDao {
 
 
 
-            if(name.equals("username")) {
-                user.setUsername(value);
-            }if(name.equals("password")){
-                user.setPassword(value);
-            }if(name.equals("name")){
-                user.setName(value);
-            }if(name.equals("department")){
-                user.setDepartment(value);
+        if(name.equals("username")) {
+            user.setUsername(value);
+        }if(name.equals("password")){
+            user.setPassword(value);
+        }if(name.equals("name")){
+            user.setName(value);
+        }if(name.equals("department")){
+            user.setDepartment(value);
             }
         }
         return user;
