@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -27,43 +28,42 @@ public class G04TaskServiceImpl implements G04TaskService {
 
     @Override
     @Test
-    public Boolean modifyTaskState(String  taskId,Task task,String cusId) throws Exception {
+    public Boolean modifyTaskState(String  taskId,Task task,String cusId) throws BaseException {
 
 
         //得到发起人
         String sponsor = task.getSponsor();
         //得到ID栈
-        List<String> idStack = g04TaskIdDao.getIdStack(taskId);
+        String idStack = null;
+        try {
+            idStack = g04TaskIdDao.getIdStack(taskId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //分割
-        String[] strings = idStack.toString().split(",");
+        String[] strings = idStack.split(",");
 
 
         //判断ID栈是否最后一个和当前用户ID和发起人ID 是否一致
-        if(strings.length==1&&cusId.equals(g04TaskIdDao.getSponsorId(taskId))){
-            g04TaskIdDao.modifyFinishState(taskId,cusId);
+        try {
+            if(strings.length==1&&cusId.equals(g04TaskIdDao.getSponsorId(taskId))){
+                g04TaskIdDao.modifyFinishState(taskId,cusId);
 
-        }else {
-            return  false;
-        }
-        //调用完成任务时间方法
-      try {
+            }else return  null ;
+            //调用完成任务时间方法
             g04TaskIdDao.taskFinishTime(taskId);
-      }catch (Exception e){
-          System.out.println("任务不存在");
-        }
-        //调用添加评论方法
-        try {
+
+            //调用添加评论方法
             g04TaskIdDao.addComment(taskId);
-        }catch (Exception e){
-            System.out.println("任务不存在");
+
+            //调用添加日志方法
+            g04TaskIdDao.addLog(taskId,sponsor);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
         }
 
-        //调用添加日志方法
-        try {
-            g04TaskIdDao.addLog(taskId,sponsor);
-        }catch (Exception b){
-            System.out.println("任务不存在");
-        }
 
         return true;
     }

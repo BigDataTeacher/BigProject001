@@ -6,6 +6,9 @@ package com.tecode.G04.service;
 
 import com.tecode.bean.Task;
 import com.tecode.bean.User;
+import com.tecode.exception.BaseException;
+
+import java.io.IOException;
 
 /**
  *
@@ -14,10 +17,11 @@ import com.tecode.bean.User;
 public interface G04TaskService {
 
 
+
     /**
      *根据任务查询用户对象
      */
-    Boolean modifyTaskState(String  taskId ,Task task,String cusId) throws Exception;
+    Boolean modifyTaskState(String  taskId ,Task task,String cusId) throws BaseException, IOException;
 
 
 }
