@@ -21,4 +21,6 @@ public interface G04UserDao {
      * @return
      */
     Integer getmsgcount(String username) throws IOException;
+
+    String getName(String userid) throws IOException;
 }

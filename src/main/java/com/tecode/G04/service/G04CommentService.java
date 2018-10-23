@@ -7,5 +7,5 @@ import java.util.Date;
  * Created by Administrator on 2018/10/22.
  */
 public interface G04CommentService {
-       Boolean CommentResult(String taskid, String realName, String commentType, String comment,String commentatorType,Date taskCommentTime) throws IOException;
+       Boolean CommentResult(String taskid, String commentatorId, String commentType, String comment) throws IOException;
 }

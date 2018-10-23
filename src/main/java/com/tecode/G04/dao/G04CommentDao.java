@@ -13,7 +13,7 @@ public interface G04CommentDao {
      * @param comment  评论内容
      * @return
      */
-    Boolean addcomment(String taskid,String realName,String commentType,String comment,String commentatorType,Date taskCommentTime) throws IOException;
+    Boolean addcomment(String taskid,String commentatorId,String commentType,String comment) throws IOException;
 
     /**
      * 获取当前任务的成员ID，为逗号隔开的字符串
