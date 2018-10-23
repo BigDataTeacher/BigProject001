@@ -1,5 +1,6 @@
 package com.tecode.g01.dao.impl;
 
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import com.tecode.bean.Task;
 import com.tecode.bean.TaskComment;
 import com.tecode.enumBean.CommentatorType;
@@ -15,7 +16,9 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
 
+import javax.sound.midi.Soundbank;
 import java.io.IOException;
+import java.net.SocketPermission;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,29 +40,34 @@ public class TaskDaoImpl implements TaskDao{
      * @return 返回一个cell集合储存数据
      * @throws IOException
      */
-    Task task = new Task();
-    TaskComment comment = new TaskComment();
-    //创建一个map集合，key 为列名，value 为列名对应的值
-    Map<String,String> infoMap = new HashMap<String,String>();
+    Task task =null ;
+    TaskComment comment = null;
+
     //comment列族的map集合，key为列明，value为列名对应的值
-    Map<String,String> commentMap = new HashMap<String,String>();
+    Map<String,String> commentMap = null;
     //创建一个存放评论内容的set集合
-    Set set = new HashSet();
+    Set<TaskComment> set = null;
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    //字符串转Date型
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public Task getTaskBytaskId(String taskid,String username) throws IOException {
+        task =  new Task();
+        //创建一个map集合，key 为列名，value 为列名对应的值
+        Map<String,String> infoMap = new HashMap<String,String>();
+
         Connection connection = HBaseUtils.getConnection();
         Table tasktable = connection.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         //根据主键taskid查询
         Get get = new Get(Bytes.toBytes(taskid));
+
         Result result = tasktable.get(get);
         get.addFamily(Bytes.toBytes(getCf(0)));
         Cell[] Infocells = result.rawCells();
         for (Cell cell :Infocells ) {
-            infoMap.put(CellUtil.cloneQualifier(cell).toString(),CellUtil.cloneValue(cell).toString());
+            infoMap.put(Bytes.toString(CellUtil.cloneQualifier(cell)),Bytes.toString(CellUtil.cloneValue(cell)));
         }
-
         task.setTaskId(taskid);         //任务Id
         task.setTaskTag(infoMap.get("taskTag"));        //任务分类
         task.setTaskTitle(infoMap.get("taskTitle"));        //任务标题
@@ -68,14 +76,24 @@ public class TaskDaoImpl implements TaskDao{
         task.setSponsorId(infoMap.get("sponsorId"));         //任务发起人id
         task.setNowHandler(infoMap.get("nowHandler"));       //当前办理人姓名
         //获取当前办理人id栈
+        task.setHandlerStack(infoMap.get("handlerStack"));
         String handlerStack = infoMap.get("handlerStack");
-        task.setBeAssignId(handlerStack.substring(handlerStack.lastIndexOf(",")+1,handlerStack.length()));    //当前办理人ID
+        String[] handlerStackArr = handlerStack.split(",");
+        task.setBeAssignId(handlerStackArr[handlerStackArr.length -1]);    //当前办理人ID
+
+
         task.setTimeLimit(infoMap.get("timeLimit"));        //任务结束时间
         task.setTaskState(TaskState.fromHandleState(infoMap.get("taskState")));        //任务状态
         task.setTaskTag(infoMap.get("taskTag"));        //任务分类
-        boolean b = isAllowFinish(username);
+        boolean b = isAllowFinish(username,infoMap);
         task.setAllowFinish(b);     //是否可以完成任务
         task.setTaskComments(getTaskCommentBytaskId(taskid));       //一条评论内容
+        task.setCreateTime(infoMap.get("createTime"));      //任务发起时间
+
+        task.setFinishTime(infoMap.get("finishTime"));      //任务完成时间
+        task.setMemberIds(infoMap.get("memberIds"));        //任务成员ID
+
+
 
         System.out.println(task);
         return task;
@@ -84,30 +102,45 @@ public class TaskDaoImpl implements TaskDao{
 
     @Override
     public  Set<TaskComment> getTaskCommentBytaskId(String taskid) throws IOException {
+        //储存评论内容的set集合
+        set = new HashSet<TaskComment>();
+        commentMap = new HashMap<String,String>();
+        comment = new TaskComment();
         Connection connection = HBaseUtils.getConnection();
         Table tasktable = connection.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         //根据主键taskid查询
         Get get = new Get(Bytes.toBytes(taskid));
-        Result result = tasktable.get(get);
+
         get.addFamily(Bytes.toBytes(getCf(2)));
+
+
+        Result result = tasktable.get(get);
+
         Cell[] commentCells = result.rawCells();
         for (Cell cell : commentCells) {
-            commentMap.put(CellUtil.cloneQualifier(cell).toString(),CellUtil.cloneValue(cell).toString());
+            commentMap.put(Bytes.toString(CellUtil.cloneQualifier(cell)),Bytes.toString(CellUtil.cloneValue(cell)));
+            System.out.println(commentMap);
         }
 
+
         //遍历commetMap集合获取一条评论记录
-        Set<Map.Entry<String, String>> entrySet = commentMap.entrySet();
+       Set<Map.Entry<String, String>> entrySet = commentMap.entrySet();
         for (Map.Entry<String, String> entry : entrySet) {
             String value = entry.getValue();
+            System.out.println("value:" + value);
+            if (value == null || value.equals("") || value.split("_").length <4 ) continue;
+
             String[] split = value.split("_");
             String commenter = split[0];        //评论人姓名
             String commentorType = split[1];       //评论人类型
             String commentType = split[2];      //评论类型
             String commentMessage = split[3];       //评论内容
-            String s = df.format(entry.getKey());
+            String s = entry.getKey();
+
             try {
-                Date date = df.parse(s);
-                comment.setTaskCommentTime(date);           //评论时间
+
+                Date date = new Date(Long.valueOf(s));
+                comment.setTaskCommentTime(sdf.parse(sdf.format(date)));           //评论时间
                 comment.setTaskComment(commentMessage);       //评论内容
                 String s1 = isUserOrSystem(commentorType);
                 comment.setCommentatorType(s1);               //评论者类型
@@ -116,8 +149,10 @@ public class TaskDaoImpl implements TaskDao{
                 comment.setRealName(commenter);      //评论人名
 
                 set.add(comment);
-            } catch (ParseException e) {
-                e.printStackTrace();
+                System.out.println(set);
+            } catch (Exception e) {
+
+               e.printStackTrace();
             }
         }
 
@@ -169,19 +204,19 @@ public class TaskDaoImpl implements TaskDao{
      * 默认flag为false，如果达成上述条件，flag改为true
      * 可以点击完成任务
      */
-    private boolean isAllowFinish(String username) {
+    private boolean isAllowFinish(String username,Map<String,String > infoMap) {
 
         String handlerStack = infoMap.get("handlerStack");
-        String substring = handlerStack.substring(handlerStack.lastIndexOf(","));
-        String s = handlerStack.substring(handlerStack.lastIndexOf(",") + 1, handlerStack.length());
+        String[] handlerStackArry = handlerStack.split(",");
+        String s = handlerStackArry[handlerStackArry.length-1];
 
-        if(username.equals(s) && substring.length() == 1){
+        if(username.equals(s) && handlerStackArry.length == 1){
             return  true;
         }else{
             return  false;
-
         }
     }
+
 
 
 }
