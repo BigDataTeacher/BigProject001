@@ -11,9 +11,6 @@ import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
-/**
- * Created by Administrator on 2018/10/23.
- */
 public class G06AssignTaskDaoImpl implements G06AssignTaskDao{
     private Task task=new Task();
     private User user=new User();
