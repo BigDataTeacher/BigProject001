@@ -65,7 +65,8 @@ public class TaskDaoImpl implements TaskDao {
         //创建Get对象
         Get get = new Get(Bytes.toBytes(taskId));
 
-        get.addFamily(Bytes.toBytes("info"));
+        //get.addFamily(Bytes.toBytes("info"));
+        get.addColumn(Bytes.toBytes("info"),Bytes.toBytes("nowHandler"));
 
         Result result = table.get(get);
 

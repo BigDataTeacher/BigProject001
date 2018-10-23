@@ -11,6 +11,10 @@ import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Administrator on 2018/10/22.
  */
@@ -30,7 +34,8 @@ public class UserDaoImpl implements UserDao {
 
         Get get = new Get(Bytes.toBytes(username));
 
-        get.addFamily(Bytes.toBytes("tasks"));
+        //get.addFamily(Bytes.toBytes("tasks"));
+        get.addColumn(Bytes.toBytes("info"),Bytes.toBytes("name"));
 
         Result result = table.get(get);
 
@@ -48,12 +53,40 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void addTask(String username) {
+    public void addTask(String username) throws IOException {
+        //获取文件系统
+        conf = HBaseConfiguration.create();
+
+        conn = ConnectionFactory.createConnection(conf);
+
+        Table tableUser = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
+
+        Put put = new Put(Bytes.toBytes(username));
+
+        Put putTask = put.addColumn(Bytes.toBytes("tasks"), Bytes.toBytes("taskId"),Bytes.toBytes(""));
+
+        tableUser.put(putTask);
+
+        Get get = new Get(Bytes.toBytes(username));
+
+        Result result = tableUser.get(get);
+
+        List<byte[]> list = new ArrayList<>();
+
+        Cell [] cells = result.rawCells();
+
+        for (Cell cell : cells) {
+            list.add(CellUtil.cloneValue(cell));
+
+        }
 
     }
 
+    public
+
     @Override
     public String modifyNumOfTaskMsg(String username) {
+
 
 
 

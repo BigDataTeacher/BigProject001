@@ -1,6 +1,7 @@
 package com.tecode.G03.controller;
 
 import com.tecode.G03.dao.TaskDao;
+import com.tecode.G03.dao.UserDao;
 import com.tecode.G03.service.ComplainService;
 import com.tecode.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,14 @@ public class ComplainController {
     @Autowired
     private UserService userService;
 
-
     @Autowired
     private ComplainService complainService;
 
     @Autowired
     private TaskDao taskDao;
+
+    @Autowired
+    private UserDao userDao;
     /**
      * 用户登录方法
      *
@@ -74,7 +77,7 @@ public class ComplainController {
                 String name = complainService.getUserByUserName(userName);
                 String nowHandler = taskDao.getNowHandlerByTaskId(taskId);
                 if(name.equals(nowHandler)){
-
+                    userDao.addTask(handlerId);
                 }
             }
         return map;
