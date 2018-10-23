@@ -26,7 +26,6 @@ public class TaskCopyDaoImpl implements TaskCopyDao{
      * @throws Exception
      */
 
-   //public Task insertTaskMember(String rowKey,String cf,String column,String taskId,String memberId) throws Exception {
     @Override
     public boolean insertTaskMember(String taskId,String memberId) throws Exception {
 
@@ -34,10 +33,11 @@ public class TaskCopyDaoImpl implements TaskCopyDao{
         Connection conn = HBaseUtils.getConnection();
         //获得表
         Table taskTable = conn.getTable(TableName.valueOf("task"));
-        //获得memberIds字段
+        //获得taskid  （rwokey）的所有信息
         Get get = new Get(Bytes.toBytes("taskId"));
+        //获得指定memberIds字段
         get.addColumn(Bytes.toBytes("info"),Bytes.toBytes("memberIds"));
-
+        //获得结果集
         Result result = taskTable.get(get);
         Cell[] cells = result.rawCells();
         String s = null;
@@ -58,5 +58,7 @@ public class TaskCopyDaoImpl implements TaskCopyDao{
 
 
     }
+
+
 
 }
