@@ -13,6 +13,7 @@ import com.tecode.exception.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -34,7 +35,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 
 
     @Override
-    public Boolean createTask(Task task) throws Exception {
+    public Boolean createTask(Task task) throws BaseException {
         List<String> usernames = new ArrayList<>();
         Set<TaskComment> commentSet = new TreeSet<>();
         Set<TaskLog> logSet = new TreeSet<>();
@@ -49,8 +50,13 @@ public class CreateTaskServiceImpl implements CreateTaskService {
     /*
       调用userDao的getNameByUserName方法来获得其对应的用户ID所对应的的用户名字的集合
       */
-        Map<String,String> names = userDao.getNameByUserName(usernames);
-        if(names.size() != 2){
+        Map<String, String> names = null;
+        try {
+            names = userDao.getNameByUserName(usernames);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (names.size() != 2) {
             throw new BaseException("用户信息不存在");
         }
         //封装taskID
@@ -85,7 +91,6 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         //评论人名
         createComment.setRealName("系统消息");
         commentSet.add(createComment);
-
         //交办任务评论
         TaskComment assignedComment = new TaskComment();
         //评论时间
@@ -99,12 +104,9 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         //评论人名
         assignedComment.setRealName("系统消息");
         commentSet.add(assignedComment);
-
         task.setTaskComments(commentSet);
-
         //封装Log信息
         TaskLog log = new TaskLog();
-
         //日志生成时间
         log.setLogTime(new Date());
         //日志类型   如用户还是系统
@@ -113,15 +115,16 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         log.setContent("交办：" + names.get(sponsorID) + ":" + names.get(beAssignID));
         logSet.add(log);
         task.setTaskLog(logSet);
-
-
-        //向Task表中添加task记录
-        taskDao.addTask(task);
-
-        //向User表中任务发起人添加对应user的tasks信息
-        userDao.addUserTasks(sponsorID, taskid, 0);
-        //向User表中任务办理人添加对应user的tasks信息
-        userDao.addUserTasks(beAssignID, taskid, 2);
+        try {
+            //向Task表中添加task记录
+            taskDao.addTask(task);
+            //向User表中任务发起人添加对应user的tasks信息
+            userDao.addUserTasks(sponsorID, taskid, 0);
+            //向User表中任务办理人添加对应user的tasks信息
+            userDao.addUserTasks(beAssignID, taskid, 2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 }

@@ -5,6 +5,7 @@ import com.tecode.bean.TaskComment;
 import com.tecode.bean.TaskLog;
 import com.tecode.bean.User;
 
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -18,7 +19,7 @@ public interface G3TaskDao {
      * @param task 任务对象
      * @throws Exception
      */
-    void addTask(Task task) throws Exception;
+    void addTask(Task task) throws IOException;
 
     /**
      * 添加评论
@@ -27,7 +28,7 @@ public interface G3TaskDao {
      * @throws Exception
      */
 
-    void addComment(Set<TaskComment> coments) throws Exception;
+    void addComment(String taskID,Set<TaskComment> coments) throws IOException;
 
     /**
      * 添加log
@@ -35,5 +36,5 @@ public interface G3TaskDao {
      * @param logs log集合
      * @throws Exception
      */
-    void addLog(Set<TaskLog> logs) throws Exception;
+    void addLog(String taskID,Set<TaskLog> logs) throws IOException;
 }

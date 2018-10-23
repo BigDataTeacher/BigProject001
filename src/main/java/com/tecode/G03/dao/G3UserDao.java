@@ -1,6 +1,7 @@
 package com.tecode.G03.dao;
 
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -13,10 +14,10 @@ public interface G3UserDao {
      * 通过员工编号查询员工名字
      *
      * @param usernames 员工编号集合
-     * @return  以员工编号为key，名字为value的map
+     * @return 以员工编号为key，名字为value的map
      * @throws Exception
      */
-    Map<String, String> getNameByUserName(List<String> usernames) throws Exception;
+    Map<String, String> getNameByUserName(List<String> usernames) throws IOException;
 
     /**
      * 通过指定的用户ID给其添加任务信息
@@ -26,5 +27,5 @@ public interface G3UserDao {
      * @param num    未读消息数量
      * @throws Exception
      */
-    void addUserTasks(String userid, String taskid, int num) throws Exception;
+    void addUserTasks(String userid, String taskid, int num) throws IOException;
 }

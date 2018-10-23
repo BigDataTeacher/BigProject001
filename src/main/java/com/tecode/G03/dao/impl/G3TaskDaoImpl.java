@@ -13,6 +13,7 @@ import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -25,13 +26,14 @@ public class G3TaskDaoImpl implements G3TaskDao {
 
 
     @Override
-    public void addTask(Task task) throws Exception {
+    public void addTask(Task task) throws IOException {
         Map<String, String> map = new HashMap<>();
         //获取链接
         Connection conn = HBaseUtils.getConnection();
         //获取表的对象
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         //任务ID
+        String taskId = task.getTaskId();
         map.put("taskId", task.getTaskId());
         //任务分类  taskTag
         map.put("taskTag", task.getTaskTag());
@@ -65,7 +67,7 @@ public class G3TaskDaoImpl implements G3TaskDao {
         //遍历map集合
         for (Map.Entry<String, String> entry : entrySet) {
             //构建Put对象
-            Put put = new Put(Bytes.toBytes(map.get("taskId")));
+            Put put = new Put(Bytes.toBytes(taskId));
             //添加列族等信息
             put.addColumn(Bytes.toBytes(cf), Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
             //将Put对象加入集合
@@ -80,13 +82,13 @@ public class G3TaskDaoImpl implements G3TaskDao {
         //任务的评论
         Set<TaskComment> taskComments = task.getTaskComments();
         //调用addComment（）方法添加评论
-        addComment(taskComments);
+        addComment(taskId,taskComments);
         //调用addLog（）方法添加log
-        addLog(taskLogs);
+        addLog(taskId,taskLogs);
     }
 
     @Override
-    public void addComment(Set<TaskComment> coments) throws Exception {
+    public void addComment(String taskID,Set<TaskComment> coments) throws IOException {
         Map<String, String> commentMap = new HashMap<>();
         //获取链接
         Connection conn = HBaseUtils.getConnection();
@@ -101,7 +103,24 @@ public class G3TaskDaoImpl implements G3TaskDao {
                     coment.getTaskComment();
             commentMap.put(key, value);
         }
+        Set<Map.Entry<String, String>> entrySet = commentMap.entrySet();
+        //获取列族名
+        String[] hbase_task_tbale_cfs = ConfigUtil.getString("hbase_task_tbale_cf").split(",");
 
+
+        String cf = hbase_task_tbale_cfs[2];
+
+
+        List<Put> puts = new ArrayList<Put>();
+        for (Map.Entry<String, String> entry : entrySet) {
+
+
+            Put put = new Put(Bytes.toBytes(taskID));
+
+            put.addColumn(Bytes.toBytes(cf), Bytes.toBytes(entry.getKey()), Bytes.toBytes(entry.getValue()));
+            puts.add(put);
+
+        }
         /*
         *     //评论数据
     private Date taskCommentTime;
@@ -119,8 +138,8 @@ public class G3TaskDaoImpl implements G3TaskDao {
     }
 
     @Override
-    public void addLog(Set<TaskLog> logs) throws Exception {
-        Map<String,String> logMap = new HashMap<>();
+    public void addLog(String taskID,Set<TaskLog> logs) throws IOException {
+        Map<String, String> logMap = new HashMap<>();
         //获取链接
         Connection conn = HBaseUtils.getConnection();
         //获取表的对象
@@ -129,7 +148,7 @@ public class G3TaskDaoImpl implements G3TaskDao {
             String key = Long.toString(log.getLogTime().getTime());
             //格式为： log类型：动作:任务创建人：接办人
             String value = log.getCommentatorType().getType() + ":" + log.getContent();
-            logMap.put(key,value);
+            logMap.put(key, value);
         }
         /*
         *     //日志生成时间

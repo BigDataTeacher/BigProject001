@@ -10,6 +10,7 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class G3UserDaoImpl implements G3UserDao {
      * @throws Exception
      */
     @Override
-    public Map<String, String> getNameByUserName(List<String> usernames) throws Exception {
+    public Map<String, String> getNameByUserName(List<String> usernames) throws IOException {
         Map<String, String> names = new HashMap<>();
         //获取链接
         Connection conn = HBaseUtils.getConnection();
@@ -61,7 +62,7 @@ public class G3UserDaoImpl implements G3UserDao {
     }
 
     @Override
-    public void addUserTasks(String userid, String taskid, int num) throws Exception {
+    public void addUserTasks(String userid, String taskid, int num) throws IOException {
         //获取链接
         Connection conn = HBaseUtils.getConnection();
         //获取表的对象

@@ -5,6 +5,7 @@ package com.tecode.G03.service;
  */
 
 import com.tecode.bean.Task;
+import com.tecode.exception.BaseException;
 
 /**
  *
@@ -18,5 +19,5 @@ public interface CreateTaskService {
      * @return true: 创建成功  false:创建失败
      */
 
-    Boolean createTask(Task task) throws Exception;
+    Boolean createTask(Task task) throws BaseException;
 }
