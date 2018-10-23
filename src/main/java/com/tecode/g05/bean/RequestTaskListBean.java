@@ -42,10 +42,10 @@ public class RequestTaskListBean {
      * 任务状态
      */
     public void setTaskState(String taskState) {
-        if(taskState == null || taskState.equals(TaskState.HANDLE.getType())) {
+        if(taskState == null) {
             this.taskState = TaskState.HANDLE;
-        } else if (taskState.equals(TaskState.FINISH.getType())) {
-            this.taskState = TaskState.FINISH;
+        } else {
+            this.taskState = TaskState.fromHandleState(taskState);
         }
     }
 

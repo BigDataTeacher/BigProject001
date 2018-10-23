@@ -16,11 +16,15 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class G05UserDaoImpl  implements G05UserDao{
+    /**
+     * 表名
+     */
+    private static final String  TABLE_NAME = "oa:user";
     @Override
     public User getUserByUserId(String userId) {
         // 查询用户信息
-        Cell[] cells = G05HBaseTableUtil.getRow("oa:user", userId);
-        // 反射生成对应的Bean
+        Cell[] cells = G05HBaseTableUtil.getRow(TABLE_NAME, userId);
+        // 生成对应的Bean
         User user =  G05CreateBean.createUser(cells);
         return user;
     }
