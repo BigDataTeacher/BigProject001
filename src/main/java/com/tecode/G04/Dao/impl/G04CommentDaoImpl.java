@@ -5,13 +5,14 @@ import com.tecode.bean.TaskComment;
 import com.tecode.util.hbase.table.ConfigUtil;
 import com.tecode.util.hbase.table.HBaseUtils;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.util.List;
+
+import static org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.Method.get;
 
 
 /**
@@ -23,9 +24,9 @@ import java.io.IOException;
 
 public class G04CommentDaoImpl implements G04CommentDao {
     //task列表的rowkye
-    private  String commentrowkey = "taskid";
-    private String commentfamily = "comment";
-    private String tablename = "task";
+//    private  String commentrowkey = "taskid";
+//    private String commentfamily = "comment";
+//    private String tablename = "task";
 
     /**
      *
@@ -76,6 +77,27 @@ public class G04CommentDaoImpl implements G04CommentDao {
         flag = true;
 
         return flag;
+    }
+
+    /**
+     * 查询出当前任务下的所有任务成员ID
+     * @param taskid 任务成员ID
+     * @return 返回成员ID组成的集合
+     */
+   @Override
+    public  String getmerberID(String taskid) throws IOException {
+        //获取链接
+        Connection conn = HBaseUtils.getConnection();
+        Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
+        //构建表描述器
+        Scan scan = new Scan();
+        //得到get对象
+        Get get = new Get(Bytes.toBytes(taskid));
+        //设置获得哪一个列祖下的哪一列
+        get.addColumn(Bytes.toBytes(ConfigUtil.getString("hbase_task_tbale_cf")),Bytes.toBytes("memberlds"));
+        Result result = table.get(get);
+
+        return result.toString();
     }
 
 
