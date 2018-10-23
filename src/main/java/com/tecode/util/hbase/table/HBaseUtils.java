@@ -45,6 +45,7 @@ public class HBaseUtils {
      * @return
      */
     public static Connection getConnection(){
+
         return  connection;
     }
 
