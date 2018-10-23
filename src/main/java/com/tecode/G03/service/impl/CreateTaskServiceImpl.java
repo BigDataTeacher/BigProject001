@@ -10,10 +10,12 @@ import com.tecode.enumBean.CommentatorType;
 import com.tecode.enumBean.TaskCommentType;
 import com.tecode.enumBean.TaskState;
 import com.tecode.exception.BaseException;
+import com.tecode.util.hbase.table.ConfigUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -35,18 +37,18 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 
 
     @Override
-    public Boolean createTask(Task task) throws BaseException {
+    public void createTask(Task task) throws BaseException {
         List<String> usernames = new ArrayList<>();
         Set<TaskComment> commentSet = new TreeSet<>();
         Set<TaskLog> logSet = new TreeSet<>();
 
-        //设置任务ID
-        String taskid = ;
         //从task对象中取出sponsorID和beAssignID，并存入List集合中
         String sponsorID = task.getSponsorId();
         String beAssignID = task.getBeAssignId();
         usernames.add(sponsorID);
         usernames.add(beAssignID);
+        //设置任务ID
+        String taskid = getRowKey(sponsorID);
     /*
       调用userDao的getNameByUserName方法来获得其对应的用户ID所对应的的用户名字的集合
       */
@@ -125,6 +127,20 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return true;
+    }
+
+    public String getRowKey(String sponsorID) {
+        StringBuffer rowkey = new StringBuffer();
+        String regionCode = genRegionCode(sponsorID);
+        //格式为 分区号_任务创建人ID_时间戳
+        rowkey.append(regionCode + "_").append(sponsorID + "_").append(System.currentTimeMillis());
+        return rowkey.toString();
+    }
+
+    public String genRegionCode(String sponsorID) {
+        //以用户ID后两位与分区数进行取余计算
+        int regionCode = sponsorID.substring(6).hashCode() % ConfigUtil.getInt("hbase.regions");
+        DecimalFormat sf = new DecimalFormat("00");
+        return sf.format(regionCode);
     }
 }
