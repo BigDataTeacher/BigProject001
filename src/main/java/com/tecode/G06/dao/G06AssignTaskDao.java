@@ -10,7 +10,7 @@ public interface G06AssignTaskDao {
     /**
      * 通过用户名将新任务添加到用户任务中
      */
-    void getUserbyUsername(String userName,String tasks) throws Exception;
+    void putTaskbyUsername(String userName,String tasks) throws Exception;
     /**
      * 通过用户名查询出姓名
      */

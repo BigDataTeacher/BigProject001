@@ -22,7 +22,7 @@ public class G06AssignTaskDaoImpl implements G06AssignTaskDao{
     String key=null;
     String value=null;
     @Override
-    public void getUserbyUsername(String userName, String task) throws Exception {
+    public void putTaskbyUsername(String userName, String task) throws Exception {
         //添加任务ID在用户表中
         Connection con= HBaseUtils.getConnection();
 
@@ -65,11 +65,11 @@ public class G06AssignTaskDaoImpl implements G06AssignTaskDao{
             key=Bytes.toString(CellUtil.cloneQualifier(cell));
             value=Bytes.toString(CellUtil.cloneValue(cell));
             if(key.equals("nowHandler")){
-                task.getNowHandler();
+                task.setNowHandler(value);
             }if(key.equals("handlerStack")){
-                task.getHandlerStack();
+                task.setHandlerStack(value);
             }if(key.equals("memberIds")){
-                task.getMemberIds();
+                task.setMemberIds(value);
             }
         }
         return task;
@@ -78,7 +78,7 @@ public class G06AssignTaskDaoImpl implements G06AssignTaskDao{
     /**
      *
      * @param taskId 任务ID
-     * @param nowHandler 当前办理人
+     * @param nowHandler 当前办理人姓名
      * @param handlerStack 办理人栈
      * @param memberIds 任务成员ID
      * 将当前办理人覆盖为新的
