@@ -17,7 +17,7 @@ public interface G06UserService {
      * @param user
      * @return
      */
-    User getUseLogin(User user);
+    User getUseLogin(User user) throws Exception;
 
     /**
      *根据用户名id查询用户对象

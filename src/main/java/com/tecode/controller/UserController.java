@@ -20,7 +20,7 @@ public class UserController {
     /**
      *需要调用业务层（Services)的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。
      */
-    @Autowired
+@Autowired
     private UserService userService;
 
     /**

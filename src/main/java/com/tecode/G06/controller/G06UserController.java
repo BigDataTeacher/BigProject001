@@ -1,8 +1,10 @@
 package com.tecode.G06.controller;
 
+import com.tecode.G06.service.G06UserService;
 import com.tecode.bean.User;
 import com.tecode.service.UserService;
 import com.tecode.util.hbase.table.SessionUtil;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +24,11 @@ public class G06UserController {
      *需要调用业务层（Services)的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。
      */
     @Autowired
-    private UserService userService;
-
+    private G06UserService userService;
+    private static Map<String,Object> map = new HashedMap();
+    static {
+        map.put("success",false);
+        map.put("user",null);}
     /**
      * 用户登录方法
      *
@@ -36,8 +41,9 @@ public class G06UserController {
      * 3.@ResponseBody:：表示把返回的值封装成json进行返回
      */
     @ResponseBody
-    @RequestMapping(value = "/userLogin", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String,Object> login(User user, HttpSession session){
+        System.out.println("user:" + user);
         /**
          *1.验证参数的合法性
          * 2.调用业务逻辑层处理业务，并获得返回值
@@ -49,14 +55,32 @@ public class G06UserController {
          *
          *
          */
-        boolean n=user.getName().isEmpty();
+
+        //判断传入的账户密码是否为空
+        //为空user为null
+        boolean n=user.getUsername().isEmpty();
         boolean p=user.getPassword().isEmpty();
-        if(n==false & p==false){
-            SessionUtil.setLoginUser(session,user);
+        if(n || p){
+            return map;
         }
+        //返回的user为空，密码错误
+        User logingUser = null;
+        try {
+            logingUser = userService.getUseLogin(user);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(logingUser ==null){
+            return map;
+        }
+        //成功登录，返回给页面
+        map.put("success",true);
+        map.put("user",logingUser);
+        SessionUtil.setLoginUser(session,logingUser);
 
 
-        return null;
+        return map;
     }
 
 }
