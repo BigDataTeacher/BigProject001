@@ -4,6 +4,7 @@ package com.tecode.g01.service;
  * Created by Administrator on 2018/10/18.
  */
 
+import com.tecode.bean.Task;
 import com.tecode.bean.User;
 
 /**
@@ -13,14 +14,11 @@ import com.tecode.bean.User;
 public interface TaskService {
 
     /**
-     * 用户登录的业务处理方法
-     * @param user
+     * 用户通过taskid获取任务详情
+     * @param
      * @return
      */
-    User getUseLogin(User user);
+    Task getTaskdetail(String taskid, String username);
 
-    /**
-     *根据用户名id查询用户对象
-     */
-    User getUserByUserName(String username) throws Exception;
+
 }
