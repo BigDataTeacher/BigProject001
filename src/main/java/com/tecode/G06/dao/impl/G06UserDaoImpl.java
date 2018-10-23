@@ -50,6 +50,10 @@ public class G06UserDaoImpl implements G06UserDao {
         return user;
     }
 
+    @Override
+    public String modifyNumOfTaskMsg(String username) {
+        return null;
+    }
 
 
 }
