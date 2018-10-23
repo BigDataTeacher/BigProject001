@@ -59,7 +59,7 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
         Get get =new Get(Bytes.toBytes(taskId));
 
         //得到info列族下的handlerStack  办理人ID栈
-        get.addColumn(Bytes.toBytes(ConfigUtil.getString("info")),Bytes.toBytes("handlerStack\n"));
+        get.addColumn(Bytes.toBytes(ConfigUtil.getString("info")),Bytes.toBytes("handlerStack"));
 
         Result resultHandlerStack  = table.get(get);
 
@@ -158,14 +158,15 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
     }
 
     @Override
-    public void addLog(String taskId, String sponsor) throws IOException {
+    public void addLog(String taskId,String sponsor) throws IOException {
 
         //获得Hbase链接
         Connection conn = HBaseUtils.getConnection();
         //得到表
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
 
-        //Pet对象
+
+        //Put对象
         Put put =new Put(Bytes.toBytes(taskId));
 
         //添加log列族下的时间戳
@@ -176,7 +177,34 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
 
     }
 
+    @Override
+    public String getSponsor(String taskId) throws IOException {
+        String str=null;
+
+        //获得Hbase链接
+        Connection conn = HBaseUtils.getConnection();
+        //得到表
+        Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
+
+
+        //Get对象
+        Get get =new Get(Bytes.toBytes(taskId));
+
+        //得到info列族下的sponsor  任务发起人
+        get.addColumn(Bytes.toBytes(ConfigUtil.getString("info")),Bytes.toBytes("sponsor"));
+
+        Result result = table.get(get);
+
+        Cell[] cells = result.rawCells();
+
+        for (Cell cell : cells) {
+            str= Bytes.toString(CellUtil.cloneValue(cell));
+        }
+
+        return str;
     }
+
+}
 
 
 

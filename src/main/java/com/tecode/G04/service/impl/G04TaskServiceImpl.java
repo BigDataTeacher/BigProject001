@@ -1,6 +1,7 @@
 package com.tecode.G04.service.impl;
 
 import com.tecode.G04.dao.G04TaskIdDao;
+import com.tecode.G04.dao.impl.G04TaskIdDaoImpl;
 import com.tecode.G04.service.G04TaskService;
 import com.tecode.bean.Task;
 import com.tecode.exception.BaseException;
@@ -28,11 +29,16 @@ public class G04TaskServiceImpl implements G04TaskService {
 
     @Override
     @Test
-    public Boolean modifyTaskState(String  taskId,Task task,String cusId) throws BaseException {
+    public Boolean modifyTaskState(String  taskId,String cusId) throws BaseException {
 
 
         //得到发起人
-        String sponsor = task.getSponsor();
+        String sponsor = null;
+        try {
+            sponsor = g04TaskIdDao.getSponsor(taskId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //得到ID栈
         String idStack = null;
         try {
@@ -43,6 +49,11 @@ public class G04TaskServiceImpl implements G04TaskService {
         //分割
         String[] strings = idStack.split(",");
 
+        try {
+            String sponsorId = g04TaskIdDao.getSponsorId(taskId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //判断ID栈是否最后一个和当前用户ID和发起人ID 是否一致
         try {
@@ -57,7 +68,7 @@ public class G04TaskServiceImpl implements G04TaskService {
             g04TaskIdDao.addComment(taskId);
 
             //调用添加日志方法
-            g04TaskIdDao.addLog(taskId,sponsor);
+            g04TaskIdDao.addLog(taskId, sponsor);
 
         } catch (Exception e) {
 
