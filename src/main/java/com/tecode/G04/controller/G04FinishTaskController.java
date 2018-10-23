@@ -1,6 +1,9 @@
 package com.tecode.G04.controller;
 
+import com.tecode.G04.service.G04TaskService;
 import com.tecode.bean.Task;
+import com.tecode.util.hbase.table.SessionUtil;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -35,11 +39,9 @@ public class G04FinishTaskController {
      */
     @ResponseBody
     @RequestMapping(value = "/close-task", method = RequestMethod.POST)
-    public Map<String,Object> finishTask(Task taskId, HttpSession session){
+    public Map<String,Object> finishTask(Task task, HttpSession session)  {
         /**
          *1.验证参数的合法性
-         *
-         *
          * 2.调用业务逻辑层处理业务，并获得返回值
          * 3.判断是否登录成功
          *          如果登录成功 调用SessionUtil.setLoginUser(session,user);
@@ -49,8 +51,32 @@ public class G04FinishTaskController {
          *
          */
 
+        //得到任务ID
+        String taskId = task.getTaskId();
 
-        return null;
+        //创建集合来返回
+        Map<String,Object> taskMap= new HashMap<String,Object>();
+
+            if(taskId==null){
+                return  null;
+            }
+               taskMap.put("success",false);
+               taskMap.put("msg","没有任务");
+        try {
+            Boolean b = g04TaskService.modifyTaskState(taskId,task,SessionUtil.getLogingUser(session).getUsername());
+            if (b=true){
+                taskMap.put("success",true);
+                taskMap.put("data",true);
+            }else {
+                taskMap.put("success",false);
+                taskMap.put("msg","");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return taskMap;
     }
 
 }
