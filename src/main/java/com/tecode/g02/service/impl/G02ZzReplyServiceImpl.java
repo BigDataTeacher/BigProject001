@@ -21,7 +21,7 @@ public class G02ZzReplyServiceImpl implements G02ZzReplyService {
     @Autowired G02ReplyDao replyDao;
     //G02ReplyDao replyDao = new G02ReplyDaoImpl();
 
-    Task task = new Task();
+    Task task = null;
 
     @Override
     public boolean isReplySuccess(String taskId,String cusId) throws IOException {

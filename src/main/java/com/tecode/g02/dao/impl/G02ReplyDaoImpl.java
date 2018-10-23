@@ -117,9 +117,9 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long currentTime = System.currentTimeMillis();
         if(bl){
-            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime),Bytes.toBytes(CommentatorType.SYSTEM+":回复操作成功,"));
+            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime),Bytes.toBytes(CommentatorType.SYSTEM+"_System_text_回复操作成功,"));
         }else {
-            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime),Bytes.toBytes(CommentatorType.SYSTEM+":回复操作失败,"));
+            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime),Bytes.toBytes(CommentatorType.SYSTEM+"_System_text_回复操作失败,"));
         }
         return put;
     }
@@ -162,10 +162,18 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         String handlerStack = task.getHandlerStack();
         String[] split = handlerStack.split(",");
         String nowHandler = split[split.length-1];
-
+        Table user = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_table_name")));
+        Get getName = new Get(Bytes.toBytes(nowHandler));
+        getName.addColumn(Bytes.toBytes(info),Bytes.toBytes("name"));
+        Result result = user.get(getName);
+        Cell[] cells = result.rawCells();
+        String name= null;
+        for (Cell cell : cells) {
+           name =  Bytes.toString(CellUtil.cloneValue(cell));
+        }
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         Put put = new Put(Bytes.toBytes(taskId));
-        put.addColumn(Bytes.toBytes(info),Bytes.toBytes("nowHandler"),Bytes.toBytes(nowHandler));
+        put.addColumn(Bytes.toBytes(info),Bytes.toBytes("nowHandler"),Bytes.toBytes(name));
         table.put(put);
         table.close();
 

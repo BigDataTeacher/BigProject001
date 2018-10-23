@@ -42,7 +42,7 @@ public class G02ZzUserController {
      */
     @ResponseBody
     @RequestMapping(value = "/reply", method = RequestMethod.POST)
-    public Map<String,Object> login(String taskId, String commentType, String cusId){
+    public Map<String,Object> login(String taskId, String commentatorId, String commentType,String commentContext, String cusId){
 
         /**
          *1.验证参数的合法性
