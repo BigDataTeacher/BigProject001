@@ -38,7 +38,7 @@ public class G02ZzReplyServiceImpl implements G02ZzReplyService {
     @Override
     public boolean isHandler(String taskId, String cusId) throws Exception {
         task = replyDao.selectTaskByID(taskId);
-        String handlerStack = getHandlerId(task);
+        String handlerStack = getHandlerId(task,cusId);
 
         if(handlerStack.equals(cusId)){
             isReplySuccess(taskId,cusId);
@@ -52,9 +52,17 @@ public class G02ZzReplyServiceImpl implements G02ZzReplyService {
         }
     }
     //获得栈顶元素
-    private String getHandlerId(Task task){
+    private String getHandlerId(Task task,String cusId) throws BaseException{
         String handlerStack = task.getHandlerStack();
+        System.out.println(handlerStack+"============");
+        if(handlerStack==null){
+            throw new BaseException("id栈中没有数据");
+        }
         String[] split = handlerStack.split(",");
+        if(split.length==1 && handlerStack.equals(cusId)){
+            throw new BaseException("当前用户已经是任务的发起人，不需要回复。");
+        }
+
         return  split[split.length-1];
     }
 

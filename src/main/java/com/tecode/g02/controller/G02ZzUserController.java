@@ -66,7 +66,7 @@ public class G02ZzUserController {
             } catch (Exception e) {
                 map.put("success",false);
                 map.put("msg",e.getMessage());
-                System.out.println("回复失败，不是办理人");
+                System.out.println("回复失败");
             }
         }else {
             map.put("success",false);
