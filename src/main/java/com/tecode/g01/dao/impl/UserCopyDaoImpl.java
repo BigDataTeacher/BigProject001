@@ -10,24 +10,25 @@ import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Created by Administrator on 2018/10/22.
+ *
  */
+@Repository
 public class UserCopyDaoImpl implements UserCopyDao {
     @Override
-    public boolean addTask(String username, String column,String taskId) throws Exception {
+    public boolean addTask(String taskId) throws Exception {
         //建立存放任务的集合
-        List<String> task = new ArrayList<>();
+        Set<String> task = new HashSet<>();
         //获取链接
         Connection conn = HBaseUtils.getConnection();
         Table userTable = conn.getTable(TableName.valueOf("user"));
-        //获得use表的username字段
-        Get get = new Get(Bytes.toBytes(username));
+        //获得use表的username字段s
+        Get get = new Get(Bytes.toBytes("username"));
         get.addColumn(Bytes.toBytes("tasks"),Bytes.toBytes(taskId));
 
         Result result = userTable.get(get);
@@ -38,6 +39,7 @@ public class UserCopyDaoImpl implements UserCopyDao {
             //先把遍历出来的任务放入集合
             task.add(s);
         }
+
         //最后把要加入的任务ID加入集合
         task.add(taskId);
 

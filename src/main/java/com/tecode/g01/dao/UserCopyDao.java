@@ -5,5 +5,5 @@ package com.tecode.g01.dao;
  */
 public interface UserCopyDao {
 
-    boolean addTask(String username,String column,String taskId) throws Exception;
+    boolean addTask(String taskId) throws Exception;
 }

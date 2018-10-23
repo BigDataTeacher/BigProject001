@@ -3,47 +3,40 @@ package com.tecode.g01.service.impl;
 import com.tecode.g01.dao.TaskCopyDao;
 import com.tecode.g01.dao.UserCopyDao;
 import com.tecode.g01.service.TaskCopyService;
+import org.apache.hadoop.mapreduce.v2.api.records.TaskId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 
 /**
  * Created by Administrator on 2018/10/22.
  */
+@Service
 public class TaskCopyServiceImpl implements TaskCopyService{
 
+    @Autowired
     private TaskCopyDao taskDao;
     private UserCopyDao userDao;
 
+
+    /**
+     * 调用Dao的方法
+     */
     @Override
-    public boolean insertTaskMember(String taskId, String memberId) throws Exception {
-
-        /**
-         * 在任务表的memberids字段追加一个员工
-         * 参数：String taskId：任务ID
-         *       String memberId：成员Id
-         *
-         *       调用Dao的方法来实现，返回是否成功
-         */
-
+    public boolean insertAndAdd(String taskId, String memberId) throws Exception {
+        boolean flag = false;
         boolean b = taskDao.insertTaskMember(taskId, memberId);
+        boolean b1 = userDao.addTask(taskId);
+
+        if(b!=b1 ){
+            return flag;
+
+        }
 
 
-
-
-
-
-
-
-        return b;
+        taskDao.addLog(taskId,memberId);
+        return true;
     }
 
-    @Override
-    public boolean addTask(String username, String column, String taskId) throws Exception {
-        /**
-         * 在用户表的taskId字段追加一个任务
-         */
-        boolean b = userDao.addTask(username, column, taskId);
 
-        System.out.println("信息抄送成功");
-        return b;
-
-    }
 }
