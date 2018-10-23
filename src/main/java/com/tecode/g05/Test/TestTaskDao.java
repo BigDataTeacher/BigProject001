@@ -22,14 +22,14 @@ public class TestTaskDao {
         rtb.setCusId("04101266");
         rtb.setTaskState(TaskState.FINISH.getType());
         rtb.setP("1");
-        rtb.setQueryStr("bbb");
+        rtb.setQueryStr("eee");
         User user = new User();
         Map<String, Integer> tasks = new HashMap<>();
         user.setUserTask(tasks);
-        tasks.put("03_04101266_1519921798654", 1);
-        tasks.put("03_04101266_1530844692963", 1);
-        tasks.put("03_04101266_1531018218221", 1);
-        tasks.put("03_04101266_1534169502682", 1);
+        tasks.put("04_04101266_1505359606542", 1);
+        tasks.put("04_04101266_1505972989969", 1);
+        tasks.put("04_04101266_1507740485643", 1);
+        tasks.put("04_04101266_1517021491855", 1);
         try {
             dao.getTasksByRequest(rtb, user);
         } catch (IOException e) {

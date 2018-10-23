@@ -1,5 +1,6 @@
 package com.tecode.g05.controller;
 
+import com.tecode.g05.bean.G05TaskBean;
 import com.tecode.g05.bean.RequestTaskListBean;
 import com.tecode.g05.bean.UpdateTaskBean;
 import com.tecode.g05.service.G05TaskService;
@@ -10,7 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 版本：2018/10/22 V1.0<br>
@@ -19,6 +23,7 @@ import java.util.Map;
  */
 @Controller
 class G05TaskListController {
+
     @Autowired
     private G05TaskService taskService;
 
@@ -26,11 +31,13 @@ class G05TaskListController {
      * 请求列表失败时的返回数据
      */
     private static Map<String, Object> taskListFail = new HashedMap();
+
     static {
         taskListFail.put("success", false);
         taskListFail.put("data", null);
         taskListFail.put("totalPage", -1);
     }
+
     /**
      * <pre>
      * 请求任务列表功能模块：
@@ -46,7 +53,7 @@ class G05TaskListController {
      *      p://页码，不填或者传入的参数为非数字则默认为第一页，页码超标则会返回请求失败
      *  }
      * 请求以如下json格式回复：
-     *{
+     * {
      *     "success":true,
      *     "data":{
      *          "list":[{
@@ -63,7 +70,8 @@ class G05TaskListController {
      *     }],
      *     "totalPage":1// 总页数
      *     }
-     *}</pre>
+     * }</pre>
+     *
      * @param rtb 接收请求参数的Bean，传入的参数将会封装到此Bean中并进行初步验证
      * @return 请求回复
      */
@@ -71,14 +79,17 @@ class G05TaskListController {
     @RequestMapping(value = "/task-list", method = RequestMethod.POST)
     public Map<String, Object> getTaskList(RequestTaskListBean rtb) {
         // 如果没有传入用户ID，或者传入的任务状态参数不合法，则返回请求错误
-        if(rtb.getCusId() == null || rtb.getTaskState() == null) {
+        if (rtb.getCusId() == null || rtb.getTaskState() == null) {
             return taskListFail;
         }
 
         // 查询数据
-        taskService.getTaskList(rtb);
-
-        return taskListFail;
+        Map<String, Object> map = taskService.getTaskList(rtb);
+        if (map != null) {
+            return map;
+        } else {
+            return taskListFail;
+        }
     }
 
 
@@ -97,13 +108,21 @@ class G05TaskListController {
      * 成功{"success":true,"data":true}
      * 失败{"success":false,"msg":"错误原因"}
      * </pre>
+     *
      * @param utb 用于封装请求参数的bean
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/update-task", method = RequestMethod.POST)
     public Map<String, Object> updateTask(UpdateTaskBean utb) {
-        System.out.println(utb);
-        return taskListFail;
+        Map<String,Object> map = new HashMap();
+        // 检验参数是否合法
+        if(utb.getCusId() == null || utb.getSponsorId() == null || utb.getTaskId() == null) {
+            map.put("success", false);
+            map.put("msg", "参数错误");
+            return map;
+        }
+
+        return taskService.updateTask(utb);
     }
 }
