@@ -10,7 +10,9 @@ import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class G06AssignTaskDaoImpl implements G06AssignTaskDao{
     private Task task=new Task();
     private User user=new User();

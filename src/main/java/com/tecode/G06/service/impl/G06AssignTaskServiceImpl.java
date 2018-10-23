@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class G06AssignTaskServiceImpl implements G06AssignTaskService{
-//    @Override
-//    public Task getTaskbyTaskId(String taskId) throws Exception {
-//        return null;
-//    }
+
     @Autowired
     private G06AssignTaskDao taskDao;
 
