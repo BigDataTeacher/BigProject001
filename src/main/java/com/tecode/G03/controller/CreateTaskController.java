@@ -55,7 +55,7 @@ public class CreateTaskController {
         //taskEndTime:// 任务结束时间 ( 格式为： yyyy-MM-dd HH:mm:ss)-- 可为空
         //beAssignId:// 办理理⼈人 id
         //"taskTag":"通⽤用"// 任务标签
-
+        System.out.println(task);
         //判断输入参数是否为空（taskDesc与taskEndTime除外）
         if (task.getSponsorId() == null || task.getTaskTitle() == null || task.getBeAssignId() == null || task.getTaskTag() == null) {
             map.put("success", false);
