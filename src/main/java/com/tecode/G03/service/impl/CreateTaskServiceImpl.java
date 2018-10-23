@@ -67,7 +67,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         //封装任务发起人名字
         task.setSponsor(names.get(sponsorID));
         //封装任务办理人名字
-        task.setBeAssignId(names.get(beAssignID));
+        task.setNowHandler(names.get(beAssignID));
         //封装任务状态
         task.setTaskState(TaskState.HANDLE);
         //封装办理人ID栈
@@ -77,7 +77,8 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         String createTime = sdf.format(new Date());
         task.setCreateTime(createTime);
         //封装任务成员ID
-        task.setMemberIds(sponsorID + "," + beAssignID);
+        String memberIDs = sponsorID + "," + beAssignID;
+        task.setMemberIds(memberIDs);
         //封装Comment信息
 
         //创建任务评论

@@ -62,30 +62,30 @@ public class ComplainController {
          */
         Map<String,Object> map = new HashMap<>();
 
-            if(userName == null){
-                map.put("success",false);
-                map.put("msg","输入用户名不能为空...");
+        if(userName == null){
+            map.put("success",false);
+            map.put("msg","输入用户名不能为空...");
 
-            }else if( taskId == null){
+        }else if( taskId == null){
+            map.put("success",false);
+            map.put("msg","输入任务Id不能为空...");
+        }else if(handlerId == null){
+            map.put("success",false);
+            map.put("msg","输入接办任务人员Id不能为空...");
+        }else if(isAssign ){
+            map.put("success",false);
+            map.put("msg","请选择转办业务项...");
+        }else{
+            try{
+                complainService.complainTask(userName,  taskId,  handlerId);
+                map.put("success",true);
+            }catch(BaseException e){
                 map.put("success",false);
-                map.put("msg","输入任务Id不能为空...");
-            }else if(handlerId == null){
-                map.put("success",false);
-                map.put("msg","输入接办任务人员Id不能为空...");
-            }else if(isAssign ){
-                map.put("success",false);
-                map.put("msg","请选择转办业务项...");
-            }else{
-                try{
-                    complainService.complainTask(userName,  taskId,  handlerId);
-                    map.put("success",true);
-                }catch(BaseException e){
-                    map.put("success",false);
-                    map.put("msg",e.getMessage());
-                }
-
-
+                map.put("msg",e.getMessage());
             }
+
+
+        }
         return map;
     }
 
