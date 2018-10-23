@@ -56,20 +56,20 @@ public class G04FinishTaskController {
 
         //创建集合来返回
         Map<String,Object> taskMap= new HashMap<String,Object>();
-
-            if(taskId==null){
-                return  null;
-            }
-               taskMap.put("success",false);
-               taskMap.put("msg","没有任务");
         try {
+            if(taskId==null){
+                taskMap.put("success",false);
+                taskMap.put("msg","没有任务");
+                return  taskMap;
+            }
+
             Boolean b = g04TaskService.modifyTaskState(taskId,task,SessionUtil.getLogingUser(session).getUsername());
             if (b=true){
                 taskMap.put("success",true);
                 taskMap.put("data",true);
             }else {
                 taskMap.put("success",false);
-                taskMap.put("msg","");
+                taskMap.put("msg","任务失败");
             }
         } catch (Exception e) {
             e.printStackTrace();

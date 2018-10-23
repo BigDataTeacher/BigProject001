@@ -4,6 +4,7 @@ import com.tecode.G04.dao.G04TaskIdDao;
 import com.tecode.G04.service.G04TaskService;
 import com.tecode.bean.Task;
 import com.tecode.exception.BaseException;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class G04TaskServiceImpl implements G04TaskService {
 
 
     @Override
+    @Test
     public Boolean modifyTaskState(String  taskId,Task task,String cusId) throws Exception {
 
 
@@ -35,11 +37,13 @@ public class G04TaskServiceImpl implements G04TaskService {
         //分割
         String[] strings = idStack.toString().split(",");
 
-        boolean  flag =false;
+
         //判断ID栈是否最后一个和当前用户ID和发起人ID 是否一致
         if(strings.length==1&&cusId.equals(g04TaskIdDao.getSponsorId(taskId))){
             g04TaskIdDao.modifyFinishState(taskId,cusId);
-            flag=true;
+
+        }else {
+            return  false;
         }
         //调用完成任务时间方法
       try {
@@ -61,6 +65,7 @@ public class G04TaskServiceImpl implements G04TaskService {
             System.out.println("任务不存在");
         }
 
-        return flag;
+        return true;
     }
+
 }

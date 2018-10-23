@@ -1,7 +1,6 @@
 package com.tecode.G04.dao.impl;
 
 import com.tecode.G04.dao.G04TaskIdDao;
-import com.tecode.bean.Task;
 import com.tecode.enumBean.CommentatorType;
 import com.tecode.enumBean.TaskState;
 import com.tecode.util.hbase.table.ConfigUtil;
@@ -10,11 +9,8 @@ import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
-import sun.rmi.runtime.Log;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -50,8 +46,9 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
      * @throws Exception
      */
     @Override
-    public List<String> getIdStack(String taskId) throws Exception {
-        List<String> list= new ArrayList<String>();
+    public String getIdStack(String taskId) throws Exception {
+            String str = null;
+
         //获得Hbase链接
         Connection conn = HBaseUtils.getConnection();
         //得到表
@@ -67,11 +64,11 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
         Cell[] cellsHandlerStack = resultHandlerStack.rawCells();
 
         for (Cell cell : cellsHandlerStack) {
-            list.add(Bytes.toString(CellUtil.cloneQualifier(cell)));
+           str=(Bytes.toString(CellUtil.cloneQualifier(cell)));
 
         }
 
-        return list;
+        return str;
     }
 
     /**
@@ -81,8 +78,8 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
      * @throws Exception
      */
     @Override
-    public List<String> getSponsorId(String taskId) throws Exception {
-        List<String> list= new ArrayList<String>();
+    public String getSponsorId(String taskId) throws Exception {
+        String str =null;
 
         //获得Hbase链接
         Connection conn = HBaseUtils.getConnection();
@@ -100,11 +97,10 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
         Cell[] cellsSponsorId  = result1SponsorId.rawCells();
 
         for (Cell cell : cellsSponsorId) {
-           list.add(Bytes.toString(CellUtil.cloneQualifier(cell)));
-           System.out.println(Bytes.toString(CellUtil.cloneQualifier(cell)));
+           str=(Bytes.toString(CellUtil.cloneQualifier(cell)));
         }
 
-        return list;
+        return str;
     }
 
     /**
