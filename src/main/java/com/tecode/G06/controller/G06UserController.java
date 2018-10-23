@@ -2,7 +2,6 @@ package com.tecode.G06.controller;
 
 import com.tecode.G06.service.G06UserService;
 import com.tecode.bean.User;
-import com.tecode.service.UserService;
 import com.tecode.util.hbase.table.SessionUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ public class G06UserController {
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String,Object> login(User user, HttpSession session){
-        System.out.println("user:" + user);
+       // System.out.println("user:" + user);
         /**
          *1.验证参数的合法性
          * 2.调用业务逻辑层处理业务，并获得返回值
@@ -74,6 +73,7 @@ public class G06UserController {
         if(logingUser ==null){
             return map;
         }
+        logingUser.setPassword("");
         //成功登录，返回给页面
         map.put("success",true);
         map.put("user",logingUser);

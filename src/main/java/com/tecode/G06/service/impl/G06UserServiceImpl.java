@@ -3,7 +3,6 @@ package com.tecode.G06.service.impl;
 import com.tecode.G06.dao.G06UserDao;
 import com.tecode.G06.service.G06UserService;
 import com.tecode.bean.User;
-import com.tecode.dao.UserDao;
 import com.tecode.util.hbase.table.UtilSha1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,7 @@ public class G06UserServiceImpl implements G06UserService {
      */
     @Override
     public User getUseLogin(User user) throws Exception {
-        System.out.println(UtilSha1.getSha1(user.getPassword().toUpperCase()));
+        //System.out.println(UtilSha1.getSha1(user.getPassword().toUpperCase()));
         User loginUser=getUserByUserName(user.getUsername());
         //判断密码是否正确
         boolean b= UtilSha1.getSha1(user.getPassword().toUpperCase()).equals(loginUser.getPassword());
