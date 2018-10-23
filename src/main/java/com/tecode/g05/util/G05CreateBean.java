@@ -1,8 +1,11 @@
 package com.tecode.g05.util;
 
+import com.tecode.bean.Task;
 import com.tecode.bean.User;
+import com.tecode.enumBean.TaskState;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
+import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.lang.reflect.InvocationTargetException;
@@ -28,6 +31,7 @@ public class G05CreateBean {
         Class c = user.getClass();
         // 存放用户的所有任务集合    key 为任务id   value 为这个任务的未读消息数量
         Map<String, Integer> userTasks = new HashMap();
+        user.setUserTask(userTasks);
         for (Cell cell : cells) {
             // 列族
             String family = Bytes.toString(CellUtil.cloneFamily(cell));
@@ -55,5 +59,45 @@ public class G05CreateBean {
             }
         }
         return user;
+    }
+
+    /**
+     * 生成task
+     * @param rs    查询出的单条数据
+     * @return
+     */
+    public static Task createTask(Result rs) {
+        Task task = new Task();
+        Class  c = task.getClass();
+        Cell[] cells = rs.rawCells();
+        for (Cell cell : cells) {
+            // 列族
+            String family = Bytes.toString(CellUtil.cloneFamily(cell));
+            // 列名
+            String qualifier = Bytes.toString(CellUtil.cloneQualifier(cell));
+            // rowKey
+            String rowKey = Bytes.toString(CellUtil.cloneRow(cell));
+            // 值
+            String value = Bytes.toString(CellUtil.cloneValue(cell));
+
+            // 只需要info列族的数据
+            if(family.equals("info") && !qualifier.equals("taskState")) {
+                    // 通过反射获取set方法
+                Method method = null;
+                try {
+                    method = c.getMethod("set" + qualifier.substring(0, 1).toUpperCase() + qualifier.substring(1), String.class);
+                    method.invoke(task, value);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            } else if(family.equals("info") && qualifier.equals("taskState")) {
+                    task.setTaskState(TaskState.fromHandleState(value));
+            }
+        }
+        return task;
     }
 }

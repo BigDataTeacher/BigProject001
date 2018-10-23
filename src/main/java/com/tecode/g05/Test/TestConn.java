@@ -1,5 +1,6 @@
 package com.tecode.g05.Test;
 
+import com.tecode.enumBean.TaskState;
 import com.tecode.util.hbase.table.HBaseUtils;
 
 import java.lang.ref.SoftReference;
