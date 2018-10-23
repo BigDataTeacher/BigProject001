@@ -33,7 +33,7 @@ public interface G06AssignTaskService {
      cusId://⽤户id
      handlerId://下⼀个办理⼈id
      */
-    Task inHandlerId(String taskId,String handlerId)throws Exception;
+    Task inHandlerId(String taskId,String handlerId,String userId)throws Exception;
     /**
      * 将任务ID加入下一个班里人用户任务IDtasks
      *

@@ -16,7 +16,6 @@ import java.util.Map;
  */
 @Controller
 public class G06AssignTaskController {
-    @Autowired
     private G06AssignTaskService taskService;
     private static Map<String,Object> map = new HashedMap();
     static {

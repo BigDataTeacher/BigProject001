@@ -48,11 +48,12 @@ public class G06AssignTaskServiceImpl implements G06AssignTaskService{
      * handlerId 下一个办理人
      */
     @Override
-    public Task inHandlerId(String taskId,String handlerId) throws Exception {
+    public Task inHandlerId(String taskId,String handlerId,String userId) throws Exception {
         //获取下一个办理人姓名
-        String name=taskDao.getUserbyUserId(handlerId).getName();
-        taskDao.inTaskbyTaskId(taskId,name,handlerId,handlerId);
-
+        if(handler(taskId,userId)) {
+            String name = taskDao.getUserbyUserId(handlerId).getName();
+            taskDao.inTaskbyTaskId(taskId, name, handlerId, handlerId);
+        }
         return null;
     }
     /**
