@@ -53,6 +53,9 @@ public class G3UserDaoImpl implements G3UserDao {
                 names.put(username, name);
             }
         }
+
+
+
         //返回map集合
         return names;
     }
@@ -68,7 +71,7 @@ public class G3UserDaoImpl implements G3UserDao {
         String tasks = hbase_user_tbale_cfs[1];
         //构建Put对象
         Put put = new Put(Bytes.toBytes(userid));
-        put.addColumn(Bytes.toBytes(tasks),Bytes.toBytes(taskid),Bytes.toBytes(num));
+        put.addColumn(Bytes.toBytes(tasks), Bytes.toBytes(taskid), Bytes.toBytes(num));
         //向表中添加信息
         table.put(put);
 

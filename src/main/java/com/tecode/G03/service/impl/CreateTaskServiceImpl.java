@@ -9,6 +9,7 @@ import com.tecode.bean.TaskLog;
 import com.tecode.enumBean.CommentatorType;
 import com.tecode.enumBean.TaskCommentType;
 import com.tecode.enumBean.TaskState;
+import com.tecode.exception.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,9 @@ public class CreateTaskServiceImpl implements CreateTaskService {
       调用userDao的getNameByUserName方法来获得其对应的用户ID所对应的的用户名字的集合
       */
         Map<String,String> names = userDao.getNameByUserName(usernames);
+        if(names.size() != 2){
+            throw new BaseException("用户信息不存在");
+        }
         //封装taskID
         task.setTaskId(taskid);
         // 将取得的用户名字封装入task对象中
@@ -71,7 +75,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         //创建任务评论
         TaskComment createComment = new TaskComment();
         //评论时间
-        createComment.setTaskCommentTime(new Date(System.currentTimeMillis()));
+        createComment.setTaskCommentTime(new Date());
         //评论内容
         createComment.setTaskComment(names.get(sponsorID) + "发起了任务");
         //评论者类型
@@ -85,7 +89,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         //交办任务评论
         TaskComment assignedComment = new TaskComment();
         //评论时间
-        assignedComment.setTaskCommentTime(new Date(System.currentTimeMillis()));
+        assignedComment.setTaskCommentTime(new Date());
         //评论内容
         assignedComment.setTaskComment(names.get(sponsorID) + "交办任务给" + names.get(beAssignID));
         //评论者类型
@@ -106,7 +110,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
         //日志类型   如用户还是系统
         log.setCommentatorType(CommentatorType.SYSTEM);
         //日志内容
-        log.setContent("交办：" + names.get(sponsorID) + "," + names.get(beAssignID));
+        log.setContent("交办：" + names.get(sponsorID) + ":" + names.get(beAssignID));
         logSet.add(log);
         task.setTaskLog(logSet);
 
