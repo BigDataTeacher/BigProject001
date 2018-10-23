@@ -1,7 +1,4 @@
-package com.tecode.G04.Dao;
-
-import com.tecode.bean.User;
-import com.tecode.util.hbase.table.HBaseUtils;
+package com.tecode.G04.dao;
 
 import java.io.IOException;
 

@@ -1,9 +1,6 @@
-package com.tecode.G04.Dao.impl;
+package com.tecode.G04.dao.impl;
 
-import com.tecode.G04.Dao.G04CommentDao;
-import com.tecode.bean.TaskComment;
-import com.tecode.enumBean.CommentatorType;
-import com.tecode.enumBean.TaskCommentType;
+import com.tecode.G04.dao.G04CommentDao;
 import com.tecode.util.hbase.table.ConfigUtil;
 import com.tecode.util.hbase.table.HBaseUtils;
 import org.apache.hadoop.hbase.Cell;
@@ -11,14 +8,10 @@ import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-
-import static org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.Method.get;
 
 
 /**

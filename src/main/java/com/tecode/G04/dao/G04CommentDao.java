@@ -1,10 +1,7 @@
-package com.tecode.G04.Dao;
-
-import com.tecode.bean.TaskComment;
+package com.tecode.G04.dao;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 
 public interface G04CommentDao {

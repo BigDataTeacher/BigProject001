@@ -1,7 +1,6 @@
-package com.tecode.G04.Dao.impl;
+package com.tecode.G04.dao.impl;
 
-import com.tecode.G04.Dao.G04UserDao;
-import com.tecode.bean.User;
+import com.tecode.G04.dao.G04UserDao;
 import com.tecode.util.hbase.table.ConfigUtil;
 import com.tecode.util.hbase.table.HBaseUtils;
 import org.apache.hadoop.hbase.Cell;
