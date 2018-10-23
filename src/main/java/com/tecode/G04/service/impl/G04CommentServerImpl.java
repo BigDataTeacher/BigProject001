@@ -1,6 +1,6 @@
 package com.tecode.G04.service.impl;
 
-import com.tecode.G04.Dao.G04UserDao;
+import com.tecode.G04.dao.G04UserDao;
 import com.tecode.G04.service.G04CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class G04CommentServerImpl implements G04CommentService {
     @Autowired
-    private com.tecode.G04.Dao.G04CommentDao commentdao;
+    private com.tecode.G04.dao.G04CommentDao commentdao;
     private G04UserDao userdao;
 
     /**
