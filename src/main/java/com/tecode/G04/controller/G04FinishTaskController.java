@@ -36,6 +36,7 @@ public class G04FinishTaskController {
     @ResponseBody
     @RequestMapping(value = "/comment-task", method = RequestMethod.POST)
     public Map<String,Object> finishTask(Task taskId, HttpSession session){
+
         /**
          *1.验证参数的合法性
          *
