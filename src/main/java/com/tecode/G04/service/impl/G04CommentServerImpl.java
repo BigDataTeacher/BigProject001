@@ -34,7 +34,8 @@ public class G04CommentServerImpl implements G04CommentService {
     public Boolean CommentResult(String taskid, String commentatorId, String commentType, String comment) throws IOException {
         Boolean addcomment = commentdao.addcomment(taskid, commentatorId, commentType, comment);
         if (addcomment == true){
-            String[] ids = commentdao.getmerberID(taskid).split(",");
+            String merberid = commentdao.getmerberID(taskid);
+            String[] ids = merberid.split(",");
             for (String id : ids) {
                 Integer getmsgcount = userdao.getmsgcount(id);
                 getmsgcount = getmsgcount+1;

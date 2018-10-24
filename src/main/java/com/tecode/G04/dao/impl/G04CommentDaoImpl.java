@@ -50,7 +50,7 @@ public class G04CommentDaoImpl implements G04CommentDao {
          */
        CommentatorType user = CommentatorType.USER;
         String type = user.getType();
-       
+
         G04UserDao userdao = new G04UserDaoImpl();
         String Name = userdao.getName(commentatorId);
 
@@ -91,17 +91,21 @@ public class G04CommentDaoImpl implements G04CommentDao {
         Connection conn = HBaseUtils.getConnection();
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         //构建表描述器
-        Scan scan = new Scan();
+
         //得到get对象
         Get get = new Get(Bytes.toBytes(taskid));
         //设置获得哪一个列祖下的哪一列
+       System.out.println(ConfigUtil.getString("hbase_task_tbale_cf").split(",")[0]);
         get.addColumn(Bytes.toBytes(ConfigUtil.getString("hbase_task_tbale_cf").split(",")[0]),Bytes.toBytes("memberIds"));
         Result result = table.get(get);
+
        Cell[] cells = result.rawCells();
         String ids = null;
        for (Cell cell : cells) {
            ids = Bytes.toString(CellUtil.cloneValue(cell));
+
        }
+
        return ids;
     }
 
