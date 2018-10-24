@@ -13,13 +13,13 @@ import java.util.Set;
  */
 public interface TaskDao {
 
-//    void updateTask(Task task) throws IOException;
+      void updateTask(Task task) throws IOException;
 //
 //    String getNowHandlerByTaskId(String taskId) throws IOException;
 //
-//    void modifyComment(String taskId,Set<TaskComment> coments) throws IOException;
+      void addComment(String taskId,Set<TaskComment> coments) throws IOException;
 //
-//    void addLog(String taskId,Set<TaskLog> logs) throws IOException;
+      void addLog(String taskId,Set<TaskLog> logs) throws IOException;
 
-    Task getTaskByTaskId(String taskId) throws IOException;
+      Task getTaskByTaskId(String taskId) throws IOException;
 }

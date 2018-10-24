@@ -12,8 +12,7 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Administrator on 2018/10/22.
@@ -51,50 +50,74 @@ public class UserDaoImpl implements UserDao {
 
         return qualifier;
     }
-
+//    @Override
+//    public void addTask(String username,int num) throws IOException {
+//        //获取文件系统
+//        conf = HBaseConfiguration.create();
+//
+//        conn = ConnectionFactory.createConnection(conf);
+//
+//        Table tableUser = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
+//
+//        Put put = new Put(Bytes.toBytes(username));
+//
+//        Put putTask = put.addColumn(Bytes.toBytes("tasks"), Bytes.toBytes("taskId"),Bytes.toBytes(num));
+//
+//        tableUser.put(putTask);
+//
+//        Get get = new Get(Bytes.toBytes(username));
+//
+//        Result result = tableUser.get(get);
+//
+//        List<byte[]> list = new ArrayList<>();
+//
+//        Cell [] cells = result.rawCells();
+//
+//        for (Cell cell : cells) {
+//
+//            list.add(CellUtil.cloneValue(cell));
+//
+//        }
+//
+//    }
     @Override
-    public void addTask(String username) throws IOException {
+    public Map<String,Integer> getNumOfTaskMsg(List<String> usernames, String taskId) throws IOException {
         //获取文件系统
         conf = HBaseConfiguration.create();
-
         conn = ConnectionFactory.createConnection(conf);
-
-        Table tableUser = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
-
-        Put put = new Put(Bytes.toBytes(username));
-
-        Put putTask = put.addColumn(Bytes.toBytes("tasks"), Bytes.toBytes("taskId"),Bytes.toBytes("1"));
-
-        tableUser.put(putTask);
-
-        Get get = new Get(Bytes.toBytes(username));
-
-        Result result = tableUser.get(get);
-
-        List<byte[]> list = new ArrayList<>();
-
-        Cell [] cells = result.rawCells();
-
-        for (Cell cell : cells) {
-            list.add(CellUtil.cloneValue(cell));
-
+        Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
+        Map<String, Integer> numMap = new HashMap<>();
+        List<Get> gets = new ArrayList<>();
+        String [] family = ConfigUtil.getString("hbase_user_tbale_cf").split(",");
+        for (String username : usernames) {
+            Get get = new Get(Bytes.toBytes(username));
+            get.addColumn(Bytes.toBytes(family[1]), Bytes.toBytes(taskId));
+            gets.add(get);
         }
-
-    }
-
-    public String getNumOfTaskMsg(String username){
-
-
-
-        return null;
+        Result[] results = table.get(gets);
+        for (Result result : results) {
+            Cell[] cells = result.rawCells();
+            for (Cell cell : cells) {
+                numMap.put(Bytes.toString(CellUtil.cloneRow(cell)), Bytes.toInt(CellUtil.cloneValue(cell)));
+            }
+        }
+        return numMap;
     }
 
     @Override
-    public String modifyNumOfTaskMsg(String username) {
-
-
-
-
-        return null;
+    public void modifyNumOfTaskMsg(Map<String, Integer> map, String taskId) throws IOException {
+        //获取文件系统
+        conf = HBaseConfiguration.create();
+        conn = ConnectionFactory.createConnection(conf);
+        Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
+        List<Put> putNum = new ArrayList<>();
+        String[] family = ConfigUtil.getString("hbase_user_tbale_cf").split(",");
+        Set<String> usernames = map.keySet();
+        for (String username : usernames) {
+            Put putNames = new Put(Bytes.toBytes(username));
+            putNames.addColumn(Bytes.toBytes(family[1]), Bytes.toBytes(taskId), Bytes.toBytes(map.get(username)));
+            putNum.add(putNames);
+        }
+        table.put(putNum);
     }
 }

@@ -1,7 +1,5 @@
 package com.tecode.G03.controller;
 
-import com.tecode.G03.dao.TaskDao;
-import com.tecode.G03.dao.UserDao;
 import com.tecode.G03.service.ComplainService;
 import com.tecode.exception.BaseException;
 import com.tecode.service.UserService;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -48,7 +45,7 @@ public class ComplainController {
 
     @ResponseBody
     @RequestMapping(value = "/userLogin", method = RequestMethod.POST)
-    public Map<String,Object> login(String userName, String taskId, String handlerId, boolean isAssign, HttpSession session) throws Exception {
+    public Map<String,Object> login(String taskId, String cusId, String handlerId, boolean isAssign, HttpSession session) throws Exception {
         /**
          *1.验证参数的合法性
          * 2.调用业务逻辑层处理业务，并获得返回值
@@ -61,11 +58,9 @@ public class ComplainController {
          *
          */
         Map<String,Object> map = new HashMap<>();
-
-        if(userName == null){
+        if(cusId == null){
             map.put("success",false);
             map.put("msg","输入用户名不能为空...");
-
         }else if( taskId == null){
             map.put("success",false);
             map.put("msg","输入任务Id不能为空...");
@@ -77,14 +72,14 @@ public class ComplainController {
             map.put("msg","请选择转办业务项...");
         }else{
             try{
-                complainService.complainTask(userName,  taskId,  handlerId);
+                //调用转办任务方法
+                complainService.complainTask(cusId,  taskId,  handlerId);
                 map.put("success",true);
+                map.put("data",true);
             }catch(BaseException e){
                 map.put("success",false);
                 map.put("msg",e.getMessage());
             }
-
-
         }
         return map;
     }

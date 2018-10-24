@@ -8,6 +8,7 @@ import com.tecode.bean.TaskComment;
 import com.tecode.bean.User;
 import com.tecode.exception.BaseException;
 
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -19,7 +20,7 @@ public interface ComplainService {
     /**
      *根据用户名id查询用户对象
      */
-    String complainTask(String username,String taskId,String handlerId) throws BaseException;
+    void complainTask(String username,String taskId,String handlerId) throws BaseException, IOException;
 
 
 

@@ -3,7 +3,6 @@ package com.tecode.G03.dao.impl;
 import com.tecode.G03.dao.TaskDao;
 import com.tecode.G03.dao.UserDao;
 import com.tecode.bean.Task;
-
 import com.tecode.bean.TaskComment;
 import com.tecode.bean.TaskLog;
 import com.tecode.util.hbase.table.ConfigUtil;
@@ -17,7 +16,6 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import java.io.IOException;
 import java.util.*;
 
@@ -39,7 +37,7 @@ public class TaskDaoImpl implements TaskDao {
     @Autowired
     private TaskDao taskDao;
 
-    //@Override
+    @Override
     public void updateTask(Task task) throws IOException {
         Map<String, String> map = new HashMap<>();
         //获取链接
@@ -48,30 +46,13 @@ public class TaskDaoImpl implements TaskDao {
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         //任务ID
         String taskId = task.getTaskId();
-        map.put("taskId", task.getTaskId());
-        //任务分类  taskTag
-        map.put("taskTag", task.getTaskTag());
-        //任务标题
-        map.put("taskTitle", task.getTaskTitle());
-        //任务描述
-        map.put("taskDesc", task.getTaskDesc());
-        //任务状态
-        map.put("taskState", task.getTaskState().getType());
-        //任务发起人
-        map.put("sponsor", task.getSponsor());
-        //任务发起人ID
-        map.put("sponsorId", task.getSponsorId());
+
         //当前办理人姓名
         map.put("nowHandler", task.getNowHandler());
         //办理人ID栈
         map.put("handlerStack", task.getHandlerStack());
-        //任务发起时间
-        map.put("createTime", task.getCreateTime());
-        //任务完成时限  建议完成时间
-        map.put("timeLimit", task.getTimeLimit());
         //任务成员ID
         map.put("memberIds", task.getMemberIds());
-
         Set<Map.Entry<String, String>> entrySet = map.entrySet();
         //获取列族名
         String[] hbase_task_tbale_cfs = ConfigUtil.getString("hbase_task_tbale_cf").split(",");
@@ -93,37 +74,37 @@ public class TaskDaoImpl implements TaskDao {
     }
 
    //@Override  //重写获得当前办理人姓名nowHandler方法
-    public String getNowHandlerByTaskId(String taskId) throws IOException {
-        //获取系统
-        conf = HBaseConfiguration.create();
+//    public String getNowHandlerByTaskId(String taskId) throws IOException {
+//        //获取系统
+//        conf = HBaseConfiguration.create();
+//
+//        conn = ConnectionFactory.createConnection(conf);
+//        //创建表对象，并且获得表
+//        Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
+//
+//        //创建Get对象
+//        Get get = new Get(Bytes.toBytes(taskId));
+//
+//        //get.addFamily(Bytes.toBytes("info"));
+//        get.addColumn(Bytes.toBytes("info"),Bytes.toBytes("nowHandler"));
+//
+//        Result result = table.get(get);
+//
+//        Cell[] cells = result.rawCells();
+//
+//        String nowHandler = null;
+//
+//        for (Cell cell : cells) {
+//
+//            nowHandler = Bytes.toString(CellUtil.cloneQualifier(cell));
+//
+//        }
+//
+//        return nowHandler;
+//    }
 
-        conn = ConnectionFactory.createConnection(conf);
-        //创建表对象，并且获得表
-        Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
-
-        //创建Get对象
-        Get get = new Get(Bytes.toBytes(taskId));
-
-        //get.addFamily(Bytes.toBytes("info"));
-        get.addColumn(Bytes.toBytes("info"),Bytes.toBytes("nowHandler"));
-
-        Result result = table.get(get);
-
-        Cell[] cells = result.rawCells();
-
-        String nowHandler = null;
-
-        for (Cell cell : cells) {
-
-            nowHandler = Bytes.toString(CellUtil.cloneQualifier(cell));
-
-        }
-
-        return nowHandler;
-    }
-
-    //@Override
-    public void modifyComment(String taskId,Set<TaskComment> coments) throws IOException {
+    @Override
+    public void addComment(String taskId,Set<TaskComment> coments) throws IOException {
         Map<String, String> commentMap = new HashMap<>();
         conn = ConnectionFactory.createConnection(conf);
         //获取表的对象
@@ -149,7 +130,7 @@ public class TaskDaoImpl implements TaskDao {
         tableTask.put(puts);
     }
 
-    //@Override
+    @Override
     public void addLog(String taskId,Set<TaskLog> logs) throws IOException {
         Map<String, String> logMap = new HashMap<>();
         conn = ConnectionFactory.createConnection(conf);
