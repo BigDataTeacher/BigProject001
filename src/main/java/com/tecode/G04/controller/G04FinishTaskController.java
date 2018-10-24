@@ -41,7 +41,7 @@ public class G04FinishTaskController {
      */
     @ResponseBody
     @RequestMapping(value = "/close-task", method = RequestMethod.POST)
-    public Map<String, Object> finishTask(String taskId, String username,HttpSession session) {
+    public Map<String, Object> finishTask(Task task, HttpSession session) {
         /**
          *1.验证参数的合法性
          * 2.调用业务逻辑层处理业务，并获得返回值
@@ -54,9 +54,9 @@ public class G04FinishTaskController {
          */
 
         //得到任务ID
-       // String taskId = task.getTaskId();
+       String taskId = task.getTaskId();
 
-        System.out.println(taskId);
+
         //创建集合来返回
         Map<String, Object> taskMap = new HashMap<String, Object>();
 
@@ -66,7 +66,7 @@ public class G04FinishTaskController {
             return taskMap;
         }
         try {
-           g04TaskService.modifyTaskState(taskId, username);
+           g04TaskService.modifyTaskState(taskId, SessionUtil.getLogingUser(session).getUsername());
 
 
                 taskMap.put("success", true);
