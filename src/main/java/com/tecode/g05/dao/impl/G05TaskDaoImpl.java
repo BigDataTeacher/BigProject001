@@ -2,6 +2,7 @@ package com.tecode.g05.dao.impl;
 
 import com.tecode.bean.Task;
 import com.tecode.bean.User;
+import com.tecode.enumBean.TaskCommentType;
 import com.tecode.enumBean.TaskState;
 import com.tecode.exception.BaseException;
 import com.tecode.g05.bean.G05TaskBean;
@@ -82,7 +83,7 @@ public class G05TaskDaoImpl implements G05TaskDao {
         if (utb.getCusId() == utb.getSponsorId()) {
             G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "info", "timeLimit", utb.getTaskEndTime());
         }
-        G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "log", new Date().getTime() + "", "消息：" + utb.getSponsorId() + "修改了任务");
+        G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "log", new Date().getTime() + "", "系统消息_系统_" + TaskCommentType.TEXT.getType() + "_" + utb.getSponsorId() + "修改了任务");
         return true;
     }
 
