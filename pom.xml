@@ -82,6 +82,7 @@
             <version>${hbase.version}</version>
         </dependency>
 
+
     </dependencies>
 
     <build>
