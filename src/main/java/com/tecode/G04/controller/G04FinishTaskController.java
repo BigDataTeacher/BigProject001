@@ -56,7 +56,7 @@ public class G04FinishTaskController {
         //得到任务ID
        // String taskId = task.getTaskId();
 
-       // System.out.println(task);
+        System.out.println(taskId);
         //创建集合来返回
         Map<String, Object> taskMap = new HashMap<String, Object>();
 
@@ -73,7 +73,7 @@ public class G04FinishTaskController {
                 taskMap.put("data", true);
             } else {
                 taskMap.put("success", false);
-                taskMap.put("msg", "任务失败");
+                taskMap.put("msg", "当前用户ID和发起人ID不一致");
             }
         } catch (BaseException e) {
             taskMap.put("success", false);

@@ -59,14 +59,15 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
         Get get =new Get(Bytes.toBytes(taskId));
 
         //得到info列族下的handlerStack  办理人ID栈
-        get.addColumn(Bytes.toBytes(ConfigUtil.getString("info")),Bytes.toBytes("handlerStack"));
+       get.addColumn(Bytes.toBytes("info"), Bytes.toBytes("handlerStack"));
+
 
         Result resultHandlerStack  = table.get(get);
 
         Cell[] cellsHandlerStack = resultHandlerStack.rawCells();
 
         for (Cell cell : cellsHandlerStack) {
-           str=(Bytes.toString(CellUtil.cloneQualifier(cell)));
+           str=Bytes.toString(CellUtil.cloneValue(cell));
 
         }
 
@@ -92,14 +93,14 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
         Get get =new Get(Bytes.toBytes(taskId));
 
         //得到info列族下的sponsor  任务发起人
-        get.addColumn(Bytes.toBytes(ConfigUtil.getString("info")),Bytes.toBytes("sponsor"));
+        get.addColumn(Bytes.toBytes("info"),Bytes.toBytes("sponsorId"));
 
         Result result1SponsorId = table.get(get);
 
         Cell[] cellsSponsorId  = result1SponsorId.rawCells();
 
         for (Cell cell : cellsSponsorId) {
-           str=(Bytes.toString(CellUtil.cloneQualifier(cell)));
+           str=(Bytes.toString(CellUtil.cloneValue(cell)));
         }
 
         return str;
@@ -170,9 +171,9 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
         Put put =new Put(Bytes.toBytes(taskId));
 
         //添加log列族下的时间戳
+        long l = System.currentTimeMillis();
 
-        put.addColumn(Bytes.toBytes("log"),Bytes.toBytes(System.currentTimeMillis()),Bytes.toBytes("完成"+":"+sponsor));
-
+        put.addColumn(Bytes.toBytes("log"),Bytes.toBytes(l),Bytes.toBytes("完成"+":"+sponsor));
         table.put(put);
 
     }
@@ -191,7 +192,7 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
         Get get =new Get(Bytes.toBytes(taskId));
 
         //得到info列族下的sponsor  任务发起人
-        get.addColumn(Bytes.toBytes(ConfigUtil.getString("info")),Bytes.toBytes("sponsor"));
+        get.addColumn(Bytes.toBytes("info"),Bytes.toBytes("sponsor"));
 
         Result result = table.get(get);
 
