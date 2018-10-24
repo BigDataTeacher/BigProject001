@@ -66,19 +66,15 @@ public class G04FinishTaskController {
             return taskMap;
         }
         try {
-            Boolean b = g04TaskService.modifyTaskState(taskId, username);
+           g04TaskService.modifyTaskState(taskId, username);
 
-            if (b) {
+
                 taskMap.put("success", true);
                 taskMap.put("data", true);
-            } else {
-                taskMap.put("success", false);
-                taskMap.put("msg", "当前用户ID和发起人ID不一致");
-            }
+
         } catch (BaseException e) {
             taskMap.put("success", false);
-            taskMap.put("msg",  e.getMessage());
-
+            taskMap.put("msg", e.getMessage());
 
     }
 

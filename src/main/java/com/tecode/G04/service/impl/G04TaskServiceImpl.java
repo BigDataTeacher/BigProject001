@@ -1,15 +1,12 @@
 package com.tecode.G04.service.impl;
 
 import com.tecode.G04.dao.G04TaskIdDao;
-import com.tecode.G04.dao.impl.G04TaskIdDaoImpl;
 import com.tecode.G04.service.G04TaskService;
-import com.tecode.bean.Task;
 import com.tecode.exception.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * 被Controller层调用的方法所在类上添加@Service
@@ -27,9 +24,8 @@ public class G04TaskServiceImpl implements G04TaskService {
 
 
     @Override
-    @Test
-    public Boolean modifyTaskState(String  taskId,String cusId) throws BaseException {
-        String sponsorId = null;
+    public void modifyTaskState(String  taskId,String cusId) throws BaseException {
+
 
         //得到发起人
         String sponsor = null;
@@ -48,6 +44,7 @@ public class G04TaskServiceImpl implements G04TaskService {
         //分割
         String[] strings = idStack.split(","); //
 
+        String sponsorId = null;
         try {
              sponsorId = g04TaskIdDao.getSponsorId(taskId);
         } catch (IOException e) {
@@ -59,7 +56,7 @@ public class G04TaskServiceImpl implements G04TaskService {
                 g04TaskIdDao.modifyFinishState(taskId,cusId);
 
             }else {
-                return  false;
+                throw  new BaseException("当前用户ID和发起人ID 不一致");
             };
             //调用完成任务时间方法
             g04TaskIdDao.taskFinishTime(taskId);
@@ -70,13 +67,12 @@ public class G04TaskServiceImpl implements G04TaskService {
             //调用添加日志方法
             g04TaskIdDao.addLog(taskId, sponsor);;
 
-        } catch (Exception e) {
+        } catch (IOException e) {
 
             e.printStackTrace();
         }
 
 
-        return true;
     }
 
 }
