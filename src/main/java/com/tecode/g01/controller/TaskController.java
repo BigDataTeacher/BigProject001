@@ -5,16 +5,11 @@ import com.tecode.bean.TaskComment;
 import com.tecode.g01.service.TaskService;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 
@@ -61,7 +56,7 @@ public class TaskController {
         }else {
             Task taskdetail = taskService.getTaskdetail(taskid,username);
             for (TaskComment taskComment : taskdetail.getTaskComments()) {
-                System.out.println(taskComment.getTaskCommentTime().toString());
+                System.out.println(taskComment.getTaskCommentTime());
             }
             if(taskdetail != null){
                 map.put("success",true);
