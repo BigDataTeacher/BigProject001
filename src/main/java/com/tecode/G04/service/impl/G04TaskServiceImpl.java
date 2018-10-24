@@ -28,7 +28,6 @@ public class G04TaskServiceImpl implements G04TaskService {
 
 
     @Override
-    @Test
     public Boolean modifyTaskState(String  taskId,String cusId) throws BaseException {
         String sponsorId = null;
 
