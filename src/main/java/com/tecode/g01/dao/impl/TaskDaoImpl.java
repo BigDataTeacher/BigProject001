@@ -1,6 +1,5 @@
 package com.tecode.g01.dao.impl;
 
-import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import com.tecode.bean.Task;
 import com.tecode.bean.TaskComment;
 import com.tecode.enumBean.CommentatorType;
@@ -12,15 +11,15 @@ import com.tecode.util.hbase.table.HBaseUtils;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.client.Connection;
+import org.apache.hadoop.hbase.client.Get;
+import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
 
-import javax.sound.midi.Soundbank;
 import java.io.IOException;
-import java.net.SocketPermission;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -138,7 +137,7 @@ public class TaskDaoImpl implements TaskDao{
             String s = entry.getKey();
 
             try {
-
+                System.out.println("s:" + s);
                 Date date = new Date(Long.valueOf(s));
                 comment.setTaskCommentTime(date);           //评论时间
                 comment.setTaskComment(commentMessage);       //评论内容
