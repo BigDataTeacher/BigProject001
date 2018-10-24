@@ -1,7 +1,7 @@
 package com.tecode.g02.dao.impl;
 
 import com.tecode.bean.Task;
-import com.tecode.bean.User;
+import com.tecode.enumBean.CommentatorType;
 import com.tecode.g02.dao.G02ReplyDao;
 import com.tecode.util.hbase.table.ConfigUtil;
 import com.tecode.util.hbase.table.HBaseUtils;
@@ -13,6 +13,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 /**
  *   用户数据处理层的具体实现
@@ -101,31 +102,36 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
     }
 
     /**
-     * 在log中添加一个新列，列名为当前时间，值一条回复的记录
+     * 在log中添加一个新列
      */
     @Override
     public void addReplyLog(String taskId,boolean bl ) throws IOException {
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
-        Task task = selectTaskByID(taskId);
-        Put put = new Put(Bytes.toBytes(taskId));
-        if(bl){
-            put.addColumn(Bytes.toBytes(log),Bytes.toBytes("SystemComment"),Bytes.toBytes("回复操作成功"));
-        }else {
-            put.addColumn(Bytes.toBytes(log),Bytes.toBytes("SystemComment"),Bytes.toBytes("回复操作失败"));
-        }
-
+        Put put = getPut(taskId,log,bl);
         table.put(put);
         table.close();
     }
+    //得到一个put对象
+    private Put getPut(String rowKey,String family,boolean bl){
+        Put put = new Put(Bytes.toBytes(rowKey));
+        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long currentTime = System.currentTimeMillis();
+        //System.out.println("####" + Bytes.toBytes(currentTime));
+        if(bl){
+            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime+""),Bytes.toBytes(CommentatorType.SYSTEM+"_System_text_回复操作成功,"));
+        }else {
+            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime +""),Bytes.toBytes(CommentatorType.SYSTEM+"_System_text_回复操作失败,"));
+        }
+        return put;
+    }
+
     /**
      * 在comment列族中添加一列，列名为当前时间，值为系统的评论
      */
     @Override
-    public void addSystemComment(String taskId) throws IOException {
+    public void addSystemComment(String taskId,boolean bl) throws IOException {
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
-        Task task = selectTaskByID(taskId);
-        Put put = new Put(Bytes.toBytes(taskId));
-        put.addColumn(Bytes.toBytes(comment),Bytes.toBytes("SystemComment"),Bytes.toBytes("回复操作成功"));
+        Put put = getPut(taskId,comment,bl);
         table.put(put);
         table.close();
     }
@@ -138,7 +144,7 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         Task task = selectTaskByID(taskId);
         String handlerStack = task.getHandlerStack();
         String[] split = handlerStack.split(",");
-        String newStack=null;
+        String newStack="";
         for (int i = 0 ;i < split.length-1;i++) {
             newStack+=split[i];
         }
@@ -157,13 +163,22 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         String handlerStack = task.getHandlerStack();
         String[] split = handlerStack.split(",");
         String nowHandler = split[split.length-1];
-
-        Connection conn = HBaseUtils.getConnection();
+        Table user = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
+        Get getName = new Get(Bytes.toBytes(nowHandler));
+        getName.addColumn(Bytes.toBytes(info),Bytes.toBytes("name"));
+        Result result = user.get(getName);
+        Cell[] cells = result.rawCells();
+        String name= null;
+        for (Cell cell : cells) {
+           name =  Bytes.toString(CellUtil.cloneValue(cell));
+        }
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         Put put = new Put(Bytes.toBytes(taskId));
-        put.addColumn(Bytes.toBytes(info),Bytes.toBytes("nowHandler"),Bytes.toBytes(nowHandler));
+        put.addColumn(Bytes.toBytes(info),Bytes.toBytes("nowHandler"),Bytes.toBytes(name));
         table.put(put);
         table.close();
 
     }
+
+
 }
