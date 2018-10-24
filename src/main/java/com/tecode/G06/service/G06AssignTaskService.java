@@ -14,11 +14,11 @@ public interface G06AssignTaskService {
     /**
      * 通过传入的TaskID查询任务中的当前办理人
      */
-   // Task getTaskbyTaskId(String taskId)throws Exception;
+    // Task getTaskbyTaskId(String taskId)throws Exception;
     /**
      * 通过传入的用户ID查询办理人姓名name
      */
-   // User getUserbyUserId(String username)throws Exception;
+    // User getUserbyUserId(String username)throws Exception;
     /**
      * 判断用户ID是否是任务查询中查出的当前办理人
      * 是才能继续操作
@@ -40,4 +40,5 @@ public interface G06AssignTaskService {
      */
     boolean inTask(String taskId,String handlerId)throws Exception;
 }
+
 

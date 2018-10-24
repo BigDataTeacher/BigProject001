@@ -34,7 +34,7 @@ public class G06AssignTaskDaoImpl implements G06AssignTaskDao{
         table.put(put);
 
     }
-//在用户表中查询出用户姓名
+    //在用户表中查询出用户姓名
     @Override
     public User getUserbyUserId(String username) throws Exception {
         Connection con=HBaseUtils.getConnection();
