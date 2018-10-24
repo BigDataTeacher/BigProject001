@@ -6,6 +6,7 @@ package com.tecode.g01.service;
 
 import com.tecode.bean.Task;
 import com.tecode.bean.User;
+import com.tecode.exception.BaseException;
 
 /**
  *
@@ -18,7 +19,7 @@ public interface TaskService {
      * @param
      * @return
      */
-    Task getTaskdetail(String taskid, String username);
+    Task getTaskdetail(String taskid, String username) throws BaseException;
 
 
 }
