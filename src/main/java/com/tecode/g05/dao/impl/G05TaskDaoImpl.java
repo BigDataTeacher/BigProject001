@@ -78,13 +78,23 @@ public class G05TaskDaoImpl implements G05TaskDao {
 
     @Override
     public boolean updateTask(UpdateTaskBean utb) throws BaseException {
-        G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "info", "taskTitle", utb.getTaskTitle());
-        G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "info", "taskDesc", utb.getTaskDesc());
-        if (utb.getCusId() == utb.getSponsorId()) {
-            G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "info", "timeLimit", utb.getTaskEndTime());
+        boolean b = true;
+        if (utb.getTaskTitle() != null && !utb.getTaskTitle().equals("")) {
+            b = G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "info", "taskTitle", utb.getTaskTitle());
         }
-        G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "log", new Date().getTime() + "", "系统消息_系统_" + TaskCommentType.TEXT.getType() + "_" + utb.getSponsorId() + "修改了任务");
-        return true;
+        if (utb.getTaskDesc() != null && !utb.getTaskDesc().equals("")) {
+            b = G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "info", "taskDesc", utb.getTaskDesc());
+        }
+        if (utb.getCusId().equals(utb.getSponsorId())) {
+            if (utb.getTaskEndTime() != null && !utb.getTaskEndTime().equals("")) {
+                b = G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "info", "timeLimit", utb.getTaskEndTime());
+            }
+        }
+        if (b) {
+            G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "log", new Date().getTime() + "", "系统消息_系统_" + TaskCommentType.TEXT.getType() + "_" + utb.getSponsorId() + "修改了任务");
+            return b;
+        }
+        return b;
     }
 
     /**
@@ -106,6 +116,9 @@ public class G05TaskDaoImpl implements G05TaskDao {
      * @return
      */
     private List<G05TaskBean> keywordFilter(List<G05TaskBean> list, String keyword) {
+        if (keyword == null) {
+            return list;
+        }
         return list.stream().filter((gtb) -> KeywordFilter.filter(gtb, new String[]{"sponsor", "taskTitle", "taskTag"}, keyword, KeywordFilter.Operator.MUST_PASS_ONE)).collect(Collectors.toList());
     }
 

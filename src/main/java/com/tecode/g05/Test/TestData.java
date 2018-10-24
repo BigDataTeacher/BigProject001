@@ -18,7 +18,7 @@ import java.util.Date;
  */
 public class TestData {
     // 拼装rowkey用的userId
-    private static String[] userId = {"04101231", "04101236", "04101252", "04101266"};
+    private static String[] userId = {"04102276", "04102269", "04102268", "04102262"};
     // 标题、描述
     private static String[] tables = {"aaa", "bbb", "ccc", "ddd", "eee", "fff", "ggg"};
     // 状态数组

@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public class RequestTaskListBean {
     private String cusId;
-    private TaskState taskState;
+    private TaskState taskState = TaskState.HANDLE;
     private String queryStr;
     private int p = 1;
 
@@ -42,10 +42,9 @@ public class RequestTaskListBean {
      * 任务状态
      */
     public void setTaskState(String taskState) {
-        if(taskState == null) {
+        this.taskState = TaskState.fromHandleState(taskState);
+        if(this.taskState == null) {
             this.taskState = TaskState.HANDLE;
-        } else {
-            this.taskState = TaskState.fromHandleState(taskState);
         }
     }
 
