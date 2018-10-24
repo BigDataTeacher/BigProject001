@@ -19,17 +19,32 @@ public class CopyTaskSerbiceImpl implements CopyTaskService {
 
 
 
+
     @Override
     public boolean toNext(String taskId, String memberId, String username) throws IOException {
 
-        Integer taskcount = copydao.putIntoMenment(taskId, memberId);
-        Integer usercount = copydao.putIdintoUserTask(taskId, memberId);
+        boolean flag = false;
 
-        if ((taskcount == 0 && usercount > 0) || usercount > 0) {
+        //成员列
+        Integer taskcount = copydao.putIntoMenment(taskId, memberId);
+        //用户的任务列
+        Integer usercount = copydao.putIdintoUserTask(taskId, memberId);
+        //System.out.println(taskcount);
+       // System.out.println(usercount);
+        //System.out.println("进入成功");
+        if ((taskcount > 0 && usercount >= 0) || usercount > 0) {
             int logs = copydao.addLog(taskId, username, memberId);
+
+            //System.out.println("进入里面");
             if (logs > 0) {
-                return true;
+                int a =copydao.addComment(taskId,username,memberId,true);
+                if(a>0){
+                    return true;
+                }
+                copydao.addComment(taskId,username,memberId,false);
+                return false;
             }
+            return false;
         }
 
 

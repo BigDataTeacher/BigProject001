@@ -24,6 +24,7 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
     //獲得task表和user表的列族
     private final String taskInfo = getCf("hbase_task_tbale_cf",0);
     private final String taskLog = getCf("hbase_task_tbale_cf",1);
+    private final String taskComment = getCf("hbase_task_tbale_cf",2);
     private final String userTasks = getCf("hbase_user_tbale_cf",1);
     //活的表
     private final String taskTableName = ConfigUtil.getString("hbase_task_table_name");
@@ -39,11 +40,21 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
         Table taskTable = conn.getTable(TableName.valueOf(taskTableName));
         //获取表里的成员
         Set<String> before = getMembers(taskId, taskTable);
+       // System.out.println("before"+before.size());
+
+        addMember(before,memberId);
+
+
+
+
         //添加信息成员进入表
+
+
         Set<String> after = addMember(before, memberId);
+       // System.out.println("after"+after.size());
 
 
-        addMember(after,taskTable,taskId);
+
         //
 
         taskTable.close();
@@ -52,8 +63,16 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
         return after.size()-before.size();
     }
 
+    /**
+     * 用户表加入任务数量
+     * @param taskId
+     * @param memberId
+     * @return
+     * @throws IOException
+     */
     @Override
     public Integer putIdintoUserTask(String taskId, String memberId) throws IOException {
+        //System.out.println("putIdintoUserTask");
         Table userTable = conn.getTable(TableName.valueOf(userTableName));
         //获得tasks下的列
         Set<String> setbefore = getTasks(memberId, userTable);
@@ -78,7 +97,7 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time =sdf.format(System.currentTimeMillis());
         String mess = username + "copy"+ taskId + "to" + menberId;
-        put.addColumn(Bytes.toBytes(userTasks),Bytes.toBytes(taskId),Bytes.toBytes(mess));
+        put.addColumn(Bytes.toBytes(taskLog),Bytes.toBytes(System.currentTimeMillis()+""),Bytes.toBytes(mess));
 
         taskTable.put(put);
 
@@ -92,21 +111,28 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
      * 添加评论
      */
     @Override
-    public Integer addComment(String taskId, String username, String menberId) throws IOException {
+    public Integer addComment(String taskId, String username, String menberId,boolean b) throws IOException {
 
         Table taskTable = conn.getTable(TableName.valueOf(taskTableName));
         int before = getComment(taskId,taskTable);
 
         Put put = new Put(Bytes.toBytes(taskId));
+        //获得时间戳
+
         String mess1 = CommentatorType.SYSTEM+"_system_text_抄送成功";
         String mess2 = CommentatorType.SYSTEM+"_system_text_抄送失败";
 
+        if(b){
+             put.addColumn(Bytes.toBytes(taskComment),Bytes.toBytes(System.currentTimeMillis()+""),Bytes.toBytes(mess1));
+        }
+        put.addColumn(Bytes.toBytes(taskComment),Bytes.toBytes(System.currentTimeMillis()+""),Bytes.toBytes(mess2));
+        taskTable.put(put);
+        int after = getComment(taskId,taskTable);
 
+        //System.out.println(after - before+"============");
 
+        return after - before;
 
-
-
-        return null;
     }
 
     /**
@@ -184,9 +210,11 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
         Put put = new Put(Bytes.toBytes(taskId));
 
         for(String s:set){
+
             put.addColumn(Bytes.toBytes(taskInfo),Bytes.toBytes("memberIds"),Bytes.toBytes(s));
             putList.add(put);
         }
+
 
         taskTable.put(putList);
 
@@ -242,7 +270,7 @@ public Set<String> addMember(Set<String> set,String memberId){
     }
 
     /**
-     * 获取user表全部列
+     * 获取user表userTasks列
      */
     public Set<String> getTasks(String userName,Table userTable)throws IOException{
         //创建Set存储列族下的列
@@ -266,8 +294,9 @@ public Set<String> addMember(Set<String> set,String memberId){
      * 向表里插入数据
      */
     public void putTask(String taskId,String memberId,Table userTable) throws IOException {
-        Put put = new Put(Bytes.toBytes("username"));
+        Put put = new Put(Bytes.toBytes(memberId));
         put.addColumn(Bytes.toBytes(userTasks),Bytes.toBytes(taskId),Bytes.toBytes("1"));
+        userTable.put(put);
         userTable.close();
     }
 

@@ -26,7 +26,7 @@ public class CopyController {
         if (taskId!=null&&userName!=null&&memberId!=null){
             boolean handler = taskService.isHandler(taskId, userName);
             if(handler){
-                boolean b = taskService.toNext(taskId, userName, memberId);
+                boolean b = taskService.toNext(taskId, memberId, userName);
                 if(b){
                     map.put("success",true);
                     map.put("msg","抄送成功");
