@@ -30,6 +30,14 @@ public class ComplainServiceImpl implements ComplainService {
     @Autowired
     private TaskDao taskDao;
 
+    /**
+     *
+     * @param username      当前操作人员ID
+     * @param taskId        task任务id
+     * @param handlerId     下一个办理人id
+     * @return
+     * @throws BaseException
+     */
     @Override
     public String complainTask(String username, String taskId, String handlerId) throws BaseException {
 //          String nowHandler = null;
@@ -53,15 +61,28 @@ public class ComplainServiceImpl implements ComplainService {
 //        }
         //创建task对象
         Task task = new Task();
-
-
+        String handlerName = null;
         try {
             //通过任务id查找该任务所有信息，并封装进task对象
             task = taskDao.getTaskByTaskId(taskId);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        String [] handlers = task.getHandlerStack().split(",");
+        if(handlers.length<2){
+            throw new BaseException("任务不能转办...");
+        }
+        String nowHandlerId = handlers[handlers.length-1];
+        if(!nowHandlerId.equals(username)){
+            throw new BaseException("当前操作人不是该任务当前办理人，没有权利操作此转办操作...");
+        }
+        try {
+            handlerName = userDao.getNameByUserName(handlerId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return null;
 
