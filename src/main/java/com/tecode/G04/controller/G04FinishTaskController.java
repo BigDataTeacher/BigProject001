@@ -79,7 +79,8 @@ public class G04FinishTaskController {
             taskMap.put("success", false);
             taskMap.put("msg",  e.getMessage());
 
-        }
+
+    }
 
 
         return taskMap;

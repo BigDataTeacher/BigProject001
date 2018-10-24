@@ -36,6 +36,11 @@ public class G04CommentController {
     @RequestMapping(value = "/comment-task", method = RequestMethod.POST)
     public Map<String,Object> finishTask( String taskId,String commentatorId,String commentType,String taskComment,HttpSession session)  {
         Map<String,Object> map = new HashMap<String,Object>();
+        /*System.out.println(taskId);
+        System.out.println(commentatorId);
+        System.out.println(commentType);
+        System.out.println(taskComment);*/
+
         //String Name = SessionUtil.getLogingUser(session).getName();
       /*  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long date = 0;
