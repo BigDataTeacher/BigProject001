@@ -47,6 +47,7 @@ public class CopyTaskSerbiceImpl implements CopyTaskService {
             return false;
         }
 
+        copydao.addComment(taskId,username,memberId,false);
 
         return false;
     }
