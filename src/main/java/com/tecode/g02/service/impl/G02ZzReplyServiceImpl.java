@@ -58,7 +58,7 @@ public class G02ZzReplyServiceImpl implements G02ZzReplyService {
     private String getHandlerId(Task task,String cusId) throws BaseException{
         String handlerStack = task.getHandlerStack();
         //打印出id栈中的信息，用于测试
-        //System.out.println(handlerStack+"============");
+        System.out.println(handlerStack+"============");
         if(handlerStack==null){
             throw new BaseException("id栈中没有数据");
         }
