@@ -10,10 +10,12 @@ import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by Administrator on 2018/10/23.
  */
+@Repository
 public class G06AssignTaskDaoImpl implements G06AssignTaskDao{
     private Task task=new Task();
     private User user=new User();
@@ -98,6 +100,6 @@ public class G06AssignTaskDaoImpl implements G06AssignTaskDao{
         put.addColumn(Bytes.toBytes("info"),Bytes.toBytes("nowHandler"),Bytes.toBytes(nowHandler));
         put.addColumn(Bytes.toBytes("info"),Bytes.toBytes("handlerStack"),Bytes.toBytes(stack));
         put.addColumn(Bytes.toBytes("info"),Bytes.toBytes("memberIds"),Bytes.toBytes(member));
-
+        table.put(put);
     }
 }

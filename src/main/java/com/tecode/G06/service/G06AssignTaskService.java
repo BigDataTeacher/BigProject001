@@ -18,7 +18,7 @@ public interface G06AssignTaskService {
     /**
      * 通过传入的用户ID查询办理人姓名name
      */
-    User getUserbyUserId(String username)throws Exception;
+   // User getUserbyUserId(String username)throws Exception;
     /**
      * 判断用户ID是否是任务查询中查出的当前办理人
      * 是才能继续操作
@@ -33,11 +33,11 @@ public interface G06AssignTaskService {
      cusId://⽤户id
      handlerId://下⼀个办理⼈id
      */
-    Task inHandlerId(String taskId,String handlerId,String userId)throws Exception;
+    boolean inHandlerId(String taskId,String handlerId,String userId)throws Exception;
     /**
      * 将任务ID加入下一个班里人用户任务IDtasks
      *
      */
-    Task inTask(Task task)throws Exception;
+    boolean inTask(String taskId,String handlerId)throws Exception;
 }
 
