@@ -116,10 +116,11 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         Put put = new Put(Bytes.toBytes(rowKey));
         //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long currentTime = System.currentTimeMillis();
+        System.out.println("####" + Bytes.toBytes(currentTime));
         if(bl){
-            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime),Bytes.toBytes(CommentatorType.SYSTEM+"_System_text_回复操作成功,"));
+            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime+""),Bytes.toBytes(CommentatorType.SYSTEM+"_System_text_回复操作成功,"));
         }else {
-            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime),Bytes.toBytes(CommentatorType.SYSTEM+"_System_text_回复操作失败,"));
+            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime +""),Bytes.toBytes(CommentatorType.SYSTEM+"_System_text_回复操作失败,"));
         }
         return put;
     }
