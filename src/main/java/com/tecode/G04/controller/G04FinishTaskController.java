@@ -61,7 +61,7 @@ public class G04FinishTaskController {
             taskMap.put("msg", "没有任务");
             return taskMap;
         }
-        try {
+        try {//SessionUtil.getLogingUser(session).getUsername()
            g04TaskService.modifyTaskState(taskId, SessionUtil.getLogingUser(session).getUsername());
 
 
