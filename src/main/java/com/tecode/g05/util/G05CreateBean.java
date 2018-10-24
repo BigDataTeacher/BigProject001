@@ -26,6 +26,7 @@ import java.util.Map;
 public class G05CreateBean {
     // 格式化日期
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     /**
      * 生成User
      *
@@ -61,7 +62,8 @@ public class G05CreateBean {
                     e.printStackTrace();
                 }
             } else {    // tasks列族的保存到Map集合中
-                userTasks.put(qualifier, Integer.parseInt(value));
+                int i = G05NumberUtil.isNumber(value) ? Integer.parseInt(value) : 0;
+                userTasks.put(qualifier, i);
             }
         }
         return user;
@@ -69,12 +71,13 @@ public class G05CreateBean {
 
     /**
      * 生成task
-     * @param rs    查询出的单条数据
+     *
+     * @param rs 查询出的单条数据
      * @return
      */
     public static Task createTask(Result rs) {
         Task task = new Task();
-        Class  c = task.getClass();
+        Class c = task.getClass();
         Cell[] cells = rs.rawCells();
         for (Cell cell : cells) {
             // 列族
@@ -87,8 +90,8 @@ public class G05CreateBean {
             String value = Bytes.toString(CellUtil.cloneValue(cell));
 
             // 只需要info列族的数据
-            if(family.equals("info") && !qualifier.equals("taskState")) {
-                    // 通过反射获取set方法
+            if (family.equals("info") && !qualifier.equals("taskState")) {
+                // 通过反射获取set方法
                 Method method = null;
                 try {
                     method = c.getMethod("set" + qualifier.substring(0, 1).toUpperCase() + qualifier.substring(1), String.class);
@@ -100,8 +103,8 @@ public class G05CreateBean {
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 }
-            } else if(family.equals("info") && qualifier.equals("taskState")) {
-                    task.setTaskState(TaskState.fromHandleState(value));
+            } else if (family.equals("info") && qualifier.equals("taskState")) {
+                task.setTaskState(TaskState.fromHandleState(value));
             }
         }
         return task;
@@ -122,7 +125,7 @@ public class G05CreateBean {
             // 当前时间
             Date nowDate = new Date();
             long time = limitDate.getTime() - nowDate.getTime();
-            if(time > 0) {
+            if (time > 0) {
                 gtb.setBalanceTime(G05TimeUtil.getTime(time));
             }
         } catch (ParseException e) {
@@ -130,7 +133,7 @@ public class G05CreateBean {
         }
         gtb.setTaskTag(task.getTaskTag());
         gtb.setIsHandle("false");
-        if(task.getSponsor().equals(task.getNowHandler())) {
+        if (task.getSponsor().equals(task.getNowHandler())) {
             gtb.setIsHandle("true");
         }
         gtb.setNowHandle(task.getNowHandler());
