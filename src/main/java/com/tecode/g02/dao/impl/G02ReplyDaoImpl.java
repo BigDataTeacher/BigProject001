@@ -118,9 +118,9 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         long currentTime = System.currentTimeMillis();
         //System.out.println("####" + Bytes.toBytes(currentTime));
         if(bl){
-            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime+""),Bytes.toBytes(CommentatorType.SYSTEM+"_System_text_回复操作成功,"));
+            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime+""),Bytes.toBytes(CommentatorType.SYSTEM+"_system_text_回复操作成功,"));
         }else {
-            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime +""),Bytes.toBytes(CommentatorType.SYSTEM+"_System_text_回复操作失败,"));
+            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime +""),Bytes.toBytes(CommentatorType.SYSTEM+"_system_text_回复操作失败,"));
         }
         return put;
     }
@@ -144,10 +144,13 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         Task task = selectTaskByID(taskId);
         String handlerStack = task.getHandlerStack();
         String[] split = handlerStack.split(",");
-        String newStack="";
-        for (int i = 0 ;i < split.length-1;i++) {
-            newStack+=split[i];
+
+        String tmp ="";
+        for (int i = 0; i < split.length - 1; i++) {
+            tmp += split[i]+",";
         }
+        String newStack = tmp.substring(0,tmp.length()-1);
+
         Put put = new Put(Bytes.toBytes(taskId));
         put.addColumn(Bytes.toBytes(info),Bytes.toBytes("handlerStack"),Bytes.toBytes(newStack));
         table.put(put);
