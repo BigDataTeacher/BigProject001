@@ -7,7 +7,7 @@ package com.tecode.g05.bean;
  * 成员：李晋、建晨飞<br>
  */
 public class G05TaskBean {
-    private String taskId;
+    private String taskId ;
     private String sponsor;
     private String taskTitle;
     private String taskState;

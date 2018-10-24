@@ -117,7 +117,7 @@ public class G05CreateBean {
         gtb.setTaskTitle(task.getTaskTitle());
         gtb.setTaskState(task.getTaskState().getType());
         //****************剩余时限*****************
-        gtb.setBalanceTime("0");
+        gtb.setBalanceTime("不限");
         try {
             // 任务规定完成时间
             String timeLimit = task.getTimeLimit();
@@ -129,11 +129,12 @@ public class G05CreateBean {
                 gtb.setBalanceTime(G05TimeUtil.getTime(time));
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            // 日期格式错误则使用默认的"不限"
+            // e.printStackTrace();
         }
         gtb.setTaskTag(task.getTaskTag());
         gtb.setIsHandle("false");
-        if (task.getSponsor().equals(task.getNowHandler())) {
+        if (task.getSponsor() != null && task.getSponsor().equals(task.getNowHandler())) {
             gtb.setIsHandle("true");
         }
         gtb.setNowHandle(task.getNowHandler());
