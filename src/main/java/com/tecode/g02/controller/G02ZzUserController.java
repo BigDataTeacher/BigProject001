@@ -1,6 +1,9 @@
-package com.tecode.controller;
+package com.tecode.g02.controller;
 
+import com.tecode.bean.Task;
 import com.tecode.bean.User;
+import com.tecode.g02.service.G02ZzReplyService;
+import com.tecode.g02.service.impl.G02ZzReplyServiceImpl;
 import com.tecode.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,19 +11,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Map;
+
+
+
+
 
 
 /**
  * 1.在接收html请求的java文件的类上添加@Controller
+ *
+ *
  */
 @Controller
-public class UserController {
+public class G02ZzUserController {
     /**
      *需要调用业务层（Services)的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。
      */
-@Autowired
+    @Autowired
     private UserService userService;
 
     /**
@@ -35,8 +46,8 @@ public class UserController {
      * 3.@ResponseBody:：表示把返回的值封装成json进行返回
      */
     @ResponseBody
-    @RequestMapping(value = "/userLogin", method = RequestMethod.POST)
-    public Map<String,Object> login(User user, HttpSession session){
+    @RequestMapping(value = "/reply", method = RequestMethod.POST)
+    public Map<String,Object> login(Task task, String cusId, HttpSession session){
         /**
          *1.验证参数的合法性
          * 2.调用业务逻辑层处理业务，并获得返回值
@@ -49,8 +60,25 @@ public class UserController {
          *
          */
 
+        String taskId = task.getTaskId();
+        String idStack = task.getHandlerStack();
+        String[] split = idStack.split(",");
+        String handlerId = split[split.length-1];
 
-        return null;
+
+        Map<String,Object> map = new HashMap<>();
+        if(taskId!=null || handlerId.equals(cusId)){
+            G02ZzReplyService replyService = new G02ZzReplyServiceImpl();
+
+            map.put("success",true);
+            map.put("msg","回复成功！");
+        }else{
+            map.put("success",false);
+            map.put("msg","");
+        }
+
+        return map;
     }
+
 
 }
