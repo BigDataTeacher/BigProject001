@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by Administrator on 2018/10/18.
  */
-public interface UserDao {
+public interface G03CYUserDao {
 
     /**
      * 通过员工编号查询员工对象

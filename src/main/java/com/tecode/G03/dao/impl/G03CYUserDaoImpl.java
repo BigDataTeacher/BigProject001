@@ -1,7 +1,6 @@
 package com.tecode.G03.dao.impl;
 
-import com.tecode.G03.dao.UserDao;
-import com.tecode.bean.User;
+import com.tecode.G03.dao.G03CYUserDao;
 import com.tecode.util.hbase.table.ConfigUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
@@ -10,6 +9,7 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.*;
@@ -17,7 +17,8 @@ import java.util.*;
 /**
  * Created by Administrator on 2018/10/22.
  */
-public class UserDaoImpl implements UserDao {
+@Repository
+public class G03CYUserDaoImpl implements G03CYUserDao {
 
     Configuration conf = null;
     Connection conn = null;
@@ -50,36 +51,7 @@ public class UserDaoImpl implements UserDao {
 
         return qualifier;
     }
-//    @Override
-//    public void addTask(String username,int num) throws IOException {
-//        //获取文件系统
-//        conf = HBaseConfiguration.create();
-//
-//        conn = ConnectionFactory.createConnection(conf);
-//
-//        Table tableUser = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
-//
-//        Put put = new Put(Bytes.toBytes(username));
-//
-//        Put putTask = put.addColumn(Bytes.toBytes("tasks"), Bytes.toBytes("taskId"),Bytes.toBytes(num));
-//
-//        tableUser.put(putTask);
-//
-//        Get get = new Get(Bytes.toBytes(username));
-//
-//        Result result = tableUser.get(get);
-//
-//        List<byte[]> list = new ArrayList<>();
-//
-//        Cell [] cells = result.rawCells();
-//
-//        for (Cell cell : cells) {
-//
-//            list.add(CellUtil.cloneValue(cell));
-//
-//        }
-//
-//    }
+
     @Override
     public Map<String,Integer> getNumOfTaskMsg(List<String> usernames, String taskId) throws IOException {
         //获取文件系统

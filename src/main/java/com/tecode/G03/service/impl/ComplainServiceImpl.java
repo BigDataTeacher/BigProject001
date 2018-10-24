@@ -1,7 +1,7 @@
 package com.tecode.G03.service.impl;
 
 import com.tecode.G03.dao.TaskDao;
-import com.tecode.G03.dao.UserDao;
+import com.tecode.G03.dao.G03CYUserDao;
 import com.tecode.G03.service.ComplainService;
 import com.tecode.bean.Task;
 import com.tecode.bean.TaskComment;
@@ -27,7 +27,7 @@ public class ComplainServiceImpl implements ComplainService {
      * 根据用户id查询
      */
     @Autowired
-    private UserDao userDao;
+    private G03CYUserDao userDao;
     @Autowired
     private TaskDao taskDao;
 
@@ -48,9 +48,13 @@ public class ComplainServiceImpl implements ComplainService {
         try {
             //通过任务id查找该任务所有信息，并封装添加进task对象
             task = taskDao.getTaskByTaskId(taskId);
+            if(task.getTaskId() == null){
+                throw new BaseException("任务不存在。。。");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+//        System.out.println(task);
         //获得办理人ID集
         String[] handlers = task.getHandlerStack().split(",");
         if (handlers.length < 2) {
