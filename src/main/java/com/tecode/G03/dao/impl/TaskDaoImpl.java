@@ -39,7 +39,7 @@ public class TaskDaoImpl implements TaskDao {
     @Autowired
     private TaskDao taskDao;
 
-    @Override
+    //@Override
     public void updateTask(Task task) throws IOException {
         Map<String, String> map = new HashMap<>();
         //获取链接
@@ -92,7 +92,7 @@ public class TaskDaoImpl implements TaskDao {
 
     }
 
-    @Override  //重写获得当前办理人姓名nowHandler方法
+   //@Override  //重写获得当前办理人姓名nowHandler方法
     public String getNowHandlerByTaskId(String taskId) throws IOException {
         //获取系统
         conf = HBaseConfiguration.create();
@@ -122,7 +122,7 @@ public class TaskDaoImpl implements TaskDao {
         return nowHandler;
     }
 
-    @Override
+    //@Override
     public void modifyComment(String taskId,Set<TaskComment> coments) throws IOException {
         Map<String, String> commentMap = new HashMap<>();
         conn = ConnectionFactory.createConnection(conf);
@@ -149,7 +149,7 @@ public class TaskDaoImpl implements TaskDao {
         tableTask.put(puts);
     }
 
-    @Override
+    //@Override
     public void addLog(String taskId,Set<TaskLog> logs) throws IOException {
         Map<String, String> logMap = new HashMap<>();
         conn = ConnectionFactory.createConnection(conf);
@@ -172,5 +172,35 @@ public class TaskDaoImpl implements TaskDao {
             puts.add(put);
         }
         tableTask.put(puts);
+    }
+
+    @Override
+    public Task getTaskByTaskId(String taskId) throws IOException {
+        //获取系统
+        conf = HBaseConfiguration.create();
+
+        conn = ConnectionFactory.createConnection(conf);
+        //创建表对象，并且获得表
+        Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
+
+        //创建Get对象
+        Get get = new Get(Bytes.toBytes(taskId));
+
+        //get.addFamily(Bytes.toBytes("info"));
+        get.addColumn(Bytes.toBytes("info"),Bytes.toBytes("nowHandler"));
+        get.addColumn(Bytes.toBytes("info"),Bytes.toBytes(""));
+        Result result = table.get(get);
+
+        Cell[] cells = result.rawCells();
+
+        String nowHandler = null;
+
+        for (Cell cell : cells) {
+
+            nowHandler = Bytes.toString(CellUtil.cloneQualifier(cell));
+
+        }
+
+        return null;
     }
 }

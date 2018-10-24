@@ -24,7 +24,7 @@ public class UserDaoImpl implements UserDao {
     Connection conn = null;
 
     @Override  //重写获得name方法
-    public String getNameByUserName(String username) throws Exception {
+    public String getNameByUserName(String username) throws IOException {
         //获取系统
         conf = HBaseConfiguration.create();
 
