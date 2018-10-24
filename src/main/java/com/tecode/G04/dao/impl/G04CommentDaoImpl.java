@@ -95,7 +95,6 @@ public class G04CommentDaoImpl implements G04CommentDao {
         //得到get对象
         Get get = new Get(Bytes.toBytes(taskid));
         //设置获得哪一个列祖下的哪一列
-       System.out.println(ConfigUtil.getString("hbase_task_tbale_cf").split(",")[0]);
         get.addColumn(Bytes.toBytes(ConfigUtil.getString("hbase_task_tbale_cf").split(",")[0]),Bytes.toBytes("memberIds"));
         Result result = table.get(get);
 
