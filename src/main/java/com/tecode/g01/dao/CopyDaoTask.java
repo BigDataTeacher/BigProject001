@@ -23,7 +23,7 @@ public interface CopyDaoTask {
     /**
      * 向log中添加记录
      */
-    Integer addLog(String taskId, String username, String menberId) throws IOException;
+    Integer addLog(String taskId, String username, String menberId,boolean b) throws IOException;
 
     /**
      * 向评论中添加记录

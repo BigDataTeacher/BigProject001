@@ -17,7 +17,14 @@ public class CopyController {
     @Autowired
     private CopyTaskService taskService;
 
-
+    /**
+     *
+     * @param taskId        r任务ID
+     * @param userName      登录人
+     * @param memberId      要转送的人的ID
+     * @return
+     * @throws Exception
+     */
 
     @ResponseBody
     @RequestMapping(value = "/copy", method = RequestMethod.POST)

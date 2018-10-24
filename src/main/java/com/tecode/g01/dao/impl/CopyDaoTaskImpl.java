@@ -89,15 +89,21 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
      *添加日志
      */
     @Override
-    public Integer addLog(String taskId, String username, String menberId) throws IOException {
+    public Integer addLog(String taskId, String username, String menberId,boolean b) throws IOException {
         Table taskTable = conn.getTable(TableName.valueOf(taskTableName));
 
         int before =getLog(taskId,taskTable);
         Put put = new Put(Bytes.toBytes(taskId));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String time =sdf.format(System.currentTimeMillis());
-        String mess = username + "copy"+ taskId + "to" + menberId;
-        put.addColumn(Bytes.toBytes(taskLog),Bytes.toBytes(System.currentTimeMillis()+""),Bytes.toBytes(mess));
+        String time = System.currentTimeMillis() + "";
+
+
+        String mess = username + "copy"+ taskId + "to" + menberId+"成功";
+        String mess1 = username + "copy"+ taskId + "to" + menberId+"失败";
+        if(b){
+            put.addColumn(Bytes.toBytes(taskLog),Bytes.toBytes(time),Bytes.toBytes(mess));
+        }
+        put.addColumn(Bytes.toBytes(taskLog),Bytes.toBytes(time),Bytes.toBytes(mess1));
 
         taskTable.put(put);
 
@@ -124,8 +130,10 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
 
         if(b){
              put.addColumn(Bytes.toBytes(taskComment),Bytes.toBytes(System.currentTimeMillis()+""),Bytes.toBytes(mess1));
+        }else{
+            put.addColumn(Bytes.toBytes(taskComment),Bytes.toBytes(System.currentTimeMillis()+""),Bytes.toBytes(mess2));
         }
-        put.addColumn(Bytes.toBytes(taskComment),Bytes.toBytes(System.currentTimeMillis()+""),Bytes.toBytes(mess2));
+
         taskTable.put(put);
         int after = getComment(taskId,taskTable);
 

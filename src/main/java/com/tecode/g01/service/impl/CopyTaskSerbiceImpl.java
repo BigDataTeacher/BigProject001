@@ -33,7 +33,7 @@ public class CopyTaskSerbiceImpl implements CopyTaskService {
        // System.out.println(usercount);
         //System.out.println("进入成功");
         if ((taskcount > 0 && usercount >= 0) || usercount > 0) {
-            int logs = copydao.addLog(taskId, username, memberId);
+            int logs = copydao.addLog(taskId, username, memberId,true);
 
             //System.out.println("进入里面");
             if (logs > 0) {
@@ -46,7 +46,7 @@ public class CopyTaskSerbiceImpl implements CopyTaskService {
             }
             return false;
         }
-
+        copydao.addLog(taskId, username, memberId,false);
         copydao.addComment(taskId,username,memberId,false);
 
         return false;
