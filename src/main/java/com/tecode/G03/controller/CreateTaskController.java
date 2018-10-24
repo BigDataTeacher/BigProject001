@@ -41,7 +41,7 @@ public class CreateTaskController {
     @RequestMapping(value = "/create-task", method = RequestMethod.POST)
     public Map<String, Object> login(Task task, HttpSession session) {
         Map<String, Object> map = new HashMap<>();
-        /**
+        /*
          *1.验证参数的合法性
          * 2.调用业务逻辑层处理业务，并获得返回值
          * 3.判断是否创建成功
@@ -61,7 +61,9 @@ public class CreateTaskController {
         if (task.getSponsorId() == null || task.getTaskTitle() == null || task.getBeAssignId() == null || task.getTaskTag() == null) {
             map.put("success", false);
             map.put("msg", "输入参数有误。。。");
-        } else {
+        } else if(task.getTimeLimit().equals("不限")) {
+            task.setTimeLimit("");
+        }else{
             try {
                 createTaskService.createTask(task);
                 map.put("success", true);
