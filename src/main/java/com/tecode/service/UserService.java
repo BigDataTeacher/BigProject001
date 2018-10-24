@@ -8,7 +8,6 @@ import com.tecode.bean.User;
 
 /**
  *
- *
  * 处理用户信息相关的业务层
  */
 public interface UserService {

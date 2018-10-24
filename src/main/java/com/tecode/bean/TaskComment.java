@@ -6,7 +6,7 @@ import java.util.Date;
  * 评论实体类
  */
 public class TaskComment implements Comparable<TaskComment> {
-    //评论数据
+    //评论时间
     private Date taskCommentTime;
     //评论内容
     private String taskComment;
