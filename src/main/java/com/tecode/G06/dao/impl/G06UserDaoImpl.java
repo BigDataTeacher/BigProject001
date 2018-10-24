@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class G06UserDaoImpl implements G06UserDao {
 
-    User user=new User();
+    User user=null;
     String name=null;
     String value=null;
     @Override
@@ -28,7 +28,7 @@ public class G06UserDaoImpl implements G06UserDao {
         String tablename="oa:user";
         Table table = con.getTable(TableName.valueOf(tablename));
         Get get=new Get(Bytes.toBytes(username));
-
+        user=new User();
         Result result=table.get(get);
         Cell[] rawCells=result.rawCells();
 

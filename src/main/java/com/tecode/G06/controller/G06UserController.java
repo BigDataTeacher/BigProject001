@@ -31,10 +31,7 @@ public class G06UserController {
      */
     @Autowired
     private G06UserService userService;
-    private static Map<String,Object> map = new HashedMap();
-    static {
-        map.put("success",false);
-        map.put("user",null);}
+
     /**
      * 用户登录方法
      *
@@ -61,7 +58,10 @@ public class G06UserController {
          *
          *
          */
+       Map<String,Object> map = new HashedMap();
 
+            map.put("success",false);
+            map.put("user",null);
         //判断传入的账户密码是否为空
         //为空user为null
         boolean n=user.getUsername().isEmpty();
