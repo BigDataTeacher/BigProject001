@@ -1,7 +1,6 @@
 package com.tecode.g05.Test;
 
 import com.tecode.enumBean.TaskState;
-import com.tecode.g05.dao.impl.G05TaskDaoImpl;
 import com.tecode.g05.util.G05HBaseTableUtil;
 import com.tecode.util.hbase.table.HBaseUtils;
 import org.apache.hadoop.hbase.Cell;
@@ -18,7 +17,13 @@ import java.lang.ref.SoftReference;
  */
 public class TestConn {
     public static void main(String[] args) {
-        G05TaskDaoImpl.addLogAndMessage("02_04102269_1539547875112", "系统消息_系统_text_aaaaaa");
+
+        Cell[] cells = G05HBaseTableUtil.getColumn("oa:user", "1082038", "tasks", "04_1082026_20170101010101");
+        for (Cell cell : cells) {
+            System.out.println(Bytes.toString(CellUtil.cloneRow(cell)));
+            System.out.println(Bytes.toString(CellUtil.cloneQualifier(cell)));
+            System.out.println(Bytes.toString(CellUtil.cloneValue(cell)));
+        }
     }
 
 }
