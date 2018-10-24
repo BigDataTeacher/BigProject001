@@ -52,7 +52,7 @@ public class G06AssignTaskServiceImpl implements G06AssignTaskService{
         if (handler(taskId, userId)) {
             String name = taskDao.getUserbyUserId(handlerId).getName();
             String handler=","+handlerId;
-            taskDao.inTaskbyTaskId(taskId, name, handlerId, handlerId);
+            taskDao.inTaskbyTaskId(taskId, name, handler, handler);
 
             return true;
         } else {

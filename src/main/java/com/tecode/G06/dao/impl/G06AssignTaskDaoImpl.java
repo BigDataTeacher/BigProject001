@@ -102,4 +102,9 @@ public class G06AssignTaskDaoImpl implements G06AssignTaskDao{
         put.addColumn(Bytes.toBytes("info"),Bytes.toBytes("memberIds"),Bytes.toBytes(member));
         table.put(put);
     }
+
+    @Override
+    public boolean assign(String taskId, String cusId, String handlerId) {
+        return false;
+    }
 }
