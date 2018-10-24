@@ -12,7 +12,10 @@ import com.tecode.g05.dao.G05TaskDao;
 import com.tecode.g05.filter.KeywordFilter;
 import com.tecode.g05.util.G05CreateBean;
 import com.tecode.g05.util.G05HBaseTableUtil;
+import com.tecode.g05.util.G05NumberUtil;
 import com.tecode.util.hbase.table.HBaseUtils;
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.exceptions.HBaseException;
@@ -80,21 +83,55 @@ public class G05TaskDaoImpl implements G05TaskDao {
     public boolean updateTask(UpdateTaskBean utb) throws BaseException {
         boolean b = true;
         if (utb.getTaskTitle() != null && !utb.getTaskTitle().equals("")) {
-            b = G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "info", "taskTitle", utb.getTaskTitle());
+            b = G05HBaseTableUtil.insertData(TABLE_NAME, utb.getTaskId(), "info", "taskTitle", utb.getTaskTitle());
         }
         if (utb.getTaskDesc() != null && !utb.getTaskDesc().equals("")) {
-            b = G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "info", "taskDesc", utb.getTaskDesc());
+            b = G05HBaseTableUtil.insertData(TABLE_NAME, utb.getTaskId(), "info", "taskDesc", utb.getTaskDesc());
         }
         if (utb.getCusId().equals(utb.getSponsorId())) {
             if (utb.getTaskEndTime() != null && !utb.getTaskEndTime().equals("")) {
-                b = G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "info", "timeLimit", utb.getTaskEndTime());
+                b = G05HBaseTableUtil.insertData(TABLE_NAME, utb.getTaskId(), "info", "timeLimit", utb.getTaskEndTime());
             }
         }
         if (b) {
-            G05HBaseTableUtil.insertData("oa:task", utb.getTaskId(), "log", new Date().getTime() + "", "系统消息_系统_" + TaskCommentType.TEXT.getType() + "_" + utb.getSponsorId() + "修改了任务");
+            addLogAndMessage(utb.getTaskId(), "系统消息_系统_" + TaskCommentType.TEXT.getType() + "_" + utb.getSponsorId() + "修改了任务");
             return b;
         }
         return b;
+    }
+
+    /**
+     * 添加日志和未读消息
+     * @param taskId    任务ID
+     * @param msg   日志内容
+     */
+    public static void addLogAndMessage( String taskId, String msg) {
+        // 添加日志
+        G05HBaseTableUtil.insertData(TABLE_NAME, taskId, "log", new Date().getTime() + "", msg);
+        // 获取用户组
+        Cell[] cells = G05HBaseTableUtil.getColumn(TABLE_NAME, taskId, "info", "memberIds");
+        // 列名
+        String qualifier = Bytes.toString(CellUtil.cloneQualifier(cells[0]));
+        // 值
+        String value = Bytes.toString(CellUtil.cloneValue(cells[0]));
+        String[] splits = value.split(",");
+        if(splits == null || splits.length == 0) {
+            return ;
+        }
+
+        for (String s : splits) {
+            // 获取原未读消息数
+            Cell[] cells2 = G05HBaseTableUtil.getColumn("oa:user", s, "tasks", taskId);
+            // 列名
+            String qualifier2 = Bytes.toString(CellUtil.cloneQualifier(cells2[0]));
+            // 值
+            String value2 = Bytes.toString(CellUtil.cloneValue(cells2[0]));
+            int i = G05NumberUtil.isNumber(value2) ? Integer.parseInt(value2) + 1 : 1;
+            // 未读消息+1
+            G05HBaseTableUtil.insertData("oa:user", s, "tasks", taskId, "" + i);
+        }
+
+
     }
 
     /**

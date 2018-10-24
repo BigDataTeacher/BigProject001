@@ -13,6 +13,7 @@ import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.util.Bytes;
 /**
  * 公用的操作HBase方法
@@ -173,6 +174,34 @@ public class G05HBaseTableUtil {
             // 获取表
             Table table = connection.getTable(tn);
             Get get = new Get(Bytes.toBytes(rowKey));
+            Result rs = table.get(get);
+            return rs.rawCells();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 获取数据
+     * @param tableName	表名
+     * @param rowKey	行键
+     * @param familyName	列族
+     * @param columnName	列名
+     * @return	结果数组/null
+     */
+    public static Cell[] getColumn(String tableName, String rowKey,String familyName,String columnName) {
+        if (!tableExists(tableName)) {
+            return null;
+        }
+        try {
+            Connection connection = HBaseUtils.getConnection();
+            // 获取表名
+            TableName tn = TableName.valueOf(tableName);
+            // 获取表
+            Table table = connection.getTable(tn);
+            Get get = new Get(Bytes.toBytes(rowKey));
+            get.addColumn(Bytes.toBytes(familyName),Bytes.toBytes(columnName));
             Result rs = table.get(get);
             return rs.rawCells();
         } catch (IOException e) {
