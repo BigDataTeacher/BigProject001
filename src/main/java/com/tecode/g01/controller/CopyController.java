@@ -1,9 +1,6 @@
 package com.tecode.g01.controller;
 
-import com.tecode.bean.Task;
-import com.tecode.bean.User;
-import com.tecode.enumBean.CommentatorType;
-import com.tecode.g01.service.TaskCopyService;
+import com.tecode.g01.service.CopyTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,36 +15,34 @@ public class CopyController {
 
 
     @Autowired
-    private TaskCopyService taskService;
-    private String userid = null;
-    private String taskid = null;
+    private CopyTaskService taskService;
+
 
 
     @ResponseBody
     @RequestMapping(value = "/copy", method = RequestMethod.POST)
-    public Map<String,Object> insert(User user,Task task) throws Exception {
-
-
-        boolean flag = false;
-        userid = user.getUsername();
-        taskid = task.getTaskId();
-
-        System.out.println(userid+":"+taskid);
-
-        boolean b = taskService.insertAndAdd(userid, taskid);
-
-        Map<String,Object> map = new HashMap<>();
-        map.put("success",false);
-        //参数合法性判断
-
-        System.out.println("123");
-        if(userid != null && taskid != null) {
-            if (b != flag) {
-                map.put("success", true);
-                System.out.println("111");
-
+    public Map<String,Object> insert(String taskId,String userName,String memberId) throws Exception {
+        Map<String,Object> map=new HashMap<>();
+        if (taskId!=null&&userName!=null&&memberId!=null){
+            boolean handler = taskService.isHandler(taskId, userName);
+            if(handler){
+                boolean b = taskService.toNext(taskId, userName, memberId);
+                if(b){
+                    map.put("success",true);
+                    map.put("msg","抄送成功");
+                }else{
+                    map.put("success",false);
+                    map.put("msg","抄送失败");
+                }
+                return map;
             }
+            map.put("success",false);
+            map.put("msg","不是当前处理人，不能处理");
+            return map;
         }
+        map.put("success",false);
+        map.put("msg","信息不能为空");
+
         return map;
 
     }
