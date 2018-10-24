@@ -1,14 +1,20 @@
 package com.tecode.g01.controller;
 
 import com.tecode.bean.Task;
+import com.tecode.bean.TaskComment;
 import com.tecode.g01.service.TaskService;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 
@@ -17,6 +23,8 @@ import java.util.Map;
  */
 @Controller
 public class TaskController {
+
+
 
     /**
      *需要调用业务层（Services)的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。
@@ -52,6 +60,9 @@ public class TaskController {
             map.put("msg","任务id或用户名为空");
         }else {
             Task taskdetail = taskService.getTaskdetail(taskid,username);
+            for (TaskComment taskComment : taskdetail.getTaskComments()) {
+                System.out.println(taskComment.getTaskCommentTime().toString());
+            }
             if(taskdetail != null){
                 map.put("success",true);
                 map.put("data",taskdetail);

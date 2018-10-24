@@ -140,7 +140,7 @@ public class TaskDaoImpl implements TaskDao{
             try {
 
                 Date date = new Date(Long.valueOf(s));
-                comment.setTaskCommentTime(sdf.parse(sdf.format(date)));           //评论时间
+                comment.setTaskCommentTime(date);           //评论时间
                 comment.setTaskComment(commentMessage);       //评论内容
                 String s1 = isUserOrSystem(commentorType);
                 comment.setCommentatorType(s1);               //评论者类型

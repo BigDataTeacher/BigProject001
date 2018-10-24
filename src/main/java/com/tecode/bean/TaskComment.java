@@ -1,5 +1,7 @@
 package com.tecode.bean;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 /**
