@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,33 +20,30 @@ import java.util.Map;
 @Controller
 public class ComplainController {
     /**
-     *需要调用业务层（Services)的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。
+     * 需要调用业务层（Services)的方法时 声明的对象 类型为接口， 添加@Autowired，实现对该对象的实例化。
      */
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private ComplainService complainService;
 
     /**
      * 用户登录方法
-     *
-     *
-     *
+     * <p>
+     * <p>
+     * <p>
      * 1.其中 @RequestMapping(value = "/userLogin", method = RequestMethod.POST) 表示html页面请求到该方法的URL地址的映射
-     *      value = "/userLogin" ： html的请求地址
-     *      method = RequestMethod.POST：表示请求的方式
+     * value = "/userLogin" ： html的请求地址
+     * method = RequestMethod.POST：表示请求的方式
      * 2.@RequestBody:表示接收josn类型的参数
-     *          注意User对象中的属性名称，必须和html页面传递的参数的名称完全相同，包括大小写。
-     *
+     * 注意User对象中的属性名称，必须和html页面传递的参数的名称完全相同，包括大小写。
+     * <p>
      * 3.@ResponseBody:：表示把返回的值封装成json进行返回
      */
 
 
-
     @ResponseBody
-    @RequestMapping(value = "/userLogin", method = RequestMethod.POST)
-    public Map<String,Object> login(String taskId, String cusId, String handlerId, boolean isAssign, HttpSession session) throws Exception {
+    @RequestMapping(value = "/assign-task", method = RequestMethod.POST)
+    public Map<String, Object> login(String taskId, String cusId, String handlerId, boolean isAssign, HttpSession session) {
         /**
          *1.验证参数的合法性
          * 2.调用业务逻辑层处理业务，并获得返回值
@@ -57,28 +55,28 @@ public class ComplainController {
          *
          *
          */
-        Map<String,Object> map = new HashMap<>();
-        if(cusId == null){
-            map.put("success",false);
-            map.put("msg","输入用户名不能为空...");
-        }else if( taskId == null){
-            map.put("success",false);
-            map.put("msg","输入任务Id不能为空...");
-        }else if(handlerId == null){
-            map.put("success",false);
-            map.put("msg","输入接办任务人员Id不能为空...");
-        }else if(isAssign ){
-            map.put("success",false);
-            map.put("msg","请选择转办业务项...");
-        }else{
-            try{
+        Map<String, Object> map = new HashMap<>();
+        if (cusId == null) {
+            map.put("success", false);
+            map.put("msg", "输入用户名不能为空...");
+        } else if (taskId == null) {
+            map.put("success", false);
+            map.put("msg", "输入任务Id不能为空...");
+        } else if (handlerId == null) {
+            map.put("success", false);
+            map.put("msg", "输入接办任务人员Id不能为空...");
+        } else if (isAssign) {
+            map.put("success", false);
+            map.put("msg", "请选择转办业务项...");
+        } else {
+            try {
                 //调用转办任务方法
-                complainService.complainTask(cusId,  taskId,  handlerId);
-                map.put("success",true);
-                map.put("data",true);
-            }catch(BaseException e){
-                map.put("success",false);
-                map.put("msg",e.getMessage());
+                complainService.complainTask(cusId, taskId, handlerId);
+                map.put("success", true);
+                map.put("data", true);
+            } catch (BaseException e) {
+                map.put("success", false);
+                map.put("msg", e.getMessage());
             }
         }
         return map;

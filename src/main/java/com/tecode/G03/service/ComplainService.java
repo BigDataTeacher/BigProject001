@@ -20,7 +20,7 @@ public interface ComplainService {
     /**
      *根据用户名id查询用户对象
      */
-    void complainTask(String username,String taskId,String handlerId) throws BaseException, IOException;
+    void complainTask(String username,String taskId,String handlerId) throws BaseException;
 
 
 

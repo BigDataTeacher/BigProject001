@@ -1,10 +1,10 @@
 package com.tecode.G03.dao.impl;
 
 import com.tecode.G03.dao.TaskDao;
-import com.tecode.G03.dao.UserDao;
 import com.tecode.bean.Task;
 import com.tecode.bean.TaskComment;
 import com.tecode.bean.TaskLog;
+import com.tecode.enumBean.TaskState;
 import com.tecode.util.hbase.table.ConfigUtil;
 import com.tecode.util.hbase.table.HBaseUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -14,15 +14,14 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.util.*;
 
 /**
- *   用户数据处理层的具体实现
- *
- *   需要类上添加@Repository注解
+ * 用户数据处理层的具体实现
+ * <p>
+ * 需要类上添加@Repository注解
  */
 @Repository
 public class TaskDaoImpl implements TaskDao {
@@ -30,12 +29,6 @@ public class TaskDaoImpl implements TaskDao {
     Configuration conf = null;
 
     Connection conn = null;
-
-    @Autowired
-    private UserDao userDao;
-
-    @Autowired
-    private TaskDao taskDao;
 
     @Override
     public void updateTask(Task task) throws IOException {
@@ -73,48 +66,18 @@ public class TaskDaoImpl implements TaskDao {
 
     }
 
-   //@Override  //重写获得当前办理人姓名nowHandler方法
-//    public String getNowHandlerByTaskId(String taskId) throws IOException {
-//        //获取系统
-//        conf = HBaseConfiguration.create();
-//
-//        conn = ConnectionFactory.createConnection(conf);
-//        //创建表对象，并且获得表
-//        Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
-//
-//        //创建Get对象
-//        Get get = new Get(Bytes.toBytes(taskId));
-//
-//        //get.addFamily(Bytes.toBytes("info"));
-//        get.addColumn(Bytes.toBytes("info"),Bytes.toBytes("nowHandler"));
-//
-//        Result result = table.get(get);
-//
-//        Cell[] cells = result.rawCells();
-//
-//        String nowHandler = null;
-//
-//        for (Cell cell : cells) {
-//
-//            nowHandler = Bytes.toString(CellUtil.cloneQualifier(cell));
-//
-//        }
-//
-//        return nowHandler;
-//    }
-
     @Override
-    public void addComment(String taskId,Set<TaskComment> coments) throws IOException {
+    public void addComment(String taskId, Set<TaskComment> comments) throws IOException {
         Map<String, String> commentMap = new HashMap<>();
         conn = ConnectionFactory.createConnection(conf);
         //获取表的对象
         Table tableTask = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
-        for (TaskComment coment : coments) {
-            String key = Long.toString(coment.getTaskCommentTime().getTime());
-            String value = coment.getRealName() + "_" +
-                    coment.getCommentatorType() + "_" +
-                    coment.getCommentType() + "_" +
-                    coment.getTaskComment();
+        for (TaskComment comment : comments) {
+            String key = Long.toString(comment.getTaskCommentTime().getTime());
+            String value = comment.getRealName() + "_" +
+                    comment.getCommentatorType() + "_" +
+                    comment.getCommentType() + "_" +
+                    comment.getTaskComment();
             commentMap.put(key, value);
         }
         Set<Map.Entry<String, String>> entrySet = commentMap.entrySet();
@@ -131,7 +94,7 @@ public class TaskDaoImpl implements TaskDao {
     }
 
     @Override
-    public void addLog(String taskId,Set<TaskLog> logs) throws IOException {
+    public void addLog(String taskId, Set<TaskLog> logs) throws IOException {
         Map<String, String> logMap = new HashMap<>();
         conn = ConnectionFactory.createConnection(conf);
         //获取表的对象
@@ -161,27 +124,54 @@ public class TaskDaoImpl implements TaskDao {
         conf = HBaseConfiguration.create();
 
         conn = ConnectionFactory.createConnection(conf);
+
+        Task task = new Task();
         //创建表对象，并且获得表
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
 
         //创建Get对象
         Get get = new Get(Bytes.toBytes(taskId));
 
-        //get.addFamily(Bytes.toBytes("info"));
-        get.addColumn(Bytes.toBytes("info"),Bytes.toBytes("nowHandler"));
-        get.addColumn(Bytes.toBytes("info"),Bytes.toBytes(""));
+        get.addFamily(Bytes.toBytes("info"));
+
         Result result = table.get(get);
+
+        Map<String, String> taskMap = new HashMap<>();
 
         Cell[] cells = result.rawCells();
 
-        String nowHandler = null;
-
         for (Cell cell : cells) {
-
-            nowHandler = Bytes.toString(CellUtil.cloneQualifier(cell));
-
+            taskMap.put(Bytes.toString(CellUtil.cloneQualifier(cell)), Bytes.toString(CellUtil.cloneValue(cell)));
         }
-
-        return null;
+        String value = null;
+        for (String key : taskMap.keySet()) {
+            value = taskMap.get(key);
+            if (key.equals("taskId")) {
+                task.setTaskId(value);
+            } else if (key.equals("taskTag")) {
+                task.setTaskTag(value);
+            } else if (key.equals("taskTitle")) {
+                task.setTaskTitle(value);
+            } else if (key.equals("taskDesc")) {
+                task.setTaskDesc(value);
+            } else if (key.equals("taskState")) {
+                task.setTaskState(TaskState.fromHandleState(value));
+            } else if (key.equals("sponsor")) {
+                task.setSponsor(value);
+            } else if (key.equals("sponsorId")) {
+                task.setSponsorId(value);
+            } else if (key.equals("nowHandler")) {
+                task.setNowHandler(value);
+            } else if (key.equals("handlerStack")) {
+                task.setHandlerStack(value);
+            } else if (key.equals("createTime")) {
+                task.setCreateTime(value);
+            } else if (key.equals("timeLimit")) {
+                task.setTimeLimit(value);
+            } else if (key.equals("memberIds")) {
+                task.setMemberIds(value);
+            }
+        }
+        return task;
     }
 }
