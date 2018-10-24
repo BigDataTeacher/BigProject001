@@ -5,6 +5,7 @@ import com.tecode.bean.TaskComment;
 import com.tecode.enumBean.CommentatorType;
 import com.tecode.enumBean.TaskCommentType;
 import com.tecode.enumBean.TaskState;
+import com.tecode.exception.BaseException;
 import com.tecode.g01.dao.TaskDao;
 import com.tecode.util.hbase.table.ConfigUtil;
 import com.tecode.util.hbase.table.HBaseUtils;
@@ -40,18 +41,18 @@ public class TaskDaoImpl implements TaskDao{
      * @throws IOException
      */
     Task task =null ;
-    TaskComment comment = null;
 
     //comment列族的map集合，key为列明，value为列名对应的值
     Map<String,String> commentMap = null;
     //创建一个存放评论内容的set集合
-    Set<TaskComment> set = null;
+    TreeSet<TaskComment> set = null;
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     //字符串转Date型
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
-    public Task getTaskBytaskId(String taskid,String username) throws IOException {
+    public Task getTaskBytaskId(String taskid,String username) throws IOException, BaseException {
+        Set<TaskComment> commentSet = new TreeSet<>();
         task =  new Task();
         //创建一个map集合，key 为列名，value 为列名对应的值
         Map<String,String> infoMap = new HashMap<String,String>();
@@ -60,10 +61,14 @@ public class TaskDaoImpl implements TaskDao{
         Table tasktable = connection.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         //根据主键taskid查询
         Get get = new Get(Bytes.toBytes(taskid));
-
+        //返回一个result结果集
         Result result = tasktable.get(get);
+        if(result.isEmpty()){
+            throw new BaseException("该任务不存在。。。");
+        }
         get.addFamily(Bytes.toBytes(getCf(0)));
         Cell[] Infocells = result.rawCells();
+        //遍历cell数组，把列名当做key，对应的列名的值作value存入infoMap集合中
         for (Cell cell :Infocells ) {
             infoMap.put(Bytes.toString(CellUtil.cloneQualifier(cell)),Bytes.toString(CellUtil.cloneValue(cell)));
         }
@@ -86,25 +91,31 @@ public class TaskDaoImpl implements TaskDao{
         task.setTaskTag(infoMap.get("taskTag"));        //任务分类
         boolean b = isAllowFinish(username,infoMap);
         task.setAllowFinish(b);     //是否可以完成任务
-        task.setTaskComments(getTaskCommentBytaskId(taskid));       //一条评论内容
+
+        task.setTaskComments(getTaskCommentBytaskId(taskid));       //任务评论
+
+
         task.setCreateTime(infoMap.get("createTime"));      //任务发起时间
 
         task.setFinishTime(infoMap.get("finishTime"));      //任务完成时间
         task.setMemberIds(infoMap.get("memberIds"));        //任务成员ID
 
-
-
-        System.out.println(task);
         return task;
 
     }
 
+    /**
+     * 通过任务id查询task表comment列族的信息
+     * @param taskid 任务id
+     * @return   返回一个set集合，储存评论信息
+     * @throws IOException
+     */
     @Override
-    public  Set<TaskComment> getTaskCommentBytaskId(String taskid) throws IOException {
+    public  TreeSet<TaskComment> getTaskCommentBytaskId(String taskid) throws IOException {
         //储存评论内容的set集合
-        set = new HashSet<TaskComment>();
+        set = new TreeSet<TaskComment>();
         commentMap = new HashMap<String,String>();
-        comment = new TaskComment();
+        TaskComment comment = null;
         Connection connection = HBaseUtils.getConnection();
         Table tasktable = connection.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         //根据主键taskid查询
@@ -118,15 +129,16 @@ public class TaskDaoImpl implements TaskDao{
         Cell[] commentCells = result.rawCells();
         for (Cell cell : commentCells) {
             commentMap.put(Bytes.toString(CellUtil.cloneQualifier(cell)),Bytes.toString(CellUtil.cloneValue(cell)));
-            System.out.println(commentMap);
+
         }
 
 
         //遍历commetMap集合获取一条评论记录
        Set<Map.Entry<String, String>> entrySet = commentMap.entrySet();
         for (Map.Entry<String, String> entry : entrySet) {
+            comment= new TaskComment();
             String value = entry.getValue();
-            System.out.println("value:" + value);
+
             if (value == null || value.equals("") || value.split("_").length <4 ) continue;
 
             String[] split = value.split("_");
@@ -148,7 +160,7 @@ public class TaskDaoImpl implements TaskDao{
                 comment.setRealName(commenter);      //评论人名
 
                 set.add(comment);
-                System.out.println(set);
+
             } catch (Exception e) {
 
                e.printStackTrace();

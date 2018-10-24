@@ -2,6 +2,7 @@ package com.tecode.g01.controller;
 
 import com.tecode.bean.Task;
 import com.tecode.bean.TaskComment;
+import com.tecode.exception.BaseException;
 import com.tecode.g01.service.TaskService;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,17 +55,16 @@ public class TaskController {
             map.put("success",false);
             map.put("msg","任务id或用户名为空");
         }else {
-            Task taskdetail = taskService.getTaskdetail(taskid,username);
-            for (TaskComment taskComment : taskdetail.getTaskComments()) {
-                System.out.println(taskComment.getTaskCommentTime());
-            }
-            if(taskdetail != null){
+            Task taskdetail = null;
+            try {
+                taskdetail = taskService.getTaskdetail(taskid,username);
                 map.put("success",true);
                 map.put("data",taskdetail);
-            }else{
+            } catch (BaseException e) {
                 map.put("success",false);
-                map.put("msg","任务id或用户名不存在");
+                map.put("msg",e.getMessage());
             }
+
 
         }
         return map;
