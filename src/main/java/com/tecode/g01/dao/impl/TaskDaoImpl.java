@@ -46,7 +46,7 @@ public class TaskDaoImpl implements TaskDao{
     //comment列族的map集合，key为列明，value为列名对应的值
     Map<String,String> commentMap = null;
     //创建一个存放评论内容的set集合
-    Set<TaskComment> set = null;
+    TreeSet<TaskComment> set = null;
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     //字符串转Date型
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -61,10 +61,11 @@ public class TaskDaoImpl implements TaskDao{
         Table tasktable = connection.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         //根据主键taskid查询
         Get get = new Get(Bytes.toBytes(taskid));
-
+        //返回一个result结果集
         Result result = tasktable.get(get);
         get.addFamily(Bytes.toBytes(getCf(0)));
         Cell[] Infocells = result.rawCells();
+        //遍历cell数组，把列名当做key，对应的列名的值作value存入infoMap集合中
         for (Cell cell :Infocells ) {
             infoMap.put(Bytes.toString(CellUtil.cloneQualifier(cell)),Bytes.toString(CellUtil.cloneValue(cell)));
         }
@@ -100,10 +101,16 @@ public class TaskDaoImpl implements TaskDao{
 
     }
 
+    /**
+     * 通过任务id查询task表comment列族的信息
+     * @param taskid 任务id
+     * @return   返回一个set集合，储存评论信息
+     * @throws IOException
+     */
     @Override
     public  Set<TaskComment> getTaskCommentBytaskId(String taskid) throws IOException {
         //储存评论内容的set集合
-        set = new HashSet<TaskComment>();
+        set = new TreeSet<TaskComment>();
         commentMap = new HashMap<String,String>();
         comment = new TaskComment();
         Connection connection = HBaseUtils.getConnection();
