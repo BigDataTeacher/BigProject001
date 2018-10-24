@@ -1,12 +1,17 @@
 package com.tecode.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 /**
  * 评论实体类
  */
 public class TaskComment implements Comparable<TaskComment> {
-    //评论时间
+    //评论数据
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date taskCommentTime;
     //评论内容
     private String taskComment;
@@ -64,7 +69,7 @@ public class TaskComment implements Comparable<TaskComment> {
         int i = (int)(this.taskCommentTime.getTime() - o.getTaskCommentTime().getTime());
 
         if(i ==0)
-                i = this.taskComment.compareTo(o.getTaskComment());
+            i = this.taskComment.compareTo(o.getTaskComment());
 
         return i;
     }
