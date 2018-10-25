@@ -66,6 +66,10 @@ public class TaskComment implements Comparable<TaskComment> {
 
     @Override
     public int compareTo(TaskComment o) {
+
+        if(this.taskCommentTime == null || o.getTaskCommentTime() == null){
+            return  -1;
+        }
         int i = (int)(this.taskCommentTime.getTime() - o.getTaskCommentTime().getTime());
 
         if(i ==0) {
