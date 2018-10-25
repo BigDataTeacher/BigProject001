@@ -168,12 +168,25 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
      */
     @Override
     public void addComment(String taskId) throws IOException {
-        String commentString ="系统_"+CommentatorType.SYSTEM.getType()+"_"+ TaskCommentType.TEXT.getType() +"_"+TaskState.FINISH.getType();
-
+        String sponsor =null;
         //获得Hbase链接
         Connection conn = HBaseUtils.getConnection();
         //得到表
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
+        //Get对象
+        Get get= new Get(Bytes.toBytes(taskId));
+        //获得发起人
+        get.addColumn(Bytes.toBytes("info"),Bytes.toBytes("sponsor"));
+
+        Result result = table.get(get);
+
+        Cell[] cells = result.rawCells();
+
+        for (Cell cell : cells) {
+             sponsor =Bytes.toString(CellUtil.cloneValue(cell));
+
+        }
+        String commentString ="系统消息_"+CommentatorType.SYSTEM.getType()+"_"+ TaskCommentType.TEXT.getType() +"_"+sponsor+TaskState.FINISH.getTypeName()+"任务";
 
         //Put对象
          Put put =new Put(Bytes.toBytes(taskId));
