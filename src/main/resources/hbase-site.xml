@@ -19,35 +19,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 -->
 <configuration>
-		<!--配置HBase的元数据，存放在hdfs的的路径-->
-		<property>
-			<name>hbase.rootdir</name>
-			<value>hdfs://166.166.166.167:8020/hbase</value>
-		</property>
-		
-		<!--配置是否是集群-->
-		<property>
-			<name>hbase.cluster.distributed</name>
-			<value>true</value>
-		</property>
-		<!-- 0.98后的新变动，之前版本没有.port,默认端口为 60000 -->
-		<property>
-			<name>hbase.master.port</name>
-			<value>16000</value>
-		</property>
-		<!--配置hbase，使用的zookeeper集群-->
-		<property>
-			<name>hbase.zookeeper.quorum</name>
-			<value>166.166.166.167:2181,166.166.166.168:2181,166.166.166.169:2181</value>
-		</property>
-		<!--获得zookeeper的原始数据的存放目录-->
-		<property>
-			<name>hbase.zookeeper.property.dataDir</name>
-			<value>/home/centos/zookeeper</value>
-		</property>
+    <!--配置HBase的元数据，存放在hdfs的的路径-->
+    <property>
+        <name>hbase.rootdir</name>
+        <value>hdfs://166.166.166.167:8020/hbase</value>
+    </property>
 
+    <!--配置是否是集群-->
+    <property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+    </property>
+    <!-- 0.98后的新变动，之前版本没有.port,默认端口为 60000 -->
+    <property>
+        <name>hbase.master.port</name>
+        <value>16000</value>
+    </property>
+    <!--配置hbase，使用的zookeeper集群-->
+    <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>166.166.166.167:2181,166.166.166.168:2181,166.166.166.169:2181</value>
+			<value>166.166.166.167,166.166.166.168,166.166.166.169</value>
+    </property>
+    <!--获得zookeeper的原始数据的存放目录-->
+    <property>
+        <name>hbase.zookeeper.property.dataDir</name>
+        <value>/home/centos/zookeeper</value>
+    </property>
 </configuration>
