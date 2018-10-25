@@ -2,7 +2,6 @@ package com.tecode.g01.controller;
 
 import com.tecode.bean.Task;
 import com.tecode.bean.User;
-import com.tecode.enumBean.CommentatorType;
 import com.tecode.g01.service.TaskCopyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +31,7 @@ public class CopyController {
         userid = user.getUsername();
         taskid = task.getTaskId();
 
-        System.out.println(userid+":"+taskid);
+        //System.out.println(userid+":"+taskid);
 
         boolean b = taskService.insertAndAdd(userid, taskid);
 
@@ -40,11 +39,11 @@ public class CopyController {
         map.put("success",false);
         //参数合法性判断
 
-        System.out.println("123");
+        //System.out.println("123");
         if(userid != null && taskid != null) {
             if (b != flag) {
                 map.put("success", true);
-                System.out.println("111");
+                //System.out.println("111");
 
             }
         }

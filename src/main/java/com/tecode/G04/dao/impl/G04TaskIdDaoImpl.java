@@ -168,7 +168,7 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
      */
     @Override
     public void addComment(String taskId) throws IOException {
-        String commentString ="系统_"+CommentatorType.SYSTEM.getTypeName()+"_"+ TaskCommentType.TEXT.getTypeName() +"_"+TaskState.FINISH.getTypeName();
+        String commentString ="系统_"+CommentatorType.SYSTEM.getType()+"_"+ TaskCommentType.TEXT.getType() +"_"+TaskState.FINISH.getType();
 
         //获得Hbase链接
         Connection conn = HBaseUtils.getConnection();

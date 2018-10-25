@@ -100,7 +100,7 @@ public class TaskCopyDaoImpl implements TaskCopyDao{
 
 
         //接受者
-        System.out.println(systype+":"+beAssignId+":"+memberId);
+        //System.out.println(systype+":"+beAssignId+":"+memberId);
 
 
 
