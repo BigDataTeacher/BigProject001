@@ -2,11 +2,13 @@ package com.tecode.G04.dao.impl;
 
 import com.tecode.G04.dao.G04TaskIdDao;
 import com.tecode.enumBean.CommentatorType;
+import com.tecode.enumBean.TaskCommentType;
 import com.tecode.enumBean.TaskState;
-import com.tecode.exception.BaseException;
 import com.tecode.util.hbase.table.ConfigUtil;
 import com.tecode.util.hbase.table.HBaseUtils;
-import org.apache.hadoop.hbase.*;
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
+import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
@@ -140,7 +142,7 @@ public class G04TaskIdDaoImpl implements G04TaskIdDao {
      */
     @Override
     public void addComment(String taskId) throws IOException {
-        String commentString ="系统_"+CommentatorType.SYSTEM.getType()+"_"+taskId+"_"+TaskState.FINISH.getType();
+        String commentString ="系统_"+CommentatorType.SYSTEM.getType()+"_"+ TaskCommentType.TEXT.getType()+"_"+TaskState.FINISH.getType();
 
         //获得Hbase链接
         Connection conn = HBaseUtils.getConnection();
