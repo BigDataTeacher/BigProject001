@@ -11,7 +11,7 @@ import com.tecode.exception.BaseException;
 import java.io.IOException;
 
 /**
- *
+ * @author  LiJun
  * 处理用户信息相关的业务层
  */
 public interface G04TaskService {

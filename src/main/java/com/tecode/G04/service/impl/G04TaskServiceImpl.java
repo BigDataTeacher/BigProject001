@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 被Controller层调用的方法所在类上添加@Service
  *
  * 这是处理用户请求的业务逻辑实现层。
+ * @author  liJun
  */
 @Service
 public class G04TaskServiceImpl implements G04TaskService {
@@ -28,14 +31,24 @@ public class G04TaskServiceImpl implements G04TaskService {
     @Autowired
     private G04UserDao g04UserDao;
 
+    /**
+     * 修改任务状态
+     * @param taskId
+     * @param cusId
+     * @throws BaseException
+     */
     @Override
     public void modifyTaskState(String  taskId,String cusId) throws BaseException {
 
-
+        List<String>  list=new ArrayList<>();
         //得到发起人
         String sponsor = null;
+
+
         try {
-            sponsor = g04TaskIdDao.getSponsor(taskId);
+            list = g04TaskIdDao.getSponsorIdAndSponsor(taskId);
+            sponsor = list.get(0);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,11 +60,13 @@ public class G04TaskServiceImpl implements G04TaskService {
             e.printStackTrace();
         }
         //分割
-        String[] strings = idStack.split(","); //
+        String[] strings = idStack.split(",");
 
-        String sponsorId = null;
+        //得到发起人ID
+        String sponsorId=null;
         try {
-             sponsorId = g04TaskIdDao.getSponsorId(taskId);
+             list = g04TaskIdDao.getSponsorIdAndSponsor(taskId);
+            sponsorId=list.get(1);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,11 +81,13 @@ public class G04TaskServiceImpl implements G04TaskService {
             //调用完成任务时间方法
             g04TaskIdDao.taskFinishTime(taskId);
 
-            //调用添加评论方法
-            g04TaskIdDao.addComment(taskId);
+
 
             //调用添加日志方法
             g04TaskIdDao.addLog(taskId, sponsor);;
+
+            //调用添加评论方法
+            g04TaskIdDao.addComment(taskId);
 
             //获取当前任务成员ID
             String[] ids = g04CommentDao.getmerberID(taskId).split(",");

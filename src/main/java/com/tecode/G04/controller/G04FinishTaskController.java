@@ -19,6 +19,7 @@ import java.util.Map;
 
 /**
  * 1.在接收html请求的java文件的类上添加@Controller
+ * @author LiJun
  */
 @Controller
 public class G04FinishTaskController {
@@ -29,7 +30,7 @@ public class G04FinishTaskController {
     private G04TaskService g04TaskService;
 
     /**
-     * 用户登录方法
+     *
      * <p>
      * 1.其中 @RequestMapping(value = "/userLogin", method = RequestMethod.POST) 表示html页面请求到该方法的URL地址的映射
      * value = "/userLogin" ： html的请求地址
@@ -41,7 +42,7 @@ public class G04FinishTaskController {
      */
     @ResponseBody
     @RequestMapping(value = "/close-task", method = RequestMethod.POST)
-    public Map<String, Object> finishTask(String taskId, HttpSession session) {
+    public Map<String, Object> finishTask(String taskId, String username,HttpSession session) {
         /**
          *1.验证参数的合法性
          * 2.调用业务逻辑层处理业务，并获得返回值
@@ -56,14 +57,15 @@ public class G04FinishTaskController {
         //创建集合来返回
         Map<String, Object> taskMap = new HashMap<String, Object>();
 
+        String trim = taskId.trim();
+
         if (taskId == null) {
             taskMap.put("success", false);
             taskMap.put("msg", "没有任务");
             return taskMap;
         }
         try {//SessionUtil.getLogingUser(session).getUsername()
-           g04TaskService.modifyTaskState(taskId, SessionUtil.getLogingUser(session).getUsername());
-
+           g04TaskService.modifyTaskState(trim, username);
 
                 taskMap.put("success", true);
                 taskMap.put("data", true);
@@ -71,10 +73,7 @@ public class G04FinishTaskController {
         } catch (BaseException e) {
             taskMap.put("success", false);
             taskMap.put("msg", e.getMessage());
-
     }
-
-
         return taskMap;
     }
 
