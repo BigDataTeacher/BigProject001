@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 
 /**
@@ -61,9 +60,11 @@ public class CreateTaskController {
         if (task.getSponsorId() == null || task.getTaskTitle() == null || task.getBeAssignId() == null || task.getTaskTag() == null) {
             map.put("success", false);
             map.put("msg", "输入参数有误。。。");
-        } else if(task.getTimeLimit().equals("不限")) {
-            task.setTimeLimit("");
-        }else{
+        } else  {
+            if (task.getTimeLimit().equals("不限") || task.getTimeLimit().equals("")) {
+                task.setTimeLimit("");
+            }
+
             try {
                 createTaskService.createTask(task);
                 map.put("success", true);
@@ -71,7 +72,8 @@ public class CreateTaskController {
             } catch (BaseException e) {
                 map.put("success", false);
                 map.put("msg", e.getMessage());
-        }
+
+            }
         }
         return map;
     }
