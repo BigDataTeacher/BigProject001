@@ -29,13 +29,10 @@ public class CopyTaskSerbiceImpl implements CopyTaskService {
         Integer taskcount = copydao.putIntoMenment(taskId, memberId);
         //用户的任务列
         Integer usercount = copydao.putIdintoUserTask(taskId, memberId);
-        //System.out.println(taskcount);
-       // System.out.println(usercount);
-        //System.out.println("进入成功");
+
         if ((taskcount > 0 && usercount >= 0) || usercount > 0) {
             int logs = copydao.addLog(taskId, username, memberId,true);
 
-            //System.out.println("进入里面");
             if (logs > 0) {
                 int a =copydao.addComment(taskId,username,memberId,true);
                 if(a>0){

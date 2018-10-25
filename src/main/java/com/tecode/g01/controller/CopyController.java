@@ -29,7 +29,7 @@ public class CopyController {
     @ResponseBody
     @RequestMapping(value = "/copy", method = RequestMethod.POST)
     public Map<String,Object> insert(String taskId,String userName,String memberId) throws Exception {
-        Map<String,Object> map=new HashMap<>();
+        Map<String,Object> map=new HashMap<String,Object>();
         if (taskId!=null&&userName!=null&&memberId!=null){
             boolean handler = taskService.isHandler(taskId, userName);
             if(handler){

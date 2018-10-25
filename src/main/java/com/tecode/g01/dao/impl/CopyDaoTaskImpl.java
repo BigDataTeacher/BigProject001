@@ -40,26 +40,14 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
         Table taskTable = conn.getTable(TableName.valueOf(taskTableName));
         //获取表里的成员
         Set<String> before = getMembers(taskId, taskTable);
-       // System.out.println("before"+before.size());
 
         addMember(before,memberId);
 
 
-
-
         //添加信息成员进入表
 
-
         Set<String> after = addMember(before, memberId);
-       // System.out.println("after"+after.size());
-
-
-
-        //
-
         taskTable.close();
-
-
         return after.size()-before.size();
     }
 
@@ -72,7 +60,6 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
      */
     @Override
     public Integer putIdintoUserTask(String taskId, String memberId) throws IOException {
-        //System.out.println("putIdintoUserTask");
         Table userTable = conn.getTable(TableName.valueOf(userTableName));
         //获得tasks下的列
         Set<String> setbefore = getTasks(memberId, userTable);
@@ -80,7 +67,6 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
         putTask(taskId,memberId,userTable);
 
         Set<String> setafter = getTasks(memberId, userTable);
-
         return setafter.size()-setbefore.size();
     }
 
@@ -95,7 +81,7 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
         int before =getLog(taskId,taskTable);
         Put put = new Put(Bytes.toBytes(taskId));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String time = System.currentTimeMillis() + "";
+        String time = System.currentTimeMillis() +"";
 
 
         String mess = username + "copy"+ taskId + "to" + menberId+"成功";
@@ -137,7 +123,6 @@ public class CopyDaoTaskImpl implements CopyDaoTask {
         taskTable.put(put);
         int after = getComment(taskId,taskTable);
 
-        //System.out.println(after - before+"============");
 
         return after - before;
 
@@ -254,6 +239,7 @@ public Set<String> addMember(Set<String> set,String memberId){
 
 
     //获取办理人，判断当前的是否是办理人里
+    @Override
     public Set<String> getHandler(String taskId) throws IOException {
 
         Table taskTable = conn.getTable(TableName.valueOf(taskTableName));

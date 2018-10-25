@@ -7,6 +7,10 @@ public interface CopyDaoTask {
 
     /**
      * 任务表里传入任务ID和要插入的用户ID
+     * @param taskId 任务Id
+     * @param memberId  成员Id
+     * @return
+     * @throws IOException
      */
     Integer putIntoMenment(String taskId, String memberId) throws IOException;
 
