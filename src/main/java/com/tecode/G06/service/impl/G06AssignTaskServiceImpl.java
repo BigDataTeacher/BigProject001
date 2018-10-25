@@ -12,17 +12,20 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class G06AssignTaskServiceImpl implements G06AssignTaskService{
-
+    //    @Override
+//    public Task getTaskbyTaskId(String taskId) throws Exception {
+//        return null;
+//    }
     @Autowired
     private G06AssignTaskDao taskDao;
-
     private String nowhandler=null;
+    private String nowhandlers=null;
 
 //获取姓名
-    @Override
-    public User getUserbyUserId(String username) throws Exception {
-        return taskDao.getUserbyUserId(username);
-    }
+//    @Override
+//    public User getUserbyUserId(String username) throws Exception {
+//        return taskDao.getUserbyUserId(username);
+//    }
 
     /**
      * 判断用户ID是否是任务查询中查出的当前办理人
@@ -31,11 +34,14 @@ public class G06AssignTaskServiceImpl implements G06AssignTaskService{
      */
     @Override
     public boolean handler(String taskId, String userId) throws Exception {
-        nowhandler=taskDao.getTaskbyTaskId(taskId).getNowHandler();
-        if(nowhandler.equals(userId)){
-            return true;
-        }
-        return false;
+        nowhandlers=taskDao.getTaskbyTaskId(taskId).getMemberIds();
+        String [] id=nowhandlers.split(",");
+        nowhandler=id[id.length-1];
+
+
+        //  String nexthander=taskDao.getUserbyUserId(userId).getName();
+        return nowhandler.equals(userId);
+
 
     }
     /**
@@ -45,20 +51,29 @@ public class G06AssignTaskServiceImpl implements G06AssignTaskService{
      * handlerId 下一个办理人
      */
     @Override
-    public Task inHandlerId(String taskId,String handlerId,String userId) throws Exception {
-        //获取下一个办理人姓名
-        if(handler(taskId,userId)) {
+    public boolean inHandlerId(String taskId,String handlerId,String userId) throws Exception {
+        //获取下一个办理人姓名（userId)
+        if (handler(taskId, userId)) {
             String name = taskDao.getUserbyUserId(handlerId).getName();
-            taskDao.inTaskbyTaskId(taskId, name, handlerId, handlerId);
+            String handler=","+handlerId;
+            taskDao.inTaskbyTaskId(taskId, name, handler, handler);
+
+            return true;
+        } else {
+            return false;
         }
-        return null;
+        /**
+         * 将任务ID加入下一个办理人用户任务IDtasks
+         *
+         */
     }
-    /**
-     * 将任务ID加入下一个办理人用户任务IDtasks
-     *
-     */
+    //taskId://任务id
+    //handlerId://下⼀个办理⼈id
     @Override
-    public Task inTask(Task task) throws Exception {
-        return null;
+    public boolean inTask(String taskId,String handlerId) throws Exception {
+        taskDao.putTaskbyUsername(handlerId,taskId);
+
+
+        return true;
     }
 }

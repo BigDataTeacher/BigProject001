@@ -13,7 +13,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+
 
 /**
  *   用户数据处理层的具体实现
@@ -83,9 +83,14 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         for (Cell cell:cells5) {
             task.setMemberIds(Bytes.toString(CellUtil.cloneValue(cell)));
         }
+
+
         table.close();
         return task;
+
     }
+
+
 
     /**
      * 通过列族地址得到info列族
@@ -105,7 +110,7 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
      * 在log中添加一个新列
      */
     @Override
-    public void addReplyLog(String taskId,boolean bl ) throws IOException {
+    synchronized public void addReplyLog(String taskId,boolean bl ) throws IOException {
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         Put put = getPut(taskId,log,bl);
         table.put(put);
@@ -129,7 +134,7 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
      * 在comment列族中添加一列，列名为当前时间，值为系统的评论
      */
     @Override
-    public void addSystemComment(String taskId,boolean bl) throws IOException {
+    synchronized public void addSystemComment(String taskId,boolean bl) throws IOException {
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         Put put = getPut(taskId,comment,bl);
         table.put(put);

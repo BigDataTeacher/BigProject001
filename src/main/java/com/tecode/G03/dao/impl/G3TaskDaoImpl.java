@@ -101,6 +101,7 @@ public class G3TaskDaoImpl implements G3TaskDao {
                     coment.getCommentatorType() + "_" +
                     coment.getCommentType() + "_" +
                     coment.getTaskComment();
+
             commentMap.put(key, value);
         }
         Set<Map.Entry<String, String>> entrySet = commentMap.entrySet();

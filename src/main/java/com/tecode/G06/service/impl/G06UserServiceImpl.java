@@ -34,9 +34,9 @@ public class G06UserServiceImpl implements G06UserService {
         User loginUser=getUserByUserName(user.getUsername());
         //判断密码是否正确
         boolean b= UtilSha1.getSha1(user.getPassword().toUpperCase()).equals(loginUser.getPassword());
-        if(b==false){return null;}
+        if(b){return loginUser;}
 
-        return  loginUser;
+        return  null;
     }
     /**
      * 根据用户id查询

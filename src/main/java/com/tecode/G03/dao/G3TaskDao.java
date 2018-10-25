@@ -28,7 +28,7 @@ public interface G3TaskDao {
      * @throws Exception
      */
 
-    void addComment(String taskID,Set<TaskComment> coments) throws IOException;
+    void addComment(String taskID, Set<TaskComment> coments) throws IOException;
 
     /**
      * 添加log
@@ -36,5 +36,5 @@ public interface G3TaskDao {
      * @param logs log集合
      * @throws Exception
      */
-    void addLog(String taskID,Set<TaskLog> logs) throws IOException;
+    void addLog(String taskID, Set<TaskLog> logs) throws IOException;
 }

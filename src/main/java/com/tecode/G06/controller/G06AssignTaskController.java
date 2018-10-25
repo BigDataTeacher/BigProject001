@@ -16,11 +16,12 @@ import java.util.Map;
  */
 @Controller
 public class G06AssignTaskController {
+    @Autowired
     private G06AssignTaskService taskService;
     private static Map<String,Object> map = new HashedMap();
-    static {
-        map.put("success",false);
-        map.put("msg",null);}
+//    static {
+//        map.put("success",false);
+//        map.put("msg","交办失败");}
     @ResponseBody
     @RequestMapping(value = "/assign", method = RequestMethod.POST)
     /**
@@ -32,9 +33,21 @@ public class G06AssignTaskController {
      */
     public Map<String,Object> assign(String taskId,String cusId,String handlerId,boolean isAssign){
         if(isAssign==true){
+            try {
+                boolean a=taskService.inHandlerId(taskId,handlerId,cusId);
+                boolean b=taskService.inTask(taskId,handlerId);
+                if(a&&b){
+                    map.put("success",true);
+                    map.put("data",true);
+                    return map;}
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return null;
+        map.put("success",false);
+        map.put("msg","交办失败");
+        return map;
     }
 
 }

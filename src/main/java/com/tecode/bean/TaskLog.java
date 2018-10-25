@@ -57,12 +57,18 @@ public class TaskLog implements Comparable<TaskLog>{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o){
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
 
         TaskLog taskLog = (TaskLog) o;
 
-        if (!logTime.equals(taskLog.logTime)) return false;
+        if (!logTime.equals(taskLog.logTime)){
+            return false;
+        }
         return content != null ? content.equals(taskLog.content) : taskLog.content == null;
     }
 

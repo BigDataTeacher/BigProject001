@@ -25,7 +25,7 @@ public interface G02ZzReplyService {
      *判断当前的用户是否是办理人
      * @return
      */
-    boolean isHandler(String taskId,String cusId) throws Exception;
+    boolean isHandler(String taskId, String cusId) throws Exception;
 
 
 }

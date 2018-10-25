@@ -66,7 +66,9 @@ public class G06UserController {
         //为空user为null
         boolean n=user.getUsername().isEmpty();
         boolean p=user.getPassword().isEmpty();
+
         if(n || p){
+
             return map;
         }
         //返回的user为空，密码错误
