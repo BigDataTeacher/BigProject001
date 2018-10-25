@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Created by Administrator on 2018/10/18.
  */
-public interface TaskDao {
+public interface G03CYTaskDao {
 
       void updateTask(Task task) throws IOException;
 //

@@ -1,6 +1,6 @@
 package com.tecode.G03.service.impl;
 
-import com.tecode.G03.dao.TaskDao;
+import com.tecode.G03.dao.G03CYTaskDao;
 import com.tecode.G03.dao.G03CYUserDao;
 import com.tecode.G03.service.ComplainService;
 import com.tecode.bean.Task;
@@ -29,7 +29,7 @@ public class ComplainServiceImpl implements ComplainService {
     @Autowired
     private G03CYUserDao userDao;
     @Autowired
-    private TaskDao taskDao;
+    private G03CYTaskDao taskDao;
 
 
     /**

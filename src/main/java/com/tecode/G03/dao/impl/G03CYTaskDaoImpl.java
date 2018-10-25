@@ -1,6 +1,6 @@
 package com.tecode.G03.dao.impl;
 
-import com.tecode.G03.dao.TaskDao;
+import com.tecode.G03.dao.G03CYTaskDao;
 import com.tecode.bean.Task;
 import com.tecode.bean.TaskComment;
 import com.tecode.bean.TaskLog;
@@ -24,7 +24,7 @@ import java.util.*;
  * 需要类上添加@Repository注解
  */
 @Repository
-public class TaskDaoImpl implements TaskDao {
+public class G03CYTaskDaoImpl implements G03CYTaskDao {
 
     Configuration conf = null;
 
