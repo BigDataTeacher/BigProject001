@@ -151,8 +151,12 @@ public class TaskDaoImpl implements TaskDao{
             String s = entry.getKey();
 
             try {
-                System.out.println("s:" + s);
-                Date date = new Date(Long.valueOf(s));
+                //System.out.println("s:" + s);
+                Date date = null;
+                try {
+                    date = new Date(Long.valueOf(s));
+                }catch (Exception e){}
+
                 comment.setTaskCommentTime(date);           //评论时间
                 comment.setTaskComment(commentMessage);       //评论内容
                 String s1 = isUserOrSystem(commentorType);
