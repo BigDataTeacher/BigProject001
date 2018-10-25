@@ -13,12 +13,12 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+
 
 /**
  *   用户数据处理层的具体实现
- *
  *   需要类上添加@Repository注解
+ * @author zhangzhou
  */
 @Repository
 public class G02ReplyDaoImpl implements G02ReplyDao {
@@ -83,9 +83,14 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         for (Cell cell:cells5) {
             task.setMemberIds(Bytes.toString(CellUtil.cloneValue(cell)));
         }
+
+
         table.close();
         return task;
+
     }
+
+
 
     /**
      * 通过列族地址得到info列族
@@ -105,18 +110,20 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
      * 在log中添加一个新列
      */
     @Override
-    public void addReplyLog(String taskId,boolean bl ) throws IOException {
+    synchronized public void addReplyLog(String taskId,boolean bl ) throws IOException {
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         Put put = getPut(taskId,log,bl);
         table.put(put);
         table.close();
     }
-    //得到一个put对象
+    /**
+     * 得到一个put对象
+     */
     private Put getPut(String rowKey,String family,boolean bl){
         Put put = new Put(Bytes.toBytes(rowKey));
         //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long currentTime = System.currentTimeMillis();
-        //System.out.println("####" + Bytes.toBytes(currentTime));
+
         if(bl){
             put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime+""),Bytes.toBytes(CommentatorType.SYSTEM+"_system_text_回复操作成功,"));
         }else {
@@ -129,7 +136,7 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
      * 在comment列族中添加一列，列名为当前时间，值为系统的评论
      */
     @Override
-    public void addSystemComment(String taskId,boolean bl) throws IOException {
+    synchronized public void addSystemComment(String taskId,boolean bl) throws IOException {
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         Put put = getPut(taskId,comment,bl);
         table.put(put);

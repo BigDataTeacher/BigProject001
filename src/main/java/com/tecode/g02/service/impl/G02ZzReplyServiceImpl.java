@@ -3,7 +3,6 @@ package com.tecode.g02.service.impl;
 import com.tecode.bean.Task;
 import com.tecode.exception.BaseException;
 import com.tecode.g02.dao.G02ReplyDao;
-import com.tecode.g02.dao.impl.G02ReplyDaoImpl;
 import com.tecode.g02.service.G02ZzReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,8 +12,8 @@ import java.io.IOException;
 
 /**
  * 被Controller层调用的方法所在类上添加@Service
- *
  * 这是处理用户请求的业务逻辑实现层。
+ * @author zhangzhou
  */
 @Service
 public class G02ZzReplyServiceImpl implements G02ZzReplyService {
@@ -54,7 +53,9 @@ public class G02ZzReplyServiceImpl implements G02ZzReplyService {
             throw new BaseException("当前的用户不是办理人！");
         }
     }
-    //获得栈顶元素
+    /**
+     *  获得栈顶元素
+     */
     private String getHandlerId(Task task,String cusId) throws BaseException{
         String handlerStack = task.getHandlerStack();
         //打印出id栈中的信息，用于测试

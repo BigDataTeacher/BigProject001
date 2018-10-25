@@ -5,28 +5,45 @@ import java.io.IOException;
 
 /**
  * Created by Administrator on 2018/10/18.
+ * @author zhangzhou
  */
 public interface G02ReplyDao {
 
-
     /**
      * 通过任务id查找到TaskBean对象
+     * @param taskId:任务编号
+     * @return 返回一个集成好的TaskBean对象
+     * @throws IOException：IO异常
      */
     Task selectTaskByID(String taskId) throws IOException;
+
     /**
      * 在log中添加一个新列，列名为当前时间，值一条回复的记录
+     * @param taskId:任务编号
+     * @param bl:判断回复任务是否成功
+     * @throws IOException：IO异常
      */
     void addReplyLog(String taskId,boolean bl) throws IOException;
+
     /**
-     * 在comment列族中添加一列，列名为当前时间，值为系统的评论
+     *  在comment列族中添加一列，列名为当前时间，值为系统的评论
+     * @param taskId:任务Id
+     * @param bl：判断回复任务是否成功
+     * @throws IOException：IO异常
      */
     void addSystemComment(String taskId,boolean bl) throws IOException;
+
     /**
      * 将id栈中的栈顶元素移除
+     * @param taskId：任务Id
+     * @throws IOException：IO异常
      */
     void removeIDFromStack(String taskId) throws IOException;
+
     /**
      * 更改当前办理人的id
+     * @param taskId:任务Id
+     * @throws IOException：IO异常
      */
     void changeHandler(String taskId) throws IOException;
 }
