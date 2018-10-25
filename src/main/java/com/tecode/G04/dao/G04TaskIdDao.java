@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * @author LiJun
  * Created by Administrator on 2018/10/18.
  */
 public interface G04TaskIdDao {
@@ -29,14 +30,6 @@ public interface G04TaskIdDao {
      */
     String getIdStack(String taskId)throws IOException;
 
-
-    /**
-     * 获取发起人ID
-     * @param taskId
-     * @return
-     * @throws Exception
-     */
-    String getSponsorId(String taskId)throws IOException;
 
     /**
      * 任务完成时间
@@ -60,7 +53,13 @@ public interface G04TaskIdDao {
     void addLog(String taskId, String sponsor)throws IOException;
 
 
-    String getSponsor(String taskId)throws IOException;
 
+    /**
+     * 得到发起人和发起人ID
+     * @param taskId
+     * @return
+     * @throws IOException
+     */
+    List<String> getSponsorIdAndSponsor(String taskId)throws IOException;
 
 }
