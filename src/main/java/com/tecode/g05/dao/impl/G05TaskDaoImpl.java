@@ -107,7 +107,9 @@ public class G05TaskDaoImpl implements G05TaskDao {
      */
     public void addLogAndMessage( String taskId, String msg) {
         // 添加日志
-        G05HBaseTableUtil.insertData(TABLE_NAME, taskId, "log", new Date().getTime() + "", msg);
+        G05HBaseTableUtil.insertData(TABLE_NAME, taskId, "log", System.currentTimeMillis() + "", msg);
+        // 添加评论
+        G05HBaseTableUtil.insertData(TABLE_NAME, taskId, "comment", System.currentTimeMillis() + "", msg);
         // 获取用户组
         Cell[] cells = G05HBaseTableUtil.getColumn(TABLE_NAME, taskId, "info", "memberIds");
         // 列名
