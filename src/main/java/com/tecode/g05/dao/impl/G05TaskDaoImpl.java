@@ -94,7 +94,8 @@ public class G05TaskDaoImpl implements G05TaskDao {
             }
         }
         if (b) {
-            addLogAndMessage(utb.getTaskId(), "系统消息_系统_" + TaskCommentType.TEXT.getType() + "_" + utb.getSponsorId() + "修改了任务");
+            Cell[] cells = G05HBaseTableUtil.getColumn("oa:user",utb.getSponsorId(),"info","name");
+            addLogAndMessage(utb.getTaskId(), "系统消息_系统_" + TaskCommentType.TEXT.getType() + "_" + Bytes.toString(CellUtil.cloneValue(cells[0])) + "修改了任务");
             return b;
         }
         return b;
