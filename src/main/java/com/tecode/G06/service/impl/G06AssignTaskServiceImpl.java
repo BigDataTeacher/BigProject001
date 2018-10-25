@@ -18,8 +18,8 @@ public class G06AssignTaskServiceImpl implements G06AssignTaskService{
 //    }
     @Autowired
     private G06AssignTaskDao taskDao;
-
     private String nowhandler=null;
+    private String nowhandlers=null;
 
 //获取姓名
 //    @Override
@@ -34,9 +34,13 @@ public class G06AssignTaskServiceImpl implements G06AssignTaskService{
      */
     @Override
     public boolean handler(String taskId, String userId) throws Exception {
-        nowhandler=taskDao.getTaskbyTaskId(taskId).getNowHandler();
-        String nexthander=taskDao.getUserbyUserId(userId).getName();
-        return nowhandler.equals(nexthander);
+        nowhandlers=taskDao.getTaskbyTaskId(taskId).getMemberIds();
+        String [] id=nowhandlers.split(",");
+        nowhandler=id[id.length-1];
+
+
+      //  String nexthander=taskDao.getUserbyUserId(userId).getName();
+        return nowhandler.equals(userId);
 
 
     }

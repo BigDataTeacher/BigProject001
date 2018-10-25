@@ -19,9 +19,9 @@ public class G06AssignTaskController {
     @Autowired
     private G06AssignTaskService taskService;
     private static Map<String,Object> map = new HashedMap();
-    static {
-        map.put("success",false);
-        map.put("msg","交办失败");}
+//    static {
+//        map.put("success",false);
+//        map.put("msg","交办失败");}
     @ResponseBody
     @RequestMapping(value = "/assign", method = RequestMethod.POST)
     /**
@@ -45,6 +45,8 @@ public class G06AssignTaskController {
                 e.printStackTrace();
             }
         }
+        map.put("success",false);
+        map.put("msg","交办失败");
         return map;
     }
 
