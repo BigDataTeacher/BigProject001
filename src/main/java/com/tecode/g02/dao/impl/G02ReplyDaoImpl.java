@@ -17,8 +17,8 @@ import java.io.IOException;
 
 /**
  *   用户数据处理层的具体实现
- *
  *   需要类上添加@Repository注解
+ * @author zhangzhou
  */
 @Repository
 public class G02ReplyDaoImpl implements G02ReplyDao {
@@ -56,7 +56,7 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         Result result2 = table.get(get);
         Cell[] cells2 = result2.rawCells();
         for (Cell cell:cells2
-        ) {
+                ) {
             task.setBeAssignId(Bytes.toString(CellUtil.cloneValue(cell)));
         }
 
@@ -65,7 +65,7 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         Result result3 = table.get(get);
         Cell[] cells3 = result3.rawCells();
         for (Cell cell:cells3
-        ) {
+                ) {
             task.setTaskTag(Bytes.toString(CellUtil.cloneValue(cell)));
         }
         //在get对象中添加当前办理人姓名
@@ -110,22 +110,26 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
      * 在log中添加一个新列
      */
     @Override
-    synchronized public void addReplyLog(String taskId,boolean bl ) throws IOException {
+    synchronized public void addReplyLog(String taskId,boolean bl,String cusId ) throws IOException {
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
-        Put put = getPut(taskId,log,bl);
+        String nowHandler = getName(cusId);
+        String nextHandler = changeHandler(taskId);
+        Put put = getPut(taskId,log,bl,nowHandler,nextHandler);
         table.put(put);
         table.close();
     }
-    //得到一个put对象
-    private Put getPut(String rowKey,String family,boolean bl){
+    /**
+     * 得到一个put对象
+     */
+    private Put getPut(String rowKey,String family,boolean bl,String nowHandler,String nextHandler){
         Put put = new Put(Bytes.toBytes(rowKey));
         //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long currentTime = System.currentTimeMillis();
-        //System.out.println("####" + Bytes.toBytes(currentTime));
+
         if(bl){
-            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime+""),Bytes.toBytes(CommentatorType.SYSTEM+"_system_text_回复操作成功,"));
+            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime+""),Bytes.toBytes(CommentatorType.SYSTEM+"_system_text_"+nowHandler+" 回复:"+nextHandler+"  操作成功！"));
         }else {
-            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime +""),Bytes.toBytes(CommentatorType.SYSTEM+"_system_text_回复操作失败,"));
+            put.addColumn(Bytes.toBytes(family),Bytes.toBytes(currentTime +""),Bytes.toBytes(CommentatorType.SYSTEM+"_system_text_"+nowHandler+" 回复:"+nextHandler+"  操作失败！"));
         }
         return put;
     }
@@ -134,9 +138,11 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
      * 在comment列族中添加一列，列名为当前时间，值为系统的评论
      */
     @Override
-    synchronized public void addSystemComment(String taskId,boolean bl) throws IOException {
+    synchronized public void addSystemComment(String taskId,boolean bl,String cusId) throws IOException {
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
-        Put put = getPut(taskId,comment,bl);
+        String nowHandler = getName(cusId);
+        String nextHandler = changeHandler(taskId);
+        Put put = getPut(taskId,comment,bl,nowHandler,nextHandler);
         table.put(put);
         table.close();
     }
@@ -162,31 +168,40 @@ public class G02ReplyDaoImpl implements G02ReplyDao {
         table.close();
     }
     /**
-     * 更改当前办理人的id
+     * 更改当前办理人的姓名
      */
     @Override
-    public void changeHandler(String taskId) throws IOException {
+    public String changeHandler(String taskId) throws IOException {
         Task task = selectTaskByID(taskId);
         //获得当前的栈顶的对象
         String handlerStack = task.getHandlerStack();
         String[] split = handlerStack.split(",");
         String nowHandler = split[split.length-1];
-        Table user = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
-        Get getName = new Get(Bytes.toBytes(nowHandler));
-        getName.addColumn(Bytes.toBytes(info),Bytes.toBytes("name"));
-        Result result = user.get(getName);
-        Cell[] cells = result.rawCells();
-        String name= null;
-        for (Cell cell : cells) {
-           name =  Bytes.toString(CellUtil.cloneValue(cell));
-        }
+        String name = getName(nowHandler);
         Table table = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_task_table_name")));
         Put put = new Put(Bytes.toBytes(taskId));
         put.addColumn(Bytes.toBytes(info),Bytes.toBytes("nowHandler"),Bytes.toBytes(name));
         table.put(put);
         table.close();
-
+        return name;
     }
 
+    /**
+     * 在user表中通过用户Id查找到用户姓名
+     * @param cusId:用户Id
+     * @return：返回通过用户Id得到的用户姓名
+     */
+    private String getName(String cusId) throws IOException {
+        Table user = conn.getTable(TableName.valueOf(ConfigUtil.getString("hbase_user_tbale_name")));
+        Get getName = new Get(Bytes.toBytes(cusId));
+        getName.addColumn(Bytes.toBytes(info),Bytes.toBytes("name"));
+        Result result = user.get(getName);
+        Cell[] cells = result.rawCells();
+        String name= null;
+        for (Cell cell : cells) {
+            name =  Bytes.toString(CellUtil.cloneValue(cell));
+        }
+        return name;
+    }
 
 }
