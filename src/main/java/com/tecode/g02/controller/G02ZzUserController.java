@@ -16,6 +16,7 @@ import java.util.Map;
 /**
  * 1.在接收html请求的java文件的类上添加@Controller
  * @author zhangzhou
+ *
  */
 @Controller
 public class G02ZzUserController {
@@ -54,17 +55,17 @@ public class G02ZzUserController {
                 replyService.isHandler(taskId,cusId);
                 map.put("success",true);
                 map.put("msg","回复成功！");
-                System.out.println("回复成功。。。");
+               // System.out.println("回复成功。。。");
             } catch (Exception e) {
                 map.put("success",false);
                 map.put("msg",e.getMessage());
-                System.out.println("回复失败");
+               // System.out.println("回复失败");
 
             }
         }else {
             map.put("success",false);
             map.put("msg","输入参数不合法！");
-            System.out.println("回复失败，参数不合法");
+           // System.out.println("回复失败，参数不合法");
         }
         return map;
     }

@@ -29,9 +29,9 @@ public class G02ZzReplyServiceImpl implements G02ZzReplyService {
         //其次：将当前的办理人改为移除栈顶元素后的栈顶元素
         replyDao.changeHandler(taskId);
         //之后：在评论中添加一条系统评论，说明回复成功
-        replyDao.addSystemComment(taskId,true);
+        replyDao.addSystemComment(taskId,true,cusId);
         //最后：在log中添加一条回复成功的记录
-        replyDao.addReplyLog(taskId,true);
+        replyDao.addReplyLog(taskId,true,cusId);
 
         return true;
     }
@@ -47,9 +47,9 @@ public class G02ZzReplyServiceImpl implements G02ZzReplyService {
             return true;
         }else {
             //添加一条系统评论，提示回复失败
-            replyDao.addSystemComment(taskId,false);
+            replyDao.addSystemComment(taskId,false,cusId);
             //在日志中添加一条回复失败的记录
-            replyDao.addReplyLog(taskId,false);
+            replyDao.addReplyLog(taskId,false,cusId);
             throw new BaseException("当前的用户不是办理人！");
         }
     }
