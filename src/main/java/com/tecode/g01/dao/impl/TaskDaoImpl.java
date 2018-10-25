@@ -139,7 +139,9 @@ public class TaskDaoImpl implements TaskDao{
             comment= new TaskComment();
             String value = entry.getValue();
 
-            if (value == null || value.equals("") || value.split("_").length <4 ) continue;
+            if (value == null || value.equals("") || value.split("_").length <4 ){
+                continue;
+            }
 
             String[] split = value.split("_");
             String commenter = split[0];        //评论人姓名

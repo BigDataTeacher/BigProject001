@@ -68,9 +68,9 @@ public class TaskComment implements Comparable<TaskComment> {
     public int compareTo(TaskComment o) {
         int i = (int)(this.taskCommentTime.getTime() - o.getTaskCommentTime().getTime());
 
-        if(i ==0)
-                i = this.taskComment.compareTo(o.getTaskComment());
-
+        if(i ==0) {
+            i = this.taskComment.compareTo(o.getTaskComment());
+        }
         return i;
     }
 }
