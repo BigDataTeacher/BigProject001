@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class G06UserDaoImpl implements G06UserDao {
 
-    User user=null;
+    User user = null;
     String name=null;
     String value=null;
     @Override
@@ -28,29 +28,33 @@ public class G06UserDaoImpl implements G06UserDao {
         String tablename="oa:user";
         Table table = con.getTable(TableName.valueOf(tablename));
         Get get=new Get(Bytes.toBytes(username));
-        user=new User();
+
         Result result=table.get(get);
         Cell[] rawCells=result.rawCells();
-
+        user  =new User();
         for (Cell cell : rawCells) {
             name=Bytes.toString(CellUtil.cloneQualifier(cell));
             value=Bytes.toString(CellUtil.cloneValue(cell));
 
 
 
-        if(name.equals("username")) {
-            user.setUsername(value);
-        }if(name.equals("password")){
-            user.setPassword(value);
-        }if(name.equals("name")){
-            user.setName(value);
-        }if(name.equals("department")){
-            user.setDepartment(value);
+            if(name.equals("username")) {
+                user.setUsername(value);
+            }if(name.equals("password")){
+                user.setPassword(value);
+            }if(name.equals("name")){
+                user.setName(value);
+            }if(name.equals("department")){
+                user.setDepartment(value);
             }
         }
         return user;
     }
 
+    @Override
+    public String modifyNumOfTaskMsg(String username) {
+        return null;
+    }
 
 
 }

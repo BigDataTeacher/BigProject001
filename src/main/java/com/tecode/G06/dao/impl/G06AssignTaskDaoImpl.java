@@ -12,6 +12,9 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Created by Administrator on 2018/10/23.
+ */
 @Repository
 public class G06AssignTaskDaoImpl implements G06AssignTaskDao{
     private Task task=new Task();
@@ -31,7 +34,7 @@ public class G06AssignTaskDaoImpl implements G06AssignTaskDao{
         table.put(put);
 
     }
-//在用户表中查询出用户姓名
+    //在用户表中查询出用户姓名
     @Override
     public User getUserbyUserId(String username) throws Exception {
         Connection con=HBaseUtils.getConnection();
@@ -97,6 +100,11 @@ public class G06AssignTaskDaoImpl implements G06AssignTaskDao{
         put.addColumn(Bytes.toBytes("info"),Bytes.toBytes("nowHandler"),Bytes.toBytes(nowHandler));
         put.addColumn(Bytes.toBytes("info"),Bytes.toBytes("handlerStack"),Bytes.toBytes(stack));
         put.addColumn(Bytes.toBytes("info"),Bytes.toBytes("memberIds"),Bytes.toBytes(member));
+        table.put(put);
+    }
 
+    @Override
+    public boolean assign(String taskId, String cusId, String handlerId) {
+        return false;
     }
 }

@@ -15,4 +15,5 @@ public interface G06UserDao {
      * @throws Exception
      */
     User getUserByUserName(String username) throws Exception;
+    String modifyNumOfTaskMsg(String username);
 }
