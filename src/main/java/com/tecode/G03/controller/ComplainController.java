@@ -68,7 +68,11 @@ public class ComplainController {
         } else if (isAssign) {
             map.put("success", false);
             map.put("msg", "请选择转办业务项...");
-        } else {
+        } else if(cusId.equals(handlerId)){
+            map.put("success", false);
+            map.put("msg", "任务不能转办给自己...");
+        }
+        else {
             try {
                 //调用转办任务方法
                 complainService.complainTask(cusId, taskId, handlerId);

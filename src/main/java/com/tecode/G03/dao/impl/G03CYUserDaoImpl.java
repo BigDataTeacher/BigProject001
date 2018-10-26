@@ -45,7 +45,7 @@ public class G03CYUserDaoImpl implements G03CYUserDao {
 
         for (Cell cell : cells) {
 
-            qualifier = Bytes.toString(CellUtil.cloneQualifier(cell));
+            qualifier = Bytes.toString(CellUtil.cloneValue(cell));
 
         }
 
