@@ -45,6 +45,7 @@ public class ComplainServiceImpl implements ComplainService {
         //创建task对象
         Task task = new Task();
         String handlerName = null;
+        String nowHandlerName = null;
         try {
             //通过任务id查找该任务所有信息，并封装添加进task对象
             task = taskDao.getTaskByTaskId(taskId);
@@ -56,6 +57,7 @@ public class ComplainServiceImpl implements ComplainService {
         }
         //获得办理人ID集
         String[] handlers = task.getHandlerStack().split(",");
+        //System.out.println(handlers.length);
         if (handlers.length < 2) {
             throw new BaseException("任务不能转办...");
         }
@@ -68,6 +70,8 @@ public class ComplainServiceImpl implements ComplainService {
         try {
             //获得下一个办理人姓名
             handlerName = userDao.getNameByUserName(handlerId);
+            //获得当前办理人姓名
+            nowHandlerName = userDao.getNameByUserName(username);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -92,9 +96,9 @@ public class ComplainServiceImpl implements ComplainService {
         //封装进task
         task.setMemberIds(memberIds);
         //创建评论集合对象
-        Set<TaskComment> taskComments = createTaskComment(username, handlerId);
+        Set<TaskComment> taskComments = createTaskComment(nowHandlerName, handlerName);
         //创建日志集合对象
-        Set<TaskLog> taskLogs = createLogs(username, handlerId);
+        Set<TaskLog> taskLogs = createLogs(nowHandlerName, handlerName);
         //调用修改task对象方法
         try {
             taskDao.updateTask(task);
